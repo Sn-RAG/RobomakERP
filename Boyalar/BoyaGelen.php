@@ -4,19 +4,19 @@ require __DIR__ . '/../controller/Header.php';
 require __DIR__ . '/../controller/Db.php';
 require __DIR__ . '/../controller/VTHataMesaji.php';
 ?>
-    <main id="main" class="main">
-        <section class="section">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="card recent-sales overflow-auto">
-                        <div class="card-body">
-                            <h5 class="card-title"><?= $page ?></h5>
-                            <hr>
-                            <a href="BoyaStok.php" class="btn btn-secondary bi-arrow-left-circle">&nbsp Geri Dön
-                            </a>
-                            <hr>
-                            <table class="table datatablem">
-                                <thead>
+<main id="main" class="main">
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card recent-sales overflow-auto">
+                    <div class="card-body">
+                        <h5 class="card-title"><?= $page ?></h5>
+                        <hr>
+                        <a href="<?= isset($_GET["Gecmis"]) ? "BoyaGelen.php" : "BoyaStok.php" ?>" class="btn btn-secondary bi-arrow-left-circle me-3 mb-1">&nbsp Geri Dön</a>
+                        <a href="BoyaGelen.php?Gecmis" class="btn btn-success bi-clock-history mb-1" <?= isset($_GET["Gecmis"]) ? "hidden" : "" ?>>&nbsp Geçmiş</a>
+                        <hr>
+                        <table class="table datatablem">
+                            <thead>
                                 <tr class="table-light">
                                     <th>#</th>
                                     <th>Boya_Siparis_ID</th>
@@ -30,10 +30,15 @@ require __DIR__ . '/../controller/VTHataMesaji.php';
                                     <th>Stok</th>
                                     <th>&nbsp</th>
                                 </tr>
-                                </thead>
-                                <tbody>
+                            </thead>
+                            <tbody>
                                 <?php
-                                $sorgu = $baglanti->query('SELECT * FROM view_siparis_boya');
+                                if (isset($_GET["Gecmis"])) {
+                                    $gor = "Siparis_Miktar=0";
+                                } else {
+                                    $gor = "Siparis_Miktar<>0";
+                                }
+                                $sorgu = $baglanti->query("SELECT * FROM view_siparis_boya WHERE " . $gor . "");
                                 foreach ($sorgu as $sonuc) {
                                     $Boya_Siparis_ID = $sonuc['Boya_Siparis_ID'];
                                     $id = $sonuc['Boya_Stok_ID'];
@@ -49,7 +54,7 @@ require __DIR__ . '/../controller/VTHataMesaji.php';
                                     foreach ($sorguS as $sonuc2) {
                                         $Stok_Miktar = $sonuc2['SumStok_Miktar'];
                                         $T_Tarihi = $sonuc2['Teslim_Tarihi'];
-                                        ?>
+                                ?>
                                         <tr>
                                             <td><?= $id ?></td>
                                             <td><?= $Boya_Siparis_ID ?></td>
@@ -70,16 +75,15 @@ require __DIR__ . '/../controller/VTHataMesaji.php';
                                                     <div class="modal-header">
                                                         <h5 class="modal-title"><?= $Siparis_Miktar == null ? 0 : $Siparis_Miktar ?> Kg Siparişten &nbsp
                                                             <i class="bi bi-arrow-right-circle "></i>
-                                                            &nbsp <?= $Stok_Miktar == null ? 0 : $Stok_Miktar ?> Kg Geldi</h5>
+                                                            &nbsp <?= $Stok_Miktar == null ? 0 : $Stok_Miktar ?> Kg Geldi
+                                                        </h5>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                     </div>
                                                     <div class="modal-body row g-3">
 
-                                                        <input type="hidden" class="StokMiktar<?= $id ?>"
-                                                               value="<?= $Stok_Miktar > 0 ? $Stok_Miktar : 0 ?>"/>
+                                                        <input type="hidden" class="StokMiktar<?= $id ?>" value="<?= $Stok_Miktar > 0 ? $Stok_Miktar : 0 ?>" />
 
-                                                        <input type="hidden" class="SipMiktar<?= $id ?>"
-                                                               value="<?= $Siparis_Miktar > 0 ? $Siparis_Miktar : 0 ?>">
+                                                        <input type="hidden" class="SipMiktar<?= $id ?>" value="<?= $Siparis_Miktar > 0 ? $Siparis_Miktar : 0 ?>">
 
                                                         <input type="hidden" class="Sipid<?= $id ?>" value="<?= $Boya_Siparis_ID ?>">
 
@@ -101,8 +105,7 @@ require __DIR__ . '/../controller/VTHataMesaji.php';
 
                                                         <div class="col-md-12">
                                                             <div class="form-floating">
-                                                                <input type="number" class="form-control temizle GirMiktar<?= $id ?>"
-                                                                       required>
+                                                                <input type="number" class="form-control temizle GirMiktar<?= $id ?>" required>
                                                                 <label>Miktar</label>
                                                                 <div class="text-danger MiktarHata Hata"></div>
                                                             </div>
@@ -110,13 +113,12 @@ require __DIR__ . '/../controller/VTHataMesaji.php';
 
                                                         <div class="col-md-12">
                                                             <div class="form-floating">
-                                                                <input type="date" class="form-control T_Tarihi<?= $id ?>"
-                                                                       value="<?php
-                                                                       date_default_timezone_set('Europe/Istanbul');
-                                                                       $tarih = new DateTime("now");
-                                                                       $tarih = date("Y-m-d");
-                                                                       echo $tarih;
-                                                                       ?>">
+                                                                <input type="date" class="form-control T_Tarihi<?= $id ?>" value="<?php
+                                                                                                                                    date_default_timezone_set('Europe/Istanbul');
+                                                                                                                                    $tarih = new DateTime("now");
+                                                                                                                                    $tarih = date("Y-m-d");
+                                                                                                                                    echo $tarih;
+                                                                                                                                    ?>">
                                                                 <label>Teslim Tarihi</label>
                                                             </div>
                                                         </div>
@@ -130,38 +132,43 @@ require __DIR__ . '/../controller/VTHataMesaji.php';
                                                         </form>
                                                     </div>
                                                     <div class="card-footer">
-                                                        <button type="button" class="btn btn-success form-control Gelen"
-                                                                BoyaStokID="<?= $id ?>">Stoğa Ekle
-                                                        </button>
+                                                        <button type="button" class="btn btn-success form-control Gelen" BoyaStokID="<?= $id ?>">Stoğa Ekle</button>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-
-                                        <?php
-                                    }
-                                }
-                                ?>
-                                </tbody>
-                            </table>
-                        </div>
+                                <?php }
+                                } ?>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
-        </section>
-    </main>
-    <script>
-        $('.datatablem').DataTable({
-            order: [[10, 'DESC']],
-            responsive: true,
-            columnDefs: [
-                {"visible": false, "targets": [0, 1, 2, 7, 9]},
-                {targets: "_all", orderable: false},
-            ],
-            pageLength: 100,
-            lengthMenu: [[25, 50, 100, -1], ['25 Adet', '50 Adet', '100 Adet', 'Tümü']],
-        });
-    </script>
+        </div>
+    </section>
+</main>
+<script>
+    $('.datatablem').DataTable({
+        order: [
+            [10, 'DESC']
+        ],
+        responsive: true,
+        columnDefs: [{
+                "visible": false,
+                "targets": [0, 1, 2, 7, 9]
+            },
+            {
+                targets: "_all",
+                orderable: false
+            },
+        ],
+        pageLength: 100,
+        lengthMenu: [
+            [25, 50, 100, -1],
+            ['25 Adet', '50 Adet', '100 Adet', 'Tümü']
+        ],
+    });
+</script>
 <?php
 require __DIR__ . '/ajax.php';
 require __DIR__ . '/../controller/Footer.php';
