@@ -65,7 +65,7 @@
                         'T_Tarihi': T_Tarihi,
                         'Gelen': true,
                     },
-                    error: function (xhr, textStatus, errorThrown) {
+                    error: function (xhr) {
                         alert('Hata: ' + xhr.responseText);
                     },
                     success: function () {
@@ -107,6 +107,38 @@
                     }
                 })
             }
+        });
+
+        $('.iade').click(function (){
+            var ID=$(this).attr("id");
+            var Miktar=$('.KGirMiktar' + ID + '').val();
+            $.ajax({
+                type: 'POST',
+                url: "post.php",
+                data: {'StkID': ID, 'iMiktar': Miktar},
+                error: function (xhr) {
+                    alert('Hata: ' + xhr.responseText);
+                },
+                success: function () {
+                    window.location.assign("BoyaKullanilan.php");
+                }
+            })
+        });
+
+        $('.Emanet').click(function (){
+            var ID=$(this).attr("id");
+            var Miktar=$('.KGirMiktar' + ID + '').val();
+            $.ajax({
+                type: 'POST',
+                url: "post.php",
+                data: {'EStkID': ID, 'EMiktar': Miktar},
+                error: function (xhr) {
+                    alert('Hata: ' + xhr.responseText);
+                },
+                success: function () {
+                    window.location.assign("BoyaKullanilan.php");
+                }
+            })
         });
     });
 </script>

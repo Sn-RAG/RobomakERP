@@ -15,6 +15,8 @@ if (isset($_POST['Sec'])) {
     $Kalinlik = $_POST['Kalinlik'];
     $Kapak = $_POST["Kapak"];
     $Kulp = $_POST["Kulp"];
+    $Tepe = $_POST["Tepe"];
+    $Kutu = $_POST["Kutu"];
 
     $icBoyalar = $_POST["icBoyalar"];
     $DisBoyalar = $_POST["DisBoyalar"];
@@ -33,19 +35,19 @@ if (isset($_POST['Sec'])) {
 
     $Set_Urun_ID = $baglanti->lastInsertId();
     for ($i = 0; $i < count($Adetler); $i++) {
-        $Kaydet = $baglanti->prepare("INSERT INTO set_urun_icerik SET Set_ID= ?, Adet= ?, DisBoya= ?, icBoya= ?, Kapak= ?, Kulp= ?");
-        $Sonuc = $Kaydet->execute(array($Set_ID, $Adetler[$i], $DisBoyalar[$i], $icBoyalar[$i], $Kapak, $Kulp));
+        $Kaydet = $baglanti->prepare("INSERT INTO set_urun_icerik SET Set_ID= ?, Adet= ?, DisBoya= ?, icBoya= ?, Kapak= ?, Kulp= ?, Tepe= ?");
+        $Sonuc = $Kaydet->execute(array($Set_ID, $Adetler[$i], $DisBoyalar[$i], $icBoyalar[$i], $Kapak, $Kulp,$Tepe));
     }
 
     $Set_Urun_icerik_ID = $baglanti->lastInsertId();
 
-    $SetKaydet = $baglanti->prepare("INSERT INTO set_icerik SET Set_Urun_ID= ?, Set_Urun_icerik_ID= ?, Kalinlik= ?, Kullanici_ID= ?");
-    $Sonuc = $SetKaydet->execute(array($Set_Urun_ID, $Set_Urun_icerik_ID, $Kalinlik, $Kullanici));
+    $SetKaydet = $baglanti->prepare("INSERT INTO set_icerik SET Set_Urun_ID= ?, Set_Urun_icerik_ID= ?, Kalinlik= ?, Kutu= ?, Kullanici_ID= ?");
+    $Sonuc = $SetKaydet->execute(array($Set_Urun_ID, $Set_Urun_icerik_ID, $Kalinlik, $Kutu, $Kullanici));
 ############################################
     // Düzenlemek için Kombinasyonu yapılan verinin bütün varyasyonlarını başka bir veri tabanına ekliyoruz sırf ürüne özel düzenlemeler gerçekleştirmek için
 ###############################################
-    $baglanti->query("INSERT INTO set_urunler (Set_Urun_icerik_ID, Set_ID, Urun_ID, icBoya_ID, DisBoya_ID, Kulp_ID, Kapak_ID, Adet)
-                                    SELECT set_urun_icerik.Set_Urun_icerik_ID, view_uretim_setler.Set_ID, view_uretim_setler.Urun_ID, icBoya, DisBoya, Kulp, Kapak, Adet FROM view_uretim_setler 
+    $baglanti->query("INSERT INTO set_urunler (Set_Urun_icerik_ID, Set_ID, Urun_ID, icBoya_ID, DisBoya_ID, Kulp_ID, Kapak_ID, Tepe_ID, Adet)
+                                    SELECT set_urun_icerik.Set_Urun_icerik_ID, view_uretim_setler.Set_ID, view_uretim_setler.Urun_ID, icBoya, DisBoya, Kulp, Kapak, Tepe, Adet FROM view_uretim_setler 
                                         INNER JOIN set_urun_icerik ON view_uretim_setler.Set_ID = set_urun_icerik.Set_ID INNER JOIN set_urun ON view_uretim_setler.Set_ID = set_urun.Set_ID 
                                     WHERE view_uretim_setler.Set_ID = " . $Set_ID . " GROUP BY set_urun_icerik.Set_Urun_icerik_ID, set_urun.Set_Urun_ID");
 
@@ -62,6 +64,19 @@ if (isset($_POST['Sec'])) {
 }elseif (isset($_POST["UrunIDler"])){
     //Ürünleri tutuyoruz.ekle yapılırsa
     $_SESSION["UrunIDler"]=$_POST["UrunIDler"];
+}elseif (isset($_POST["KulpSec"])){
+    //Kulpu tutuyoruz.ekle yapılırsa
+    $_SESSION["KulpSec"]=$_POST["KulpSec"];
+}elseif (isset($_POST["KapakSec"])){
+    //Kapak tutuyoruz.ekle yapılırsa
+    $_SESSION["KapakSec"]=$_POST["KapakSec"];
+}elseif (isset($_POST["TepeSec"])){
+    //Tepe tutuyoruz.ekle yapılırsa
+    $_SESSION["TepeSec"]=$_POST["TepeSec"];
+}elseif (isset($_POST["KalinlikSec"])){
+    //Kalınlınlık ve kutu tutuyoruz.ekle yapılırsa
+    $_SESSION["KalinlikSec"]=$_POST["KalinlikSec"];
+    $_SESSION["KutuSec"]=$_POST["KutuSec"];
 }
 #############################################################################################################################################
 elseif (isset($_POST["Listele"])) {
@@ -106,7 +121,7 @@ elseif (isset($_POST["Listele"])) {
 
                         <input type='hidden' name='kulpu<?= $s["Set_Urun_Duzenle_ID"] ?>'
                                value='<?= $s["Kulp_ID"] ?>'>
-                        Kulp:<?= $s["KulpRenk"] == "" ? "<code>Ayarlanmadı</code>" : "<code class='text-success small'>" . $s["KulpCesidi"] . " > " . $s["KulpRenk"] . "</code>" ?>
+                        Kulp:<?= $s["KulpAdi"] == "" ? "<code>Ayarlanmadı</code>" : "<code class='text-success small'>" . $s["KulpAdi"] . "</code>" ?>
                         <br>
 
                         <input type='hidden' name='adeti<?= $s["Set_Urun_Duzenle_ID"] ?>'

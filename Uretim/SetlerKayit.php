@@ -4,8 +4,8 @@ $page = "Yeni Set";
 require __DIR__ . '/../controller/Header.php';
 require __DIR__ . '/../controller/Db.php';
 require __DIR__ . '/../controller/Kayit.php';
-@$Sec = $_GET["Sec"];
-if (!$_GET){unset($_SESSION["SetAdi"],$_SESSION["UrunIDler"]);}
+if (!$_GET){unset($_SESSION["Set_ID"],$_SESSION["SetAdi"],$_SESSION["UrunIDler"],$_SESSION["KulpSec"],$_SESSION["KapakSec"],$_SESSION["KalinlikSec"],$_SESSION["KutuSec"],$_SESSION["TepeSec"]);}
+
 ?>
     <!-- Stil Dosyası Başka Yerde çağarınca bütün tasarıma etki ediyor-->
     <link href="../assets/css/cbox.css" rel="stylesheet">
@@ -77,7 +77,7 @@ if (!$_GET){unset($_SESSION["SetAdi"],$_SESSION["UrunIDler"]);}
 
                     <h5></h5>
                     <div class="py-3 mb-2">
-                        <a href="Setler.php<?= $Sec == "true" ? '?Sec=true' : "" ?>"
+                        <a href="Setler.php"
                            class="bi-arrow-left btn col-md-2 btn-secondary"> &nbsp;&nbsp;Geri
                             Dön</a>
                     </div>
@@ -172,33 +172,32 @@ if (!$_GET){unset($_SESSION["SetAdi"],$_SESSION["UrunIDler"]);}
                             </div>
 
                             <div class="Sirala">
-                                <div class="card s s1">
+                                <div class="card s1">
                                     <div id="collapsebir" class="collapse show" aria-labelledby="headingOne"
                                          data-bs-parent="#accordionExample">
                                         <div class="card-body">
                                             <div class="row mb-3 py-3">
                                                 <div class="col-md-4">
-                                                    <input type="text" id="SetAdi" class="form-control"
+                                                    <input type="text" id="SetAdi" class="form-control" value="<?=isset($_SESSION["SetAdi"])?$_SESSION["SetAdi"]:""?>"
                                                            placeholder="Set Adı">
                                                 </div>
-                                                <button id="Set" type="button"
-                                                        class="col-md-1 btn btn-primary bi-arrow-right">
-                                                    &nbsp;&nbsp; İleri
-                                                </button>
+                                                <div class="col-md-8">
+                                                    <button id="Set" type="button" class="btn btn-primary bi-arrow-right"> &nbsp İleri</button>
+                                                </div>
                                                 <label id="SetAdiKontrol" class="text-danger"></label>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="card s s2">
+                                <div class="card s2">
                                     <div id="collapseiki" class="collapse" aria-labelledby="headingiki" data-bs-parent="#accordionExample">
 
                                         <div class="card-body">
                                             <div class="d-flex justify-content-between mb-2 py-2">
-                                                <button id="GeriSetAdi" type="button" class="btn btn-secondary col-md-1 bi-arrow-left"> &nbsp Geri</button>
+                                                <button id="GeriSetAdi" type="button" class="btn btn-secondary bi-arrow-left"> &nbsp Geri</button>
                                                 <label id="UrunBos" class="text-danger"></label>
-                                                <button id="UrunSec" type="button" class="btn btn-primary col-md-1 bi-arrow-right"> &nbsp İleri</button>
+                                                <button id="UrunSec" type="button" class="btn btn-primary bi-arrow-right"> &nbsp İleri</button>
                                             </div>
                                             <div class="text-center"><a href="Urun/UrunEkle.php?Setler" type="button" class="btn bg-primary-light btn-outline-dark">&nbsp Ürün Ekle</a></div>
                                             <?php
@@ -236,24 +235,26 @@ if (!$_GET){unset($_SESSION["SetAdi"],$_SESSION["UrunIDler"]);}
                                     </div>
                                 </div>
 
-                                <div class="card s s3">
+                                <div class="card s3">
                                     <div id="collapsebes" class="collapse" aria-labelledby="headingbes"
                                          data-bs-parent="#accordionExample">
                                         <div class="card-body">
                                             <div class="d-flex justify-content-between py-2">
 
-                                                <button id="GeriUrunSec" type="button" class="btn btn-secondary col-md-1 bi-arrow-left"> &nbsp Geri</button>
+                                                <button id="GeriUrunSec" type="button" class="btn btn-secondary bi-arrow-left"> &nbsp Geri</button>
                                                 <div class="col-md-4">
                                                     <div class="input-group">
                                                         <select id='Kulp' class='form-select etkin'>
                                                             <option value="">Kulp Seç</option>
                                                             <?php $kulp=$baglanti->query("SELECT Kulp_ID, KulpAdi FROM kulp GROUP BY KulpAdi")->fetchAll();
-                                                            foreach ($kulp as $s){echo"<option value='$s[Kulp_ID]'>$s[KulpAdi]</option>";}?>
+                                                            foreach ($kulp as $s){?>
+                                                                <option <?=isset($_SESSION["KulpSec"])?($_SESSION["KulpSec"]==$s["Kulp_ID"]?"selected":""):""?> value="<?=$s["Kulp_ID"]?>"><?=$s["KulpAdi"]?></option>
+                                                            <?php } ?>
                                                         </select>
                                                         <a href="../SatinAlma/Siparis/KulpSiparis.php?Setler" type="button" class="input-group-text bi-chevron-left bg-primary-light btn-outline-dark">&nbsp Ekle</a>
                                                     </div>
                                                 </div>
-                                                <button id="KulpSec" type="button" class="col-md-1 btn btn-primary bi-arrow-right"> &nbsp İleri </button>
+                                                <button id="KulpSec" type="button" class="btn btn-primary bi-arrow-right"> &nbsp İleri </button>
 
                                             </div>
                                             <label class="text-danger text-center col-md-12 KulpSecmedin"></label>
@@ -261,24 +262,26 @@ if (!$_GET){unset($_SESSION["SetAdi"],$_SESSION["UrunIDler"]);}
                                     </div>
                                 </div>
 
-                                <div class="card s s4">
+                                <div class="card s4">
                                     <div id="collapsealti" class="collapse" aria-labelledby="headingalti"
                                          data-bs-parent="#accordionExample">
                                         <div class="card-body">
                                             <div class="d-flex justify-content-between py-2">
 
-                                                <button id="GeriKulpSec" type="button" class="btn btn-secondary col-md-1 bi-arrow-left"> &nbsp Geri</button>
+                                                <button id="GeriKulpSec" type="button" class="btn btn-secondary bi-arrow-left"> &nbsp Geri</button>
                                                 <div class="col-md-4">
                                                     <div class="input-group">
                                                         <select id='Kapak' class='form-select etkin'>
                                                             <option value="">Kapak Seç</option>
                                                             <?php $kapak=$baglanti->query("SELECT Kapak_ID, Model_Adi FROM kapak GROUP BY Model_Adi")->fetchAll();
-                                                            foreach ($kapak as $s){echo"<option value='$s[Kapak_ID]'>$s[Model_Adi]</option>";}?>
+                                                            foreach ($kapak as $s){ ?>
+                                                                <option <?=isset($_SESSION["KapakSec"])?($_SESSION["KapakSec"]==$s["Kapak_ID"]?"selected":""):""?> value="<?=$s["Kapak_ID"]?>"><?=$s["Model_Adi"]?></option>
+                                                            <?php }?>
                                                         </select>
                                                         <a href="../SatinAlma/Siparis/KapakSiparis.php?Setler" type="button" class="input-group-text bi-chevron-left bg-primary-light btn-outline-dark">&nbsp Ekle</a>
                                                     </div>
                                                 </div>
-                                                <button id="KapakSec" type="button" class="col-md-1 btn btn-primary bi-arrow-right"> &nbsp İleri </button>
+                                                <button id="KapakSec" type="button" class="btn btn-primary bi-arrow-right"> &nbsp İleri </button>
 
                                             </div>
                                             <label class="text-danger text-center col-md-12 KapakSecmedin"></label>
@@ -286,24 +289,26 @@ if (!$_GET){unset($_SESSION["SetAdi"],$_SESSION["UrunIDler"]);}
                                     </div>
                                 </div>
 
-                                <div class="card s s5">
+                                <div class="card s5">
                                     <div id="collapseyedi" class="collapse" aria-labelledby="headingyedi"
                                          data-bs-parent="#accordionExample">
                                         <div class="card-body">
                                             <div class="d-flex justify-content-between py-2">
 
-                                                <button id="GeriKapakSec" type="button" class="btn btn-secondary col-md-1 bi-arrow-left"> &nbsp Geri</button>
+                                                <button id="GeriKapakSec" type="button" class="btn btn-secondary bi-arrow-left"> &nbsp Geri</button>
                                                 <div class="col-md-4">
                                                     <div class="input-group">
                                                         <select id='Tepe' class='form-select etkin'>
                                                             <option value="">Tepe Seç</option>
-                                                            <?php $kulp=$baglanti->query("SELECT Tepe_ID, TepeAdi FROM tepe GROUP BY TepeAdi")->fetchAll();
-                                                            foreach ($kulp as $s){echo"<option value='$s[Tepe_ID]'>$s[TepeAdi]</option>";}?>
+                                                            <?php $Tepe=$baglanti->query("SELECT Tepe_ID, TepeAdi FROM tepe GROUP BY TepeAdi")->fetchAll();
+                                                            foreach ($Tepe as $s) { ?>
+                                                            <option <?=isset($_SESSION["TepeSec"])?($_SESSION["TepeSec"]==$s["Tepe_ID"]?"selected":""):""?> value="<?=$s["Tepe_ID"]?>"><?=$s["TepeAdi"]?></option>
+                                                            <?php }?>
                                                         </select>
-                                                        <a type="button" class="input-group-text bi-chevron-left bg-primary-light btn-outline-dark">&nbsp Ekle</a>
+                                                        <a href="../SatinAlma/Siparis/TepeSiparis.php?Setler" type="button" class="input-group-text bi-chevron-left bg-primary-light btn-outline-dark">&nbsp Ekle</a>
                                                     </div>
                                                 </div>
-                                                <button id="TepeSec" type="button" class="col-md-1 btn btn-primary bi-arrow-right"> &nbsp İleri </button>
+                                                <button id="TepeSec" type="button" class="btn btn-primary bi-arrow-right"> &nbsp İleri </button>
 
                                             </div>
                                             <label class="text-danger text-center col-md-12 KulpSecmedin"></label>
@@ -311,24 +316,32 @@ if (!$_GET){unset($_SESSION["SetAdi"],$_SESSION["UrunIDler"]);}
                                     </div>
                                 </div>
 
-                                <div class="card s s6">
+                                <div class="card s6">
                                     <div id="collapsesekiz" class="collapse" aria-labelledby="headingsekiz"
                                          data-bs-parent="#accordionExample">
                                         <div class="card-body row">
                                             <div class="d-flex justify-content-between py-2">
-                                                <button id="GeriTepeSec" type="button" class="btn btn-secondary col-md-1 bi-arrow-left"> &nbsp Geri</button>
+                                                <button id="GeriTepeSec" type="button" class="btn btn-secondary bi-arrow-left"> &nbsp Geri</button>
                                                 <label class="text-danger text-center col-md-10 SecimlerHata"></label>
-                                                <button id="Secimler" type="button" class="col-md-1 btn btn-primary bi-arrow-right"> &nbsp İleri </button>
+                                                <button id="Secimler" type="button" class="btn btn-primary bi-arrow-right"> &nbsp İleri </button>
                                             </div>
                                             <div class="d-flex justify-content-center py-2">
                                                 <div class="col-md-4 me-3">
                                                     <div class="input-group">
                                                         <select id='Kutu' class='form-select etkin'>
-                                                            <option value="">* Kutu Seç</option>
-                                                            <option value="Sarı kutu">Sarı kutu</option>
-                                                            <option value="Ofset kutu">Ofset kutu</option>
+                                                            <?php
+                                                            @$Kutu=$_SESSION["KutuSec"];
+                                                            if (isset($Kutu)){?>
+                                                                <option value='<?=$Kutu?>'><?=$Kutu?></option>
+                                                                <option value='Sarı kutu'>Sarı kutu</option>
+                                                                <option value='Ofset kutu'>Ofset kutu</option>
+                                                            <?php }else{ ?>
+                                                                <option value=''>* Kutu Seç</option>
+                                                                <option value='Sarı kutu'>Sarı kutu</option>
+                                                                <option value='Ofset kutu'>Ofset kutu</option>
+                                                            <?php }?>
                                                         </select>
-                                                        <a type="button" class="input-group-text bi-chevron-left bg-primary-light btn-outline-dark">&nbsp Ekle</a>
+                                                        <a href="../SatinAlma/Siparis/KutuSiparis.php?Setler" type="button" class="input-group-text bi-chevron-left bg-primary-light btn-outline-dark">&nbsp Ekle</a>
                                                     </div>
                                                 </div>
 
@@ -337,9 +350,11 @@ if (!$_GET){unset($_SESSION["SetAdi"],$_SESSION["UrunIDler"]);}
                                                         <select id='Kalinlik' class='form-select'>
                                                             <option value="">* Kalınlık Seç</option>
                                                             <?php $Kalinlik = $baglanti->query("SELECT DISTINCT Kalinlik FROM levha ORDER BY Kalinlik ASC");
-                                                            foreach ($Kalinlik as $s){echo"<option value='$s[Kalinlik]'>$s[Kalinlik]</option>";}?>
+                                                            foreach ($Kalinlik as $s){ ?>
+                                                            <option <?=isset($_SESSION["KalinlikSec"])?($_SESSION["KalinlikSec"]==$s["Kalinlik"]?"selected":""):""?> value="<?=$s["Kalinlik"]?>"><?=$s["Kalinlik"]?></option>
+                                                            <?php }?>
                                                         </select>
-                                                        <a type="button" class="input-group-text bi-chevron-left bg-primary-light btn-outline-dark">&nbsp Ekle</a>
+                                                        <a href="../SatinAlma/Siparis/LevhaSiparis.php?Setler" type="button" class="input-group-text bi-chevron-left bg-primary-light btn-outline-dark">&nbsp Ekle</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -347,29 +362,34 @@ if (!$_GET){unset($_SESSION["SetAdi"],$_SESSION["UrunIDler"]);}
                                     </div>
                                 </div>
 
-                                <div class="card s s7">
+                                <div class="card s7">
                                     <div id="collapsedort" class="collapse" aria-labelledby="headingdort"
                                          data-bs-parent="#accordionExample">
                                         <div class="card-body">
                                             <div class="d-flex justify-content-between py-2">
-                                                <button id="GeriSecimler" type="button" class="btn btn-secondary col-md-1 bi-arrow-left"> &nbsp Geri</button>
+                                                <button id="GeriSecimler" type="button" class="btn btn-secondary bi-arrow-left"> &nbsp Geri</button>
+                                                <a href="../SatinAlma/Siparis/BoyaSiparis.php?Setler" class="btn btn-outline-dark bi-brush"> &nbsp Boya Ekle</a>
                                                 <div class="text-danger Fazlainput"></div>
-                                                <button id="SetTamam" type="button" class="btn btn-primary col-md-1  bi-arrow-right"> &nbsp İleri</button>
+                                                <button id="SetTamam" type="button" class="btn btn-primary bi-arrow-right"> &nbsp İleri</button>
                                             </div>
-                                            <div class="py-3" border="">
+                                            <div class="py-3">
                                                 <div class="inputlar">
                                                     <div class="form-group row g-3 mb-3">
                                                         <div class="col-md-4">
                                                             <select name='icBoyalar' class='form-select icBoyalar'>
                                                                 <option value=''>* İç Boya Seç</option>
                                                                 <?php $boya = $baglanti->query("SELECT Boya_ID, Renk FROM boya GROUP BY Renk")->fetchAll();
-                                                                foreach ($boya as $s){echo"<option value='$s[Boya_ID]'>$s[Renk]</option>";}?>
+                                                                foreach ($boya as $s){ ?>
+                                                                <option <?=isset($_SESSION["icBoyaSec"])?($_SESSION["icBoyaSec"]==$s["Boya_ID"]?"selected":""):""?> value="<?=$s["Boya_ID"]?>"><?=$s["Renk"]?></option>
+                                                                <?php }?>
                                                             </select>
                                                         </div>
                                                         <div class="col-md-4">
                                                             <select name='DisBoyalar' class='form-select DisBoyalar'>
                                                                 <option value=''>* Dış Boya Seç</option>
-                                                                <?php foreach ($boya as $s){echo "<option value='$s[Boya_ID]'>$s[Renk]</option>";}?>
+                                                                <?php foreach ($boya as $s){ ?>
+                                                                    <option <?=isset($_SESSION["DisBoyaSec"])?($_SESSION["DisBoyaSec"]==$s["Boya_ID"]?"selected":""):""?> value="<?=$s["Boya_ID"]?>"><?=$s["Renk"]?></option>
+                                                                <?php }?>
                                                             </select>
                                                         </div>
                                                         <div class="col-md-3">
@@ -377,13 +397,13 @@ if (!$_GET){unset($_SESSION["SetAdi"],$_SESSION["UrunIDler"]);}
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <button class="col-md-1 btn btn-success mb-3 input-ekle">Ekle</button>
+                                                <button class="btn btn-success mb-3 input-ekle bi-plus-lg"></button>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="card s s8">
+                                <div class="card s8">
                                     <div id="collapseuc" class="collapse" aria-labelledby="headingThree"
                                          data-bs-parent="#accordionExample">
                                         <div class="card-body">
@@ -438,13 +458,12 @@ if (!$_GET){unset($_SESSION["SetAdi"],$_SESSION["UrunIDler"]);}
                                                                             class="btn btn-success me-3 etkin" hidden
                                                                             disabled>Ürün Düzenle
                                                                     </button>
-                                                                    <a href="Setler.php<?= $Sec == "true" ? '?Sec=true' : "" ?>"
-                                                                       class="btn col-md-2 btn-primary me-3">Kaydet</a>
+                                                                    <a href="Yazdir.php?SetAdi=<?=@$_SESSION["SetAdi"]?>" class="btn col-md-2 btn-primary me-3">Kaydet</a>
+                                                                    <a href="Yazdir.php?Levha" class="btn col-md-2 btn-primary me-3">Levha Hesapla</a>
                                                                     <div class="col-md-3 row me-3">
                                                                         <label class="col-sm-4 col-form-label">Adet</label>
                                                                         <div class="col-sm-8">
-                                                                            <input type="number" name="Adet"
-                                                                                   class="form-control etkin" disabled>
+                                                                            <input type="number" name="Adet" class="form-control etkin" disabled>
                                                                         </div>
                                                                     </div>
                                                                 </div>

@@ -1,5 +1,13 @@
 <?php
-require __DIR__."/Nav.php";
+$kisa="document.querySelector";
+@$Urunler=$_GET["Urunler"];
+@$Kulp=$_GET["Kulp"];
+@$Kapak=$_GET["Kapak"];
+@$Tepe=$_GET["Tepe"];
+@$Secimler=$_GET["Secimler"];
+@$Seticerigi=$_GET["Seticerigi"];
+$SorAc=isset($Urunler)?"iki":(isset($Kulp)?"bes":(isset($Kapak)?"alti":(isset($Tepe)?"yedi":(isset($Secimler)?"sekiz":(isset($Seticerigi)?"dort":"")))));
+$SorSira=isset($Urunler)?"s2":(isset($Kulp)?"s3":(isset($Kapak)?"s4":(isset($Tepe)?"s5":(isset($Secimler)?"s6":(isset($Seticerigi)?"s7":"")))));
 ?>
 <script>
     $(function () {
@@ -61,14 +69,12 @@ require __DIR__."/Nav.php";
 
 //#####    ########    ##########    ########    ##########    ########    ##########    ########    ##########    ########    ##########    ########    #####
         // Yapılan iş Bu kısımda navigasyonlarda veriyi hem kaybetmemek hem kaldığı yerden devam etmesi için
-        <?php
-        @$Urunler=$_GET["Urunler"];
-        @$Kulp=$_GET["Kulp"];
-        @$Kapak=$_GET["Kapak"];
-        $SorAc=isset($Urunler)?"iki":(isset($Kulp)?"bes":(isset($Kapak)?"alti":""));
-        $SorSira=isset($Urunler)?"s2":(isset($Kulp)?"s3":(isset($Kapak)?"s4":""));
-        $Calistir=isset($Urunler)||isset($Kulp)||isset($Kapak)?"$.Urunler();":"";
-        ?>
+
+
+        $.Sirala=function (deneme,abc){
+            var ustDiv = <?=$kisa?>(".Sirala");
+            ustDiv.insertBefore(deneme, abc);
+        };
         $.Urunler=function () {
             $("#bir").addClass('collapsed');
             $("#collapsebir").removeClass('show');
@@ -80,15 +86,11 @@ require __DIR__."/Nav.php";
 
             //Sıralama
             var a = <?=$kisa?>(".<?=$SorSira?>");
-            var b = <?=$kisa?>(".collapsed");
+            var b = <?=$kisa?>(".s1");
             $.Sirala(a,b);
-            //Set adı varsa yazdırıyoruz.
-            $("#SetAdi").val(<?=isset($_SESSION["SetAdi"])?$_SESSION["SetAdi"]:""?>);
         }
-        <?=$Calistir?>
-
+        <?=isset($Urunler)||isset($Kulp)||isset($Kapak)||isset($Tepe)||isset($Secimler)||isset($Seticerigi)?"$.Urunler();":""?>
     });
-
 //#####    ########    ##########    ########    ##########    ########    ##########    ########    ##########    ########    ##########    ########    #####
 
     $("#Set").click(function () {
@@ -101,7 +103,7 @@ require __DIR__."/Nav.php";
                 type: "POST",
                 url: "AjaxForm/post.php",
                 data: {
-                    'SetAdiKontrol': $.trim(SetAdi),
+                    'SetAdiKontrol': $.trim(SetAdi).toString(),
                 },
                 error: function (xhr) {
                     alert('Hata: ' + xhr.responseText);
@@ -117,7 +119,9 @@ require __DIR__."/Nav.php";
                         $("#collapseiki").addClass('show');
                         $("#iki").attr('aria-expanded', true);
 
-                        $.Setadi();
+                        var a = <?=$kisa?>(".s1");
+                        var b = <?=$kisa?>(".s8");
+                        $.Sirala(a,b);
                     }
                 }
             })
@@ -142,7 +146,9 @@ require __DIR__."/Nav.php";
             $("#collapsebes").addClass('show');
             $("#bes").attr('aria-expanded', true);
 
-            $.UrunSec();
+            var a = <?=$kisa?>(".s2");
+            var b = <?=$kisa?>(".s8");
+            $.Sirala(a,b);
 
             $.ajax({
                 type: "POST",
@@ -160,7 +166,9 @@ require __DIR__."/Nav.php";
         $("#collapsebir").addClass('show');
         $("#bir").attr('aria-expanded', true);
 
-        $.GeriSetadi();
+        var a = <?=$kisa?>(".s1");
+        var b = <?=$kisa?>(".s2");
+        $.Sirala(a,b);
     });
     //#####################################################
     $("#KulpSec").click(function () {
@@ -175,12 +183,19 @@ require __DIR__."/Nav.php";
             $("#collapsebes").removeClass('show');
             $("#bes").removeAttr("aria-expanded");
 
-
             $("#alti").removeClass('collapsed');
             $("#collapsealti").addClass('show');
             $("#alti").attr('aria-expanded', true);
 
-            $.KulpSec();
+            var a = <?=$kisa?>(".s3");
+            var b = <?=$kisa?>(".s8");
+            $.Sirala(a,b);
+
+            $.ajax({
+                type: "POST",
+                url: "AjaxForm/post.php",
+                data: {'KulpSec': Kulp}
+            })
         }
     });
     $("#KapakSec").click(function () {
@@ -200,8 +215,15 @@ require __DIR__."/Nav.php";
             $("#collapseyedi").addClass('show');
             $("#yedi").attr('aria-expanded', true);
 
-            $.KapakSec();
+            var a = <?=$kisa?>(".s4");
+            var b = <?=$kisa?>(".s8");
+            $.Sirala(a,b);
 
+            $.ajax({
+                type: "POST",
+                url: "AjaxForm/post.php",
+                data: {'KapakSec': Kapak}
+            })
         }
     });
     $("#TepeSec").click(function () {
@@ -220,7 +242,15 @@ require __DIR__."/Nav.php";
             $("#collapsesekiz").addClass('show');
             $("#sekiz").attr('aria-expanded', true);
 
-            $.TepeSec();
+            var a = <?=$kisa?>(".s5");
+            var b = <?=$kisa?>(".s8");
+            $.Sirala(a,b);
+
+            $.ajax({
+                type: "POST",
+                url: "AjaxForm/post.php",
+                data: {'TepeSec': Tepe}
+            })
         }
     });
     $("#Secimler").click(function () {
@@ -241,7 +271,14 @@ require __DIR__."/Nav.php";
             $("#collapsedort").addClass('show');
             $("#dort").attr('aria-expanded', true);
 
-            $.Secimler();
+            var a = <?=$kisa?>(".s6");
+            var b = <?=$kisa?>(".s8");
+            $.Sirala(a,b);
+            $.ajax({
+                type: "POST",
+                url: "AjaxForm/post.php",
+                data: {'KutuSec': Kutu,'KalinlikSec': Kalinlik}
+            })
         }
     });
     $("#GeriSecimler").click(function () {
@@ -321,6 +358,8 @@ require __DIR__."/Nav.php";
         var Kalinlik = $("#Kalinlik").val();
         var Kapak = $("#Kapak").val();
         var Kulp = $("#Kulp").val();
+        var Tepe = $("#Tepe").val();
+        var Kutu = $("#Kutu").val();
 
 
         var UrunIDler = [];
@@ -367,6 +406,8 @@ require __DIR__."/Nav.php";
                                 'Kalinlik': Kalinlik,
                                 'Kapak': Kapak,
                                 'Kulp': Kulp,
+                                'Tepe': Tepe,
+                                'Kutu': Kutu,
                                 'icBoyalar': icBoyalar,
                                 'DisBoyalar': DisBoyalar,
                                 'Adetler': Adetler,

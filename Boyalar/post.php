@@ -102,4 +102,17 @@ if (isset($_POST['Gelen'])) {
         $Kaydet = $baglanti->prepare("INSERT INTO boya_giden SET Boya_Stok_ID= ?, Kullanilan_Miktar= ?, Gidis_Tarihi= ?, Kullanici_ID= ?");
         $Kaydet->execute(array($Boya_Stok_ID, $TplMevcutMiktar, $K_Tarihi, $Kullanici));
     }
+}elseif (isset($_POST["StkID"])){
+    $S=$_POST["StkID"];
+    $M=$_POST["iMiktar"];
+    $k=$baglanti->prepare("UPDATE boya_stok SET Siparis_Miktar=Siparis_Miktar-?,iade_Miktar= ? WHERE Boya_Stok_ID= ?");
+    $k->execute(array($M,$M,$S));
+
+}elseif (isset($_POST["EStkID"])){
+    $S=$_POST["EStkID"];
+    $M=$_POST["EMiktar"];
+
+    $k = $baglanti->prepare("UPDATE boya_stok SET Siparis_Miktar=Siparis_Miktar-?,Emanet_Miktar= ? WHERE Boya_Stok_ID= ?");
+    $k->execute(array($M, $M, $S));
+
 }
