@@ -477,7 +477,6 @@ if (!$_GET){unset($_SESSION["Set_ID"],$_SESSION["SetAdi"],$_SESSION["UrunIDler"]
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>

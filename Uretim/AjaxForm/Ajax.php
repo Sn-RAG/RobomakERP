@@ -65,7 +65,10 @@ $SorSira=isset($Urunler)?"s2":(isset($Kulp)?"s3":(isset($Kapak)?"s4":(isset($Tep
         $("#iki").attr("disabled", "");
         $("#uc").attr("disabled", "");
         $("#dort").attr("disabled", "");
-        $("#bes").attr("disabled", "");*/
+        $("#bes").attr("disabled", "");
+        $("#alti").attr("disabled", "");
+        $("#yedi").attr("disabled", "");
+        $("#sekiz").attr("disabled", "");*/
 
 //#####    ########    ##########    ########    ##########    ########    ##########    ########    ##########    ########    ##########    ########    #####
         // Yapılan iş Bu kısımda navigasyonlarda veriyi hem kaybetmemek hem kaldığı yerden devam etmesi için

@@ -46,11 +46,13 @@ if (isset($_POST['Sec'])) {
 ############################################
     // Düzenlemek için Kombinasyonu yapılan verinin bütün varyasyonlarını başka bir veri tabanına ekliyoruz sırf ürüne özel düzenlemeler gerçekleştirmek için
 ###############################################
-    $baglanti->query("INSERT INTO set_urunler (Set_Urun_icerik_ID, Set_ID, Urun_ID, icBoya_ID, DisBoya_ID, Kulp_ID, Kapak_ID, Tepe_ID, Adet)
-                                    SELECT set_urun_icerik.Set_Urun_icerik_ID, view_uretim_setler.Set_ID, view_uretim_setler.Urun_ID, icBoya, DisBoya, Kulp, Kapak, Tepe, Adet FROM view_uretim_setler 
-                                        INNER JOIN set_urun_icerik ON view_uretim_setler.Set_ID = set_urun_icerik.Set_ID INNER JOIN set_urun ON view_uretim_setler.Set_ID = set_urun.Set_ID 
-                                    WHERE view_uretim_setler.Set_ID = " . $Set_ID . " GROUP BY set_urun_icerik.Set_Urun_icerik_ID, set_urun.Set_Urun_ID");
-
+          
+$baglanti->query("INSERT INTO set_urunler (Set_Urun_icerik_ID, Set_ID, Urun_ID, icBoya_ID, DisBoya_ID, Kulp_ID, Kapak_ID, Tepe_ID, Adet) 
+SELECT set_urun_icerik.Set_Urun_icerik_ID, set_urun.Set_ID, set_urun.Urun_ID, icBoya, DisBoya, Kulp, Kapak, Tepe, Adet 
+FROM view_uretim_setler 
+INNER JOIN set_urun_icerik ON view_uretim_setler.Set_ID = set_urun_icerik.Set_ID 
+INNER JOIN set_urun ON view_uretim_setler.Set_ID = set_urun.Set_ID 
+WHERE view_uretim_setler.Set_ID = " . $Set_ID . " GROUP BY set_urun_icerik.Set_Urun_icerik_ID, set_urun.Set_Urun_ID");
 #############################################################################################################################################
 }elseif (isset($_POST["SetAdiKontrol"])){
     $SetVarmi = $baglanti->prepare("SELECT * FROM `set` WHERE SetAdi=?");
@@ -85,14 +87,15 @@ elseif (isset($_POST["Listele"])) {
 
     $sor = $baglanti->query("SELECT * FROM view_set_urun_sec WHERE Set_ID=" . (int)$_SESSION["Set_ID"]);
     foreach ($sor as $s) {
+        $sor2 = $baglanti->query("SELECT * FROM urun WHERE Urun_ID=" . $s["Urun_ID"]);
+        foreach ($sor2 as $s2) {
         ?>
-
         <button class="btn col-md-2 me-2" type="button" name="Urunler"
                 Set_Urun_Duzenle_ID="<?= $s["Set_Urun_Duzenle_ID"] ?>">
             <div class="card2__body">
                 <div class="card2__body-cover">
                     <img class="card2__body-cover-image"
-                         src="../assets/img/Keksan/<?= $s["UrunFoto"] == "yok" || $s["UrunFoto"] == "" || $s["UrunFoto"] == null ? "" : $s["UrunFoto"] ?>">
+                         src="../assets/img/Keksan/<?= $s2["UrunFoto"] == "yok" || $s2["UrunFoto"] == "" || $s2["UrunFoto"] == null ? "" : $s2["UrunFoto"] ?>">
                     <span class="card2__body-cover-checkbox">
                         <svg class="card2__body-cover-checkbox--svg" viewBox="0 0 12 10">
                             <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
@@ -100,7 +103,7 @@ elseif (isset($_POST["Listele"])) {
                     </span>
                 </div>
                 <header class="card2__body-header">
-                    <h2 class="card2__body-header-title"><?= $s["UrunAdi"] ?></h2>
+                    <h2 class="card2__body-header-title"><?= $s2["UrunAdi"] ?></h2>
                     <p class="card2__body-header-subtitle small">
                         <?php
                         $icBoya = $baglanti->query("SELECT Boya_ID, Renk FROM set_urunler INNER JOIN boya ON set_urunler.icBoya_ID = boya.Boya_ID WHERE Boya_ID=" . $s["icBoya_ID"] . " GROUP BY Renk");
@@ -134,7 +137,7 @@ elseif (isset($_POST["Listele"])) {
         </button>
 
         <?php
-    }
+    }}
     ?>
     <script>
         $("button[name=Urunler]").click(function () {

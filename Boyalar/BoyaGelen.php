@@ -24,6 +24,7 @@ require __DIR__ . '/../controller/VTHataMesaji.php';
                                     <th>Marka</th>
                                     <th>Renk</th>
                                     <th>Seri</th>
+                                    <th>Kod</th>
                                     <th>UT</th>
                                     <th>Teslim Tarihi</th>
                                     <th>Sipariş</th>
@@ -36,7 +37,7 @@ require __DIR__ . '/../controller/VTHataMesaji.php';
                                 if (isset($_GET["Gecmis"])) {
                                     $gor = "Siparis_Miktar=0";
                                 } else {
-                                    $gor = "Siparis_Miktar<>0";
+                                    $gor = "Siparis_Miktar>0";
                                 }
                                 $sorgu = $baglanti->query("SELECT * FROM view_siparis_boya WHERE " . $gor . "");
                                 foreach ($sorgu as $sonuc) {
@@ -46,6 +47,7 @@ require __DIR__ . '/../controller/VTHataMesaji.php';
                                     $Marka = $sonuc['Marka'];
                                     $Renk = $sonuc['Renk'];
                                     $Seri = $sonuc['Seri'];
+                                    $Kod = $sonuc['Kod'];
                                     $UT = $sonuc['Uretim_T'];
                                     $SKT = $sonuc['S_K_T'];
                                     $Siparis_Miktar = $sonuc['Siparis_Miktar'];
@@ -62,6 +64,7 @@ require __DIR__ . '/../controller/VTHataMesaji.php';
                                             <td><?= $Siparis_Miktar < 1 ? "<span class='text-black-50'>" . $Marka . "</span>" : $Marka ?></td>
                                             <td><?= $Siparis_Miktar < 1 ? "<span class='text-black-50'>" . $Renk . "</span>" : $Renk ?></td>
                                             <td><?= $Siparis_Miktar < 1 ? "<span class='text-black-50'>" . $Seri . "</span>" : $Seri ?></td>
+                                            <td><?= $Siparis_Miktar < 1 ? "<span class='text-black-50'>" . $Kod . "</span>" : $Kod ?></td>
                                             <td><?= $UT ?></td>
                                             <td><?= $Siparis_Miktar < 1 ? "<span class='text-black-50'>" . $T_Tarihi . "</span>" : $T_Tarihi ?></td>
                                             <td><?= $Siparis_Miktar < 1 ? "<span class='text-black-50'>Tamamlandı</span>" : $Siparis_Miktar . " Kg" ?></td>
@@ -86,14 +89,6 @@ require __DIR__ . '/../controller/VTHataMesaji.php';
                                                         <input type="hidden" class="SipMiktar<?= $id ?>" value="<?= $Siparis_Miktar > 0 ? $Siparis_Miktar : 0 ?>">
 
                                                         <input type="hidden" class="Sipid<?= $id ?>" value="<?= $Boya_Siparis_ID ?>">
-
-                                                        <div class="col-md-12">
-                                                            <div class="form-floating">
-                                                                <input class="form-control" value="<?= $sonuc['Kod'] ?>" disabled>
-                                                                <label>Kod</label>
-                                                                <div class="text-danger MiktarHata Hata"></div>
-                                                            </div>
-                                                        </div>
 
                                                         <div class="col-md-12">
                                                             <div class="form-floating">
@@ -150,18 +145,16 @@ require __DIR__ . '/../controller/VTHataMesaji.php';
 <script>
     $('.datatablem').DataTable({
         order: [
-            [10, 'DESC']
+            [11, 'DESC']
         ],
         responsive: true,
         columnDefs: [{
-                "visible": false,
-                "targets": [0, 1, 2, 7, 9]
-            },
-            {
-                targets: "_all",
-                orderable: false
-            },
-        ],
+            "visible": false,
+            "targets": [0, 1, 2, 8, 10]
+        }, {
+            targets: "_all",
+            orderable: false
+        }],
         pageLength: 100,
         lengthMenu: [
             [25, 50, 100, -1],
