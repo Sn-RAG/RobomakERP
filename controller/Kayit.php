@@ -130,23 +130,19 @@ if (isset($_POST['FirmaEkle'])) {
 //#######################################################################        SİPARİŞ İŞLEMLERİ      ##########################################################################################
 //---------------------------------------Sipariş GİDEN Ekle
 if (isset($_POST['Teklifver'])) {
-    $Firma_ID = $_POST['Firma_ID'];
-    $Teslim_Tarihi = $_POST['Teslim_Tarihi'];
-
     $Say = $baglanti->query("SELECT COUNT(*) AS S_No FROM view_teklifler");
     $SNo = $Say->fetch()['S_No'];
     $SNo++;
-
-
-    for ($i = 0; $i < count($Setler_IDler); $i++) {
-        $Kaydet = $baglanti->prepare("INSERT INTO teklif_setler SET S_No= ?, Firma_ID= ?, Uretim_Setler_ID= ?, Adet= ?");
-        $Sonuc = $Kaydet->execute(array($SNo, $Firma_ID, $Setler_IDler[$i], $Adetler[$i]));
+    for ($i = 0; $i < count($_SESSION["Setler"]); $i++) {
+        $Kaydet = $baglanti->prepare("INSERT INTO teklif_setler SET S_No= ?, Firma_ID= ?, Set_icerik_ID= ?, Adet= ?");
+        $Sonuc = $Kaydet->execute(array($SNo, $_SESSION["FirmaID"], $_SESSION["Setler"][$i], $_SESSION["Adetler"][$i]));
     }
 
     $id = $baglanti->lastInsertId();
 
     $Kaydet = $baglanti->prepare("INSERT INTO teklifler SET Teklif_Set_ID= ?, Teslim_Tarihi= ?, Kullanici_ID= ?");
-    $Sonuc = $Kaydet->execute(array($id, $Teslim_Tarihi, $Kullanici));
+    $Sonuc = $Kaydet->execute(array($id, $_POST['Teslim_Tarihi'], $Kullanici));
+    unset($_SESSION["Setler"],$_SESSION["Adetler"],$_SESSION["FirmaID"]);
     header("location:Teklifler.php");
 }
 

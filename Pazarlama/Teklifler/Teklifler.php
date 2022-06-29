@@ -30,9 +30,9 @@ unset($_SESSION["SeticerikID"], $_SESSION["Setler"], $_SESSION["FirmaID"], $_SES
 
                                 <hr>
 
-                                <table class="table table-borderless datatable">
+                                <table class="table table-bordered datatable">
                                     <thead>
-                                    <tr>
+                                    <tr class="table-light">
                                         <th scope="col">Firma</th>
                                         <th scope="col" class="text-center">Setler</th>
                                         <th scope="col">Teslim Tarihi</th>
@@ -46,7 +46,7 @@ unset($_SESSION["SeticerikID"], $_SESSION["Setler"], $_SESSION["FirmaID"], $_SES
                                         $id = $sonuc['Teklif_ID'];
                                         $Firma_ID = $sonuc['Firma_ID'];
                                         $Teklif_Set_ID = $sonuc['Teklif_Set_ID'];
-                                        $Uretim_Setler_ID = $sonuc['Uretim_Setler_ID'];
+                                        $Uretim_Setler_ID = $sonuc['Set_icerik_ID'];
                                         $Set_ID = $sonuc['Set_ID'];
                                         $SetAdi = $sonuc['SetAdi'];
                                         $Adet = $sonuc['Adet'];
@@ -81,7 +81,7 @@ unset($_SESSION["SeticerikID"], $_SESSION["Setler"], $_SESSION["FirmaID"], $_SES
                                                         ?>
                                                         <li class='list-group-item d-flex justify-content-between align-items-start'>
                                                             <div class='ms-2 me-auto small'>
-                                                                <?= "<button class='btn btn-sm' data-bs-toggle='modal'
+                                                                <?= "<button class='btn btn-sm bg-light' data-bs-toggle='modal'
                                                         data-bs-target='#UrunBilgi$Adi[Set_ID]'>$Adi[SetAdi]</button>" ?>
 
                                                             </div>
@@ -94,18 +94,10 @@ unset($_SESSION["SeticerikID"], $_SESSION["Setler"], $_SESSION["FirmaID"], $_SES
                                             </td>
                                             <td><?= $Teslim_Tarihi ?></td>
                                             <td>
-                                                <button type="button" class="btn btn-info" data-bs-toggle="modal"
-                                                        data-bs-target="#Bilgi<?= $id ?>"><i
-                                                            class="bi bi-info-circle me-1"></i>
+                                                <button type="button" class="btn btn-info bi-info-circle" data-bs-toggle="modal"
+                                                        data-bs-target="#Bilgi<?= $id ?>">
                                                 </button>
-                                                <a href="#" class="btn-group">
-                                                    <button type="button" class="btn btn-warning"><i
-                                                                class="bi bi-pencil-square"></i>
-                                                    </button>
-                                                </a>
-                                                <a href="Teklifler.php?TeklifSil=<?= $id ?>&S_No=<?= $S_No ?>">
-                                                    <button type="button" class="btn btn-danger"><i
-                                                                class="bi bi-x-square"></i></button>
+                                                <a href="Teklifler.php?TeklifSil=<?= $id ?>&S_No=<?= $S_No ?>" class="btn btn-danger bi-x-square">
                                                 </a>
                                             </td>
                                         </tr>

@@ -9,18 +9,6 @@ $Kalinlik = $baglanti->query("SELECT Kalinlik FROM set_icerik INNER JOIN set_uru
         <div class="card">        
             <?php
             if (isset($_GET["Levha"])) { ?>
-            
-                <style>
-                    @media print { 
-                    body * {
-                        visibility: hidden;
-                    }
-                    .yazdir * {
-                        visibility: visible;
-                    }
-                    }
-                </style>
-
                 <div class="card-body">
                     <div class="d-flex align-items-between mb-3 py-3">
                         <h5><?= $_SESSION["SetAdi"] ?> Adlı Setin Levha Hesabı<br></h5>
@@ -41,22 +29,22 @@ $Kalinlik = $baglanti->query("SELECT Kalinlik FROM set_icerik INNER JOIN set_uru
                             <tbody>
                                 <?php
                                 $i = 0;
+                                $Topla=0;
                                 $sor = $baglanti->query("SELECT Urun_ID,Adet FROM view_set_urun_sec WHERE Set_ID=" . $_SESSION["Set_ID"]);
                                 foreach ($sor as $s) {
                                     $i++;
                                     $sor2 = $baglanti->query("SELECT * FROM urun WHERE Urun_ID=" . $s["Urun_ID"]);
                                     foreach ($sor2 as $s2) {
-                                        $cap = $baglanti->query("SELECT Cap FROM view_urun_levha_bilgi WHERE Urun_ID=" . $s["Urun_ID"]);
-                                       
+                                        $cap = $baglanti->query("SELECT Cap FROM urun_levha_bilgi INNER JOIN levha ON urun_levha_bilgi.Levha_ID = levha.Levha_ID WHERE Urun_ID =" . $s["Urun_ID"]." AND Kalinlik =".$Kalinlik)->fetch()["Cap"];
+                                       $AdetKg=ceil((($cap*$cap*$Kalinlik*(0.22))/1000)*$s["Adet"]);
+                                       $Topla+=$AdetKg;
                                 ?>
                                     <tr>
-                                        <td><?= $i ?></td>
-                                        <td><select UrunID="<?=$s["Urun_ID"]?>" adet="<?=$s["Adet"]?>" class="form-select cap" id="cap<?=$s["Urun_ID"]?>"><option value=""></option><?php
-                                         foreach ($cap as $c) {
-                                        ?><option value="<?=$c["Cap"]?>"><?=$c["Cap"]?></option><?php }?></select></td>
+                                        <td><?=$i?></td>
+                                        <td><?=$cap?></td>
                                         <td><?=$Kalinlik?></td>
-                                        <td><?= $s2["UrunAdi"] ?></td>
-                                        <td id="kg<?=$s["Urun_ID"]?>"></td>
+                                        <td><?=$s2["UrunAdi"]?></td>
+                                        <td><?=$AdetKg?></td>
                                         <td></td>
                                     </tr>
                                 <?php }}?>
@@ -65,29 +53,15 @@ $Kalinlik = $baglanti->query("SELECT Kalinlik FROM set_icerik INNER JOIN set_uru
                                     <td></td>
                                     <td></td>
                                     <td></td>
-                                    <td id="sum"></td>
+                                    <td>Toplam= <?=$Topla?> Kg</td>
                                     <td></td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
-                
+                <style>@media print { body * {visibility: hidden;}.yazdir * {visibility: visible;}}</style>
                 <script>
-                   var tpl=0;
-                    $('.cap').change(function(){
-                        var ID= $(this).attr("UrunID");
-                        var adet= $(this).attr("adet");
-                        var sec=$("#cap"+ID+"").val();
-                        var Hesap=Math.ceil(((sec*sec*<?=$Kalinlik?>*(0.22))/1000)*adet);
-                        $("#kg"+ID+"").text(Hesap);
-
-                        $("#kg"+ID+"").each(function(){
-                            tpl += parseInt($(this).text());
-                        });
-                        $("#sum").text("Toplam= "+tpl+" Kg");
-                        $("#cap"+ID+"").prop("disabled",true)
-                    });
                     $("#yazdir").click(function(){
                         window.print();
                     });

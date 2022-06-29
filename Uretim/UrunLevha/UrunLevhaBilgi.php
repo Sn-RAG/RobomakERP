@@ -56,7 +56,7 @@ $UrunID = (int)$_GET['Urun_ID'];
                                         <th hidden><?= $Urun_ID ?></th>
                                         <th hidden><?= $Levha_ID ?></th>
                                         <td><?= $UrunAdi ?></td>
-                                        <td><img src="../../assets/img/Keksan/<?= $UrunFoto ?>"></td>
+                                        <td><img src="../../assets/img/Keksan/<?= $UrunFoto ?>" width="100" height="50"></td>
                                         <td><?= $Tip ?></td>
                                         <td><?= $Cap ?> cm</td>
                                         <td><?= $Kalinlik ?> mm</td>

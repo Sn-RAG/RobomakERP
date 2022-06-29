@@ -203,20 +203,22 @@ require __DIR__ . '/../../controller/Kayit.php';
 
                     <div class="col-md-12">
                         <div class="form-floating">
-                            <input type="text" id="Kalinlik"
-                                   class="form-control">
-                            <label>* Kalınlık</label>
-                        </div>
-                    </div>
-
-                    <div class="col-md-12">
-                        <div class="form-floating">
                             <input type="text" id="Cap"
                                    class="form-control"
                                    required>
                             <label>* Çap</label>
                         </div>
                     </div>
+                    
+                    <div class="col-md-12">
+                        <div class="form-floating">
+                            <input type="text" id="Kalinlik"
+                                   class="form-control">
+                            <label>* Kalınlık</label>
+                        </div>
+                    </div>
+
+                    
                     <div class="text-danger Hata"></div>
                 </div>
                 <div class="card-footer">

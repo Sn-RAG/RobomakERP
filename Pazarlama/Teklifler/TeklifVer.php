@@ -13,10 +13,9 @@ if (isset($_GET["FirmaID"])) {
 }
 $fsor = isset($_SESSION["FirmaID"]) ? "Değiştir" : "Firma Seç";
 $ssor = isset($_SESSION["Setler"]) ? "Değiştir" : "Set Seç";
-$Fdegis = "<a href='../../Firmalar/Firmalar.php?Sec=true' class='btn btn-outline-secondary'>" . $fsor . "</a>";
-$Sdegis = "<a href='../../Uretim/Setler.php?Sec=true' class='btn btn-outline-secondary'>" . $ssor . "</a>";
+$Fdegis = "<a href='../../Firmalar/Firmalar.php?Sec' class='btn btn-outline-secondary'>" . $fsor . "</a>";
+$Sdegis = "<a href='../../Uretim/Setler.php?Sec' class='btn btn-outline-secondary'>" . $ssor . "</a>";
 if (isset($_SESSION["Setler"])){
-
     $Say=count($_SESSION["Setler"]);
 }
 ?>
@@ -27,17 +26,13 @@ if (isset($_SESSION["Setler"])){
                     <div class="card-body">
                         <div class="modal-header">
                             <h5 class="modal-title"><?= $page ?></h5>
-                            <a href="Teklifler.php">
-                                <button type="button" class="btn btn-secondary"><i
-                                            class="bi bi-arrow-left me-1"></i> Geri
-                                </button>
-                            </a>
+                            <a href="Teklifler.php" class="btn btn-secondary bi-arrow-left">&nbsp Geri</a>
                         </div>
                         <form class="row g-3" method="post">
                             <h5></h5>
                             <?= isset($_SESSION["FirmaID"]) ? "<div class='input-group'><input type='button' class='form-control btn' value='$_SESSION[FirmaAdi]'>$Fdegis</div>" : $Fdegis ?>
 
-                            <?= isset($_SESSION["Setler"]) ? "<div class='input-group'><input type='button' class='form-control btn' value='@$Say Set Seçildi'>$Sdegis</div>" : $Sdegis ?>
+                            <?= isset($_SESSION["Setler"]) ? "<div class='input-group'><input type='button' class='form-control btn' value='$Say Set Seçildi'>$Sdegis</div>" : $Sdegis ?>
 
                             <div class="col-md-12">
                                 <label>Teslim Tarihi</label>

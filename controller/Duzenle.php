@@ -9,9 +9,6 @@ $bakKul = $SorKullanici->fetch();
 $Kullanici = $bakKul['Kullanici_ID'];
 
 
-##########################################################################------      Üretim       ------#########################################################################################
-
-
 //----------------------------------------------- Urun Düzenle
 if (isset($_POST['UrunDuzenle'])) {
     $Resim = $_POST['UrunFoto'];
@@ -34,7 +31,6 @@ if (isset($_POST['UrunDuzenle'])) {
          $Duzenle->execute(array($Kategori_ID, $UrunAdi, $ResimYeni, $Aciklama, $Urun_ID));
      }*/
 }
-///////////////////////////////////////////////////////////////////////////////////////
 //----------------------------------------------- Urun BOYA Bilgisi Düzenle
 if (isset($_POST['UrunBoyaBilgiDuzenle'])) {
     $id = $_POST['Urun_Boya_Bilgi_ID'];
@@ -44,34 +40,27 @@ if (isset($_POST['UrunBoyaBilgiDuzenle'])) {
     $icUstkat = $_POST['icUstkat'];
     $DisAstar = $_POST['DisAstar'];
     $DisUstkat = $_POST['DisUstkat'];
-    echo $Kullanici;
     $SetKaydet = $baglanti->prepare("UPDATE Urun_Boya_Bilgi SET Urun_ID= ?, BoyaTipi= ?, icAstar= ?, icUstkat= ?, DisAstar= ?, DisUstkat= ?, Kullanici_ID= ? WHERE Urun_Boya_Bilgi_ID= ?");
     $SonucSor = $SetKaydet->execute(array($Urun_ID, $BoyaTipi, $İcAstar, $icUstkat, $DisAstar, $DisUstkat, $Kullanici, $id));
     header("location:UrunBoyaBilgi.php?Urun_ID=$Urun_ID");
 }
-
-///////////////////////////////////////////////////////////////////////////////////////
 //---------------------////////-------------------------- Urun LEVHA Bilgisi Düzenle
 if (isset($_POST['UrunLevhaBilgiDuzenle'])) {
     $id = $_POST['Urun_Levha_Bilgi_ID'];
-    $Urun_ID = $_POST['Urun_ID'];
-    $Levha_ID = $_POST['Levha_ID'];
     $Tip = $_POST['Tip'];
     $Cap = $_POST['Cap'];
     $Kalinlik = $_POST['Kalinlik'];
 
-    $Kaydet = $baglanti->prepare("UPDATE levha SET Tip= ?, Cap= ?, Kalinlik= ? WHERE Levha_ID= ?");
-    $SonucSor = $Kaydet->execute(array($Tip, $Cap, $Kalinlik, $Levha_ID));
-    $Kaydet = $baglanti->prepare("UPDATE urun_levha_bilgi SET Urun_ID= ?, Levha_ID= ?, Kullanici_ID= ? WHERE Urun_Levha_Bilgi_ID= ?");
-    $SonucSor = $Kaydet->execute(array($Urun_ID, $Levha_ID, $Kullanici, $id));
-    header("location:UrunLevhaBilgi.php?Urun_ID=$Urun_ID");
+    $Sor = $baglanti->prepare("SELECT Levha_ID FROM levha WHERE Tip= ? AND Cap= ? AND Kalinlik= ?");
+    $Sor->execute(array($Tip, $Cap, $Kalinlik));
+    if($Sor->rowCount()){
+        $Levha_ID = $Sor->fetch()['Levha_ID'];
+    }else{
+        $Kaydet = $baglanti->prepare("INSERT INTO levha SET Tip= ?, Cap= ?, Kalinlik= ?");
+        $Kaydet->execute(array($Tip, $Cap, $Kalinlik));
+        $Levha_ID = $baglanti->lastInsertId();
+    }
+    $Kaydet = $baglanti->prepare("UPDATE urun_levha_bilgi SET Levha_ID= ?, Kullanici_ID= ? WHERE Urun_Levha_Bilgi_ID= ?");
+    $SonucSor = $Kaydet->execute(array($Levha_ID, $Kullanici, $id));
+    header("location:UrunLevhaBilgi.php?Urun_ID=$_POST[Urun_ID]");
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/////////////////////////////////////////////////////////////////////// Setler Düzenle /////////////////////////////////////////////////////////////////////
-//if (isset($_POST['SetDuzenle'])) {
-
-//}
-
-
-##########################################################################------             ------#########################################################################################

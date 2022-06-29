@@ -3,7 +3,6 @@ $page = "Firmalar";
 require __DIR__ . '/../controller/Header.php';
 require __DIR__ . '/../controller/Db.php';
 require __DIR__ . '/../controller/Sil.php';
-$Sec = $_GET["Sec"];
 ?>
     <main id="main" class="main">
         <section class="section">
@@ -14,7 +13,7 @@ $Sec = $_GET["Sec"];
                             <div class="card-body">
                                 <h5 class="card-title"><?= $page ?></h5>
                                 <hr>
-                                <a href="FirmaEkle.php<?=$Sec=="true"?'?Sec=true':""?>">
+                                <a href="FirmaEkle.php<?=isset($_GET["Sec"])?'?Sec=true':""?>">
                                     <button type="button" class="btn btn-primary"><i class="bi bi-save me-1"></i>
                                         Yeni Firma
                                     </button>
@@ -57,7 +56,7 @@ $Sec = $_GET["Sec"];
                                             <td><?= $Ulke ?></td>
                                             <td><?= $Sehir ?></td>
                                             <td>
-                                                <?php if ($Sec=="true") {
+                                                <?php if (isset($_GET["Sec"])) {
                                                     echo "<a href='../Pazarlama/Teklifler/TeklifVer.php?FirmaID=$id&FirmaAdi=$Firma' class='btn btn-success bi-check-lg'> Seç</a>";
                                                 }else{
                                                     echo "<a href='FirmaDuzenle.php?id=$id&Adres_ID=$Adres_ID&Tel_ID=$Tel_ID' class='btn btn-warning bi-pencil-square'></a>

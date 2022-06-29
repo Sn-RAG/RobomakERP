@@ -207,7 +207,7 @@ if (!$_GET){unset($_SESSION["Set_ID"],$_SESSION["SetAdi"],$_SESSION["UrunIDler"]
                                                 <div class="accordion accordion-flush col-md-12"
                                                      id="accordion<?=$sonuc['Kategori_ID']?>">
                                                     <div class="accordion-item">
-                                                        <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-<?=$sonuc['Kategori_ID']?>" aria-expanded="false"><?=$sonuc['Kategori_Adi']?></button></h2>
+                                                        <h2 class="accordion-header d-grid gap-2 mt-3"><button class="collapsed btn btn-light mb-1 fw-bold fs-5 text-end" type="button" data-bs-toggle="collapse" data-bs-target="#flush-<?=$sonuc['Kategori_ID']?>" aria-expanded="false"><?=$sonuc['Kategori_Adi']?></button></h2>
                                                         <div id="flush-<?=$sonuc['Kategori_ID']?>" class="accordion-collapse collapse show" data-bs-parent="#accordion<?= $sonuc['Kategori_ID'] ?>">
                                                             <div class="row">
                                                                 <?php $sorgu2=$baglanti->query("SELECT * FROM urun WHERE Kategori_ID=".$sonuc['Kategori_ID']);
@@ -234,7 +234,20 @@ if (!$_GET){unset($_SESSION["Set_ID"],$_SESSION["SetAdi"],$_SESSION["UrunIDler"]
                                         </div>
                                     </div>
                                 </div>
+                                <!-- Tab
 
+                                <ul class="nav nav-tabs nav-tabs-bordered d-flex">
+                                    <li class="nav-item flex-fill">
+                                    <button class="nav-link w-100" data-bs-toggle="tab" data-bs-target="#Kalinlik" type="button">Home</button>
+                                    </li>
+                                </ul>
+                                    <div class="tab-content pt-2">
+                                        <div class="tab-pane fade" id="Kalinlik">
+                                        Sunt est soluta temporibus accusantium neque nam maiores cumque temporibus. Tempora libero non est unde veniam est qui dolor. Ut sunt iure rerum quae quisquam autem eveniet perspiciatis odit. Fuga sequi sed ea saepe at unde.
+                                        </div>
+                                    </div>
+
+                                Tab Son -->
                                 <div class="card s3">
                                     <div id="collapsebes" class="collapse" aria-labelledby="headingbes"
                                          data-bs-parent="#accordionExample">
@@ -458,7 +471,7 @@ if (!$_GET){unset($_SESSION["Set_ID"],$_SESSION["SetAdi"],$_SESSION["UrunIDler"]
                                                                             class="btn btn-success me-3 etkin" hidden
                                                                             disabled>Ürün Düzenle
                                                                     </button>
-                                                                    <a href="Yazdir.php?SetAdi=<?=@$_SESSION["SetAdi"]?>" class="btn col-md-2 btn-primary me-3">Kaydet</a>
+                                                                    <a href="Setler.php<?= $Sec == "true" ? '?Sec=true' : "" ?>" class="btn col-md-2 btn-primary me-3">Kaydet</a>
                                                                     <a href="Yazdir.php?Levha" class="btn col-md-2 btn-primary me-3">Levha Hesapla</a>
                                                                     <div class="col-md-3 row me-3">
                                                                         <label class="col-sm-4 col-form-label">Adet</label>

@@ -4,6 +4,7 @@ $page = "Levha Bilgisi Düzenle";
 require __DIR__ . '/../../controller/Header.php';
 require __DIR__ . '/../../controller/Db.php';
 require __DIR__ . '/../../controller/Duzenle.php';
+$ID = (int)$_GET['id'];
 $Urun_ID = (int)$_GET['Urun_ID'];
 $Levha_ID = (int)$_GET['Levha_ID'];
 $sorgu = $baglanti->query("SELECT * FROM levha WHERE Levha_ID =" . $Levha_ID);
@@ -25,8 +26,7 @@ $SLevha = $sorgu->fetch();
                                 </a>
                             </div>
                             <div class="modal-body">
-
-
+                                <input type="hidden" name="Urun_Levha_Bilgi_ID" value="<?= $ID ?>">
                                 <input type="hidden" name="Urun_ID" value="<?= $Urun_ID ?>"/>
                                 <input type="hidden" name="Levha_ID" value="<?= $Levha_ID ?>"/>
 
@@ -44,7 +44,7 @@ $SLevha = $sorgu->fetch();
                                                 } else echo "DikDörtgen";
                                                 ?></option>
                                             <option value="Kare">Kare</option>
-                                            <option value="Kare">DikDörtgen</option>
+                                            <option value="DikDörtgen">DikDörtgen</option>
                                         </select>
                                         <label for="sec">Tip</label>
                                     </div>
