@@ -1,5 +1,5 @@
 <?php
-$Kisalt=".hasClass('btn-primary')";
+$Has=".hasClass('btn-primary')";
 ?>
 <script>
     $(function () {
@@ -7,25 +7,25 @@ $Kisalt=".hasClass('btn-primary')";
         $.Listele = function () {
             var Hangisi = "";
             var Is = "";
-            if ($("#Pres")<?=$Kisalt?>) {
+            if ($("#Pres")<?=$Has?>) {
                 Hangisi = "Pres";
                 Is = "Preslendi";
-            } else if ($("#Telleme")<?=$Kisalt?>) {
+            } else if ($("#Telleme")<?=$Has?>) {
                 Hangisi = "Telleme";
                 Is = "Tellendi";
-            } else if ($("#Kumlama")<?=$Kisalt?>) {
+            } else if ($("#Kumlama")<?=$Has?>) {
                 Hangisi = "Kumlama";
                 Is = "Kumlandı";
-            } else if ($("#icBoyama")<?=$Kisalt?>) {
+            } else if ($("#icBoyama")<?=$Has?>) {
                 Hangisi = "icBoyama";
                 Is = "Boyandı";
-            }else if ($("#DisBoyama")<?=$Kisalt?>) {
+            }else if ($("#DisBoyama")<?=$Has?>) {
                 Hangisi = "DisBoyama";
                 Is = "Boyandı";
-            } else if ($("#Paketleme")<?=$Kisalt?>) {
+            } else if ($("#Paketleme")<?=$Has?>) {
                 Hangisi = "Paketleme";
                 Is = "Paketlendi";
-            }else if ($("#Yikama")<?=$Kisalt?>) {
+            }else if ($("#Yikama")<?=$Has?>) {
                 Hangisi = "Yıkama";
                 Is = "Yıkandı";
             }

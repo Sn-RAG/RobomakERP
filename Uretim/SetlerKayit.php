@@ -5,19 +5,13 @@ require __DIR__ . '/../controller/Header.php';
 require __DIR__ . '/../controller/Db.php';
 require __DIR__ . '/../controller/Kayit.php';
 if (!$_GET){unset($_SESSION["Set_ID"],$_SESSION["SetAdi"],$_SESSION["UrunIDler"],$_SESSION["KulpSec"],$_SESSION["KapakSec"],$_SESSION["KalinlikSec"],$_SESSION["KutuSec"],$_SESSION["TepeSec"]);}
-
 ?>
-    <!-- Stil Dosyası Başka Yerde çağarınca bütün tasarıma etki ediyor-->
     <link href="../assets/css/cbox.css" rel="stylesheet">
-
-
     <style>
         :root {
             --prm-color: #0381ff;
             --prm-gray: #f9f9f9;
         }
-
-        /* CSS */
         .steps {
             display: flex;
             justify-content: space-between;
@@ -25,7 +19,6 @@ if (!$_GET){unset($_SESSION["Set_ID"],$_SESSION["SetAdi"],$_SESSION["UrunIDler"]
             margin-bottom: 2rem;
             position: relative;
         }
-
         .step-button {
             width: 50px;
             height: 50px;
@@ -34,19 +27,16 @@ if (!$_GET){unset($_SESSION["Set_ID"],$_SESSION["SetAdi"],$_SESSION["UrunIDler"]
             background-color: var(--prm-gray);
             transition: .4s;
         }
-
         .step-button[aria-expanded="true"] {
             width: 60px;
             height: 60px;
             background-color: var(--prm-color);
             color: #fff;
         }
-
         .step-item {
             z-index: 10;
             text-align: center;
         }
-
         #progress {
             -webkit-appearance: none;
             position: absolute;
@@ -56,118 +46,57 @@ if (!$_GET){unset($_SESSION["Set_ID"],$_SESSION["SetAdi"],$_SESSION["UrunIDler"]
             margin-left: 18px;
             margin-bottom: 18px;
         }
-
-        /* to customize progress bar */
         #progress::-webkit-progress-value {
             background-color: var(--prm-color);
             transition: .5s ease;
         }
-
         #progress::-webkit-progress-bar {
             background-color: var(--prm-gray);
 
         }
-
     </style>
-
     <main id="main" class="main">
         <section class="section">
-            <div class="card col-sm-12">
+            <div class="card">
                 <div class="card-body">
-
                     <h5></h5>
-                    <div class="py-3 mb-2">
-                        <a href="Setler.php"
-                           class="bi-arrow-left btn col-md-2 btn-secondary"> &nbsp;&nbsp;Geri
-                            Dön</a>
-                    </div>
-
+                    <div class="py-3 mb-2"><a href="Setler.php" class="bi-arrow-left btn col-md-2 btn-secondary"> &nbsp Geri Dön</a></div>
                     <div class="container">
                         <div class="accordion" id="accordionExample">
                             <div class="steps row">
                                 <progress id="progress" value="0" max="100"></progress>
                                 <div class="step-item col-md-1">
-                                    <button id="bir" class="step-button text-center" type="button"
-                                            data-bs-toggle="collapse"
-                                            data-bs-target="#collapsebir" aria-expanded="true"
-                                            aria-controls="collapsebir">
-                                        1
-                                    </button>
-                                    <div class="step-title">
-                                        Set Adı
-                                    </div>
+                                    <button id="bir" class="step-button text-center" type="button" data-bs-toggle="collapse" data-bs-target="#collapsebir" aria-expanded="true" aria-controls="collapsebir">1</button>
+                                    <div class="step-title">Set Adı</div>
                                 </div>
                                 <div class="step-item col-md-1">
-                                    <button id="iki" class="step-button text-center collapsed" type="button"
-                                            data-bs-toggle="collapse" data-bs-target="#collapseiki"
-                                            aria-expanded="false" aria-controls="collapseiki">
-                                        2
-                                    </button>
-                                    <div class="step-title">
-                                        Ürün Seçimi
-                                    </div>
+                                    <button id="iki" class="step-button text-center collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseiki" aria-expanded="false" aria-controls="collapseiki">2</button>
+                                    <div class="step-title">Ürün Seçimi</div>
                                 </div>
                                 <div class="step-item col-md-1">
-                                    <button id="bes" class="step-button text-center collapsed" type="button"
-                                            data-bs-toggle="collapse" data-bs-target="#collapsebes"
-                                            aria-expanded="false" aria-controls="collapsebes">
-                                        3
-                                    </button>
-                                    <div class="step-title">
-                                        Kulp Seç
-                                    </div>
+                                    <button id="bes" class="step-button text-center collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsebes" aria-expanded="false" aria-controls="collapsebes">3</button>
+                                    <div class="step-title">Kulp Seç</div>
                                 </div>
                                 <div class="step-item col-md-1">
-                                    <button id="alti" class="step-button text-center collapsed" type="button"
-                                            data-bs-toggle="collapse" data-bs-target="#collapsealti"
-                                            aria-expanded="false" aria-controls="collapsealti">
-                                        4
-                                    </button>
-                                    <div class="step-title">
-                                        Kapak Seç
-                                    </div>
+                                    <button id="alti" class="step-button text-center collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsealti" aria-expanded="false" aria-controls="collapsealti">4</button>
+                                    <div class="step-title">Kapak Seç</div>
+                                </div>
+                                <div class="step-item col-md-1">
+                                    <button id="yedi" class="step-button text-center collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseyedi" aria-expanded="false" aria-controls="collapseyedi">5</button>
+                                    <div class="step-title">Tepe Seç</div>
+                                </div>
+                                <div class="step-item col-md-1">
+                                    <button id="sekiz" class="step-button text-center collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsesekiz" aria-expanded="false" aria-controls="collapsesekiz">6</button>
+                                    <div class="step-title">Seçimler</div>
                                 </div>
 
                                 <div class="step-item col-md-1">
-                                    <button id="yedi" class="step-button text-center collapsed" type="button"
-                                            data-bs-toggle="collapse" data-bs-target="#collapseyedi"
-                                            aria-expanded="false" aria-controls="collapseyedi">
-                                        5
-                                    </button>
-                                    <div class="step-title">
-                                        Tepe Seç
-                                    </div>
+                                    <button id="dort" class="step-button text-center collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsedort" aria-expanded="false" aria-controls="collapsedort">7</button>
+                                    <div class="step-title">Set içeriği</div>
                                 </div>
                                 <div class="step-item col-md-1">
-                                    <button id="sekiz" class="step-button text-center collapsed" type="button"
-                                            data-bs-toggle="collapse" data-bs-target="#collapsesekiz"
-                                            aria-expanded="false" aria-controls="collapsesekiz">
-                                        6
-                                    </button>
-                                    <div class="step-title">
-                                        Seçimler
-                                    </div>
-                                </div>
-
-                                <div class="step-item col-md-1">
-                                    <button id="dort" class="step-button text-center collapsed" type="button"
-                                            data-bs-toggle="collapse" data-bs-target="#collapsedort"
-                                            aria-expanded="false" aria-controls="collapsedort">
-                                        7
-                                    </button>
-                                    <div class="step-title">
-                                        Set içeriği
-                                    </div>
-                                </div>
-                                <div class="step-item col-md-1">
-                                    <button id="uc" class="step-button text-center collapsed" type="button"
-                                            data-bs-toggle="collapse" data-bs-target="#collapseuc"
-                                            aria-expanded="false" aria-controls="collapseuc">
-                                        8
-                                    </button>
-                                    <div class="step-title">
-                                        Ürün Ayarla
-                                    </div>
+                                    <button id="uc" class="step-button text-center collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseuc" aria-expanded="false" aria-controls="collapseuc">8</button>
+                                    <div class="step-title">Ürün Ayarla</div>
                                 </div>
                             </div>
 
@@ -178,8 +107,7 @@ if (!$_GET){unset($_SESSION["Set_ID"],$_SESSION["SetAdi"],$_SESSION["UrunIDler"]
                                         <div class="card-body">
                                             <div class="row mb-3 py-3">
                                                 <div class="col-md-4">
-                                                    <input type="text" id="SetAdi" class="form-control" value="<?=isset($_SESSION["SetAdi"])?$_SESSION["SetAdi"]:""?>"
-                                                           placeholder="Set Adı">
+                                                    <input type="text" id="SetAdi" class="form-control" value="<?=isset($_SESSION["SetAdi"])?$_SESSION["SetAdi"]:""?>" placeholder="Set Adı">
                                                 </div>
                                                 <div class="col-md-8">
                                                     <button id="Set" type="button" class="btn btn-primary bi-arrow-right"> &nbsp İleri</button>
@@ -214,14 +142,14 @@ if (!$_GET){unset($_SESSION["Set_ID"],$_SESSION["SetAdi"],$_SESSION["UrunIDler"]
                                                                 foreach ($sorgu2 as $sonuc2) {
                                                                     $ID = $sonuc2['Urun_ID'];
                                                                     $Foto=$sonuc2['UrunFoto'];?>
-                                                                    <label class="row mb-3 col-md-3" for="<?= $ID ?>">
-                                                                        <input class="card2__input" type="checkbox" id="<?= $ID ?>" value="<?= $ID ?>" name="UrunIDler[]" <?php if (isset($_SESSION["UrunIDler"])){foreach ($_SESSION["UrunIDler"] as $A) {if ($A == $ID){echo "checked";}}}?>>
+                                                                    <label class="row mb-3 col-md-3" for="<?=$ID?>">
+                                                                        <input class="card2__input UrunSecim" type="checkbox" id="<?=$ID?>" value="<?=$ID?>" name="UrunIDler[]" <?php if (isset($_SESSION["UrunIDler"])){foreach ($_SESSION["UrunIDler"] as $A) {if ($A == $ID){echo "checked";}}}?>>
                                                                         <div class="card2__body"><div class="card2__body-cover">
                                                                             <img class="card2__body-cover-image" src="../assets/img/Keksan/<?=$Foto=="yok"||$Foto==""||$Foto==null?"":$Foto?>">
                                                                             <span class="card2__body-cover-checkbox"><svg class="card2__body-cover-checkbox--svg" viewBox="0 0 12 10"><polyline points="1.5 6 4.5 9 10.5 1"></polyline></svg></span></div>
                                                                             <header class="card2__body-header">
                                                                                 <h2 class="card2__body-header-title"><?= $sonuc2['UrunAdi'] ?></h2>
-                                                                                <p class="card2__body-header-subtitle"></p>
+                                                                                <p class="card2__body-header-subtitle"><?php foreach($baglanti->query("SELECT Kalinlik FROM urun_levha_bilgi INNER JOIN levha ON urun_levha_bilgi.Levha_ID = levha.Levha_ID WHERE Urun_ID =".$ID) as $Kal){echo $Kal["Kalinlik"]." mm &nbsp &nbsp <input id='kal$ID' type='hidden' value='$Kal[Kalinlik]'>";}?></p>
                                                                             </header>
                                                                         </div>
                                                                     </label>
@@ -234,20 +162,7 @@ if (!$_GET){unset($_SESSION["Set_ID"],$_SESSION["SetAdi"],$_SESSION["UrunIDler"]
                                         </div>
                                     </div>
                                 </div>
-                                <!-- Tab
 
-                                <ul class="nav nav-tabs nav-tabs-bordered d-flex">
-                                    <li class="nav-item flex-fill">
-                                    <button class="nav-link w-100" data-bs-toggle="tab" data-bs-target="#Kalinlik" type="button">Home</button>
-                                    </li>
-                                </ul>
-                                    <div class="tab-content pt-2">
-                                        <div class="tab-pane fade" id="Kalinlik">
-                                        Sunt est soluta temporibus accusantium neque nam maiores cumque temporibus. Tempora libero non est unde veniam est qui dolor. Ut sunt iure rerum quae quisquam autem eveniet perspiciatis odit. Fuga sequi sed ea saepe at unde.
-                                        </div>
-                                    </div>
-
-                                Tab Son -->
                                 <div class="card s3">
                                     <div id="collapsebes" class="collapse" aria-labelledby="headingbes"
                                          data-bs-parent="#accordionExample">

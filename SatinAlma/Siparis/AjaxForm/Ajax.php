@@ -138,8 +138,8 @@
                 data: {
                     'LevhaFirma': $.trim(Firma),
                     'Tip': $.trim(Tip),
-                    'Cap': $.trim(Cap),
-                    'Kalinlik': $.trim(Kalinlik),
+                    'Cap': Cap,
+                    'Kalinlik': Kalinlik,
                     'LevhaEkle': true,
                 },
                 error: function (xhr, textStatus, errorThrown) {

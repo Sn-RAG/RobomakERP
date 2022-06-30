@@ -135,7 +135,7 @@ $SorSira=isset($Urunler)?"s2":(isset($Kulp)?"s3":(isset($Kapak)?"s4":(isset($Tep
 
     $("#UrunSec").click(function () {
         var UrunIDler = [];
-        $("input:checkbox:checked").map(function () {UrunIDler.push($(this).val());});
+        $(".UrunSecim:checked").map(function () {UrunIDler.push($(this).val());});
 
         if(UrunIDler==""){
             $("#UrunBos").html("Ürün Seçmediniz!");
@@ -355,6 +355,23 @@ $SorSira=isset($Urunler)?"s2":(isset($Kulp)?"s3":(isset($Kapak)?"s4":(isset($Tep
         var b = <?=$kisa?>(".s4");
         $.Sirala(a,b);
     });
+
+    $(".UrunSecim").on("click", function () {
+            var n = $(".UrunSecim:checked").length;
+            var ID = $(this).attr("id");
+            var mm=$("#kal"+ID+"").val()
+            var UrunIDler = [];
+            $(".UrunSecim:checked").map(function () {
+            UrunIDler.push($(this).val());
+            });
+            for (let i = 0; i < UrunIDler.length; i++) {
+                if ($("#kal"+UrunIDler[i]+"").val() != mm){
+                    $(this).prop('checked',false);
+                    <?=$Baska?>
+                }
+            }
+        });
+
     $("#SetTamam").click(function () {
 
         var SetAdi = $("#SetAdi").val();
@@ -366,7 +383,7 @@ $SorSira=isset($Urunler)?"s2":(isset($Kulp)?"s3":(isset($Kapak)?"s4":(isset($Tep
 
 
         var UrunIDler = [];
-        $("input:checkbox:checked").map(function () {
+        $(".UrunSecim:checked").map(function () {
             UrunIDler.push($(this).val());
         });
 

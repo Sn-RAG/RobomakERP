@@ -52,4 +52,9 @@ $Kayitvarr = "Swal.fire({
         text: 'Var olan Kaydı oluşturamazsın!',
         confirmButtonText: 'Tamam',
     })";
+    $Baska = "Swal.fire({
+        icon: 'warning',
+        title: 'Kalınlık Farklı Olamaz!',
+        confirmButtonText: 'Tamam',
+    })";
 ?>

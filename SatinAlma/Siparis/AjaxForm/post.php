@@ -50,7 +50,7 @@ if (isset($_POST['BoyaEkle'])) {
 } elseif (isset($_POST['LevhaEkle'])) {
 
     $query = $baglanti->prepare('INSERT INTO levha SET Firma_ID=?, Tip=?, Cap=?, Kalinlik=?');
-    $query->execute(array($_POST['LevhaFirma'] == "" ? null : $_POST['LevhaFirma'], $_POST['Tip'], number_format((float)$_POST['Cap'], 2, '.', ''),  number_format((float)$_POST['Kalinlik'], 2, '.', '')));
+    $query->execute(array($_POST['LevhaFirma'] == "" ? null : $_POST['LevhaFirma'], $_POST['Tip'], $_POST['Cap'],  $_POST['Kalinlik']));
 
 } elseif (isset($_POST['LevhaSiparis'])) {
 

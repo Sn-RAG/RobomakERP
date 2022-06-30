@@ -61,29 +61,28 @@ if (isset($_POST['UrunBoyaBilgiEkle'])) {
 //---------------------------------------Ürün Levha Bilgileri
 
 if (isset($_POST['UrunLevhaBilgiEkle'])) {
-    $Urun_ID = $_POST['Urun_ID'];
-    $Tip = $_POST['Tip'];
-    $Cap = $_POST['Cap'];
-    $Kalinlik = $_POST['Kalinlik'];
+    $ID = $_POST['Urun_ID'];
+    $T = $_POST['Tip'];
+    $C = $_POST['Cap'];
+    $K = $_POST['Kalinlik'];
 
 //-----------------------------------------------------Levha Varmı Yok mu Sorgu /// Yoksa ekle
-    $LevhaVarmi = $baglanti->prepare("SELECT Levha_ID FROM levha WHERE Tip= ? AND Cap= ? AND Kalinlik= ?");
-    $Sor = $LevhaVarmi->execute(array($Tip, $Cap, $Kalinlik));
-    $bak = $LevhaVarmi->fetch();
+    $Varmi = $baglanti->prepare("SELECT Levha_ID FROM levha WHERE Tip= ? AND Cap= ? AND Kalinlik= ?");
+    $Varmi->execute(array($T, $C, $K));
 //--------------------------------------------------LEVHA VARMI SOR
-    if ($LevhaVarmi->rowCount() > 0) {
+    if ($Varmi->rowCount()) {
         $Kaydet = $baglanti->prepare("INSERT INTO urun_levha_bilgi SET Urun_ID= ?, Levha_ID= ?, Kullanici_ID= ?");
-        $SonucSor = $Kaydet->execute(array($Urun_ID, $bak['Levha_ID'], $Kullanici));
-        header("location:UrunLevhaBilgi.php?Urun_ID=$Urun_ID");
+        $SonucSor = $Kaydet->execute(array($ID, $Varmi->fetch()['Levha_ID'], $Kullanici));
+        header("location:UrunLevhaBilgi.php?Urun_ID=$ID");
 
     } else {
 //--------------------------------------------------LEVHA BİLGİSİ YOKSA EKLE
         $Kaydet = $baglanti->prepare("INSERT INTO levha SET Tip= ?, Cap= ?, Kalinlik= ?");
-        $Kaydet->execute(array($Tip, $Cap, $Kalinlik));
+        $Kaydet->execute(array($T, $C, $K));
         $Yeniid = $baglanti->lastInsertId();
         $Kaydet = $baglanti->prepare("INSERT INTO urun_levha_bilgi SET Urun_ID= ?, Levha_ID= ?, Kullanici_ID= ?");
-        $Kaydet->execute(array($Urun_ID, $Yeniid, $Kullanici));
-        header("location:UrunLevhaBilgi.php?Urun_ID=$Urun_ID");
+        $Kaydet->execute(array($ID, $Yeniid, $Kullanici));
+        header("location:UrunLevhaBilgi.php?Urun_ID=$ID");
     }
 }
 
