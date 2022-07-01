@@ -357,20 +357,23 @@ $SorSira=isset($Urunler)?"s2":(isset($Kulp)?"s3":(isset($Kapak)?"s4":(isset($Tep
     });
 
     $(".UrunSecim").on("click", function () {
-            var n = $(".UrunSecim:checked").length;
-            var ID = $(this).attr("id");
-            var mm=$("#kal"+ID+"").val()
-            var UrunIDler = [];
-            $(".UrunSecim:checked").map(function () {
-            UrunIDler.push($(this).val());
+        var ID = $(this).attr("id");
+        var mm=$(".kal"+ID+"").val();//Tıkladığım kalınlık
+        var mmler = [];
+        var UrunIDler = [];
+        $(".UrunSecim:checked").map(function () {
+            $(".kal"+$(this).val()+"").map(function () {
+                mmler.push($(this).val());
             });
-            for (let i = 0; i < UrunIDler.length; i++) {
-                if ($("#kal"+UrunIDler[i]+"").val() != mm){
-                    $(this).prop('checked',false);
-                    <?=$Baska?>
-                }
+        });
+        //Seçili olan kalınlıklar ve tıkladığımızı karşılaştırıyoruz
+        $.each(mmler,function(i, sel){
+            if (sel != mm){
+                //$(".kal"+sel[i]+"").prop('checked',false);
+                <?=$Baska?>
             }
         });
+    });
 
     $("#SetTamam").click(function () {
 

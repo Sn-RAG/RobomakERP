@@ -149,7 +149,7 @@ if (!$_GET){unset($_SESSION["Set_ID"],$_SESSION["SetAdi"],$_SESSION["UrunIDler"]
                                                                             <span class="card2__body-cover-checkbox"><svg class="card2__body-cover-checkbox--svg" viewBox="0 0 12 10"><polyline points="1.5 6 4.5 9 10.5 1"></polyline></svg></span></div>
                                                                             <header class="card2__body-header">
                                                                                 <h2 class="card2__body-header-title"><?= $sonuc2['UrunAdi'] ?></h2>
-                                                                                <p class="card2__body-header-subtitle"><?php foreach($baglanti->query("SELECT Kalinlik FROM urun_levha_bilgi INNER JOIN levha ON urun_levha_bilgi.Levha_ID = levha.Levha_ID WHERE Urun_ID =".$ID) as $Kal){echo $Kal["Kalinlik"]." mm &nbsp &nbsp <input id='kal$ID' type='hidden' value='$Kal[Kalinlik]'>";}?></p>
+                                                                                <p class="card2__body-header-subtitle"><?php foreach($baglanti->query("SELECT Kalinlik FROM urun_levha_bilgi INNER JOIN levha ON urun_levha_bilgi.Levha_ID = levha.Levha_ID WHERE Urun_ID =".$ID) as $Kal){echo $Kal["Kalinlik"]." mm &nbsp &nbsp <input class='kal$ID' type='hidden' value='$Kal[Kalinlik]'>";}?></p>
                                                                             </header>
                                                                         </div>
                                                                     </label>
@@ -382,11 +382,8 @@ if (!$_GET){unset($_SESSION["Set_ID"],$_SESSION["SetAdi"],$_SESSION["UrunIDler"]
                                                                 </div>
 
                                                                 <div class="col-md-12 d-flex justify-content-end">
-                                                                    <button id="icerikSec" type="button"
-                                                                            class="btn btn-success me-3 etkin" hidden
-                                                                            disabled>Ürün Düzenle
-                                                                    </button>
-                                                                    <a href="Setler.php<?= $Sec == "true" ? '?Sec=true' : "" ?>" class="btn col-md-2 btn-primary me-3">Kaydet</a>
+                                                                    <button id="icerikSec" type="button" class="btn btn-success me-3 etkin" hidden disabled>Ürün Düzenle</button>
+                                                                    <a href="Setler.php" class="btn col-md-2 btn-primary me-3">Kaydet</a>
                                                                     <a href="Yazdir.php?Levha" class="btn col-md-2 btn-primary me-3">Levha Hesapla</a>
                                                                     <div class="col-md-3 row me-3">
                                                                         <label class="col-sm-4 col-form-label">Adet</label>

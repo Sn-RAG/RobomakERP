@@ -21,8 +21,7 @@ $Kayitvar = "<script>Swal.fire({
     })</script>";
 $SilHata = "<script>Swal.fire({
         icon: 'error',
-        title: 'Kayıt Silinemedi!',
-        text: 'Kayıt silmede hataya rastlandı yahut kayıt zaten silinmiş.',
+        title: 'Teklif verilen Set silinemez!',
         confirmButtonText: 'Tamam',
     })</script>";
 $KayitAcilmamis = "<script>Swal.fire({
@@ -52,9 +51,9 @@ $Kayitvarr = "Swal.fire({
         text: 'Var olan Kaydı oluşturamazsın!',
         confirmButtonText: 'Tamam',
     })";
-    $Baska = "Swal.fire({
-        icon: 'warning',
+$Baska = "Swal.fire({
+        icon: 'error',
         title: 'Kalınlık Farklı Olamaz!',
+        text: 'Seçimi Kaldırın!',
         confirmButtonText: 'Tamam',
     })";
-?>

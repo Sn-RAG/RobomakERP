@@ -8,7 +8,8 @@ if (isset($_GET['KullaniciSil'])) {
 } //--------------------------------Setler
 elseif (isset($_GET['UretimSetlerSil'])) {
     $Setid = strip_tags(htmlspecialchars(trim($_GET['Set_ID'])));
-    $sorgu = $baglanti->query("DELETE FROM set_icerik WHERE Set_icerik_ID=" . strip_tags(htmlspecialchars(trim($_GET['UretimSetlerSil']))));
+    try {
+        $sorgu = $baglanti->query("DELETE FROM set_icerik WHERE Set_icerik_ID=" . strip_tags(htmlspecialchars(trim($_GET['UretimSetlerSil']))));
     if ($sorgu) {
         $sil = $baglanti->query("DELETE FROM set_urun WHERE Set_ID=" . $Setid);
         if ($sil) {
@@ -20,8 +21,12 @@ elseif (isset($_GET['UretimSetlerSil'])) {
                 }
             }
         }
-    } //--------------------------------Firmalar
+    }
+    } catch (\Throwable $th) {
+        echo $SilHata;
+    }
 
+//--------------------------------Firmalar
 } elseif (isset($_GET['FirmalarSil'])) {
     $sorgu = $baglanti->query("DELETE FROM firmalar WHERE Firma_ID=" . strip_tags(htmlspecialchars(trim($_GET['FirmalarSil']))));
     if ($sorgu) {

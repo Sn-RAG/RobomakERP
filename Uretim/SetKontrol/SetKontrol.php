@@ -105,6 +105,7 @@ $k=0;
                     $Paket=floor($k / ($Toplam / 100));
                     $Paket=$Paket>100?100:$Paket;
                 }
+                $_SESSION["SetYuzde"]=floor(($Hesap+$Prs+$Yika+$Kumla+$Telle+$Boya+$Paket)/7);
                 /*Yüzde Son*/
                 ?>
                 
@@ -223,7 +224,7 @@ $k=0;
                         }
                         .panel-body {
                             overflow-y: scroll;
-                            height: 250px;
+                            height: 350px;
                         }
                         ::-webkit-scrollbar-track {
                             background-color: #F5F5F5;
@@ -256,6 +257,12 @@ $k=0;
                             <button class="mb-3 me-2 btn btn-outline-dark t" id="icBoyama">İç Boya</button>
                             <button class="mb-3 me-2 btn btn-outline-dark t" id="DisBoyama">Dış Boya</button>
                             <button class="mb-3 me-2 btn btn-outline-dark t" id="Paketleme">Paketleme</button>
+                        </div>
+                        <div class="col-md-12 d-flex justify-content-end mb-3">
+                            <label class="col-sm-2 col-form-label">Tarih</label>
+                            <div class="col-md-4">
+                                <input type="date" class="form-control Tarih" value="<?php date_default_timezone_set('Europe/Istanbul'); $tarih = new DateTime("now"); $tarih = date("Y-m-d"); echo $tarih;?>">
+                            </div>
                         </div>
                         <ul class="list-group UrunYaz">
                         </ul>

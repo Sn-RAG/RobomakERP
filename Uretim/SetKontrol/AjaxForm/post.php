@@ -15,14 +15,14 @@ if (isset($_POST['Listele'])) {
         $Uid=$s["Urun_ID"]
         ?>
         <li class="list-group-item d-flex justify-content-between align-items-center">
-            <div>
-                <input type="number" id="deger<?=$Uid?>" class="form-control-sm me-1">
+            <div id="hata<?=$Uid?>">
+                <input type="number" id="deger<?=$Uid?>" class="form-control-sm me-1 mb-2">
                 <button class="gir btn btn-sm bi-check-lg btn-primary" Urun_ID="<?=$Uid?>" Set_ID="<?= $s["Set_ID"] ?>"></button>
             </div>
 
             <?=$s["UrunAdi"]?>
             
-            <span class="badge bg-secondary rounded-pill"><?php
+            <span class="badge bg-light text-black fs-6"><?php
                 if ($HB == "Pres") {
                     $Pr=$s["Preslenen"];
                     echo $Pr==""?0:$Pr;
@@ -58,8 +58,9 @@ if (isset($_POST['Listele'])) {
             var Uid = $(this).attr("Urun_ID");
             var SetID = $(this).attr("Set_ID");
             var deger = $("#deger"+Uid+"").val();
+            var Tarih = $(".Tarih").val();
             var Hangisi = "";
-            if(deger!=""){
+            if(deger!=""&Number(deger)!=0){
                 if ($("#Pres").hasClass("btn-primary")) {
                     Hangisi = "Pres";
                 } else if ($("#Telleme")<?=$Has?>) {
@@ -84,6 +85,7 @@ if (isset($_POST['Listele'])) {
                         'UrunID': Uid,
                         'Deger': deger,
                         'Hangisi': Hangisi,
+                        'Tarih':Tarih
                     },
                     error: function (xhr) {
                         alert('Hata: ' + xhr.responseText);
@@ -93,26 +95,13 @@ if (isset($_POST['Listele'])) {
                     }
                 })
             }else{
-                $("#deger"+Uid+"").attr("placeholder","Değer Giriniz!");
+                if($("#hata"+Uid+"").children("label").length==0){
+                    $("#hata"+Uid+"").append($('<label>').html("Değer Giriniz!").addClass("small text-danger"));
+                }
+                
             }
         });
     </script>
-
-    <style>
-        ::placeholder {
-        color: red;
-        opacity: 1; /* Firefox */
-        }
-
-        :-ms-input-placeholder { /* Internet Explorer 10-11 */
-        color: red;
-        }
-
-        ::-ms-input-placeholder { /* Microsoft Edge */
-        color: red;
-        }
-    </style>
-
     <?php
 } elseif (isset($_POST['Deger'])) {
     $SetID=$_POST['SetID'];
@@ -142,13 +131,13 @@ if (isset($_POST['Listele'])) {
         $Is = "Paketlendi";
     }
 
-    $ekle = $baglanti->query("SELECT " . $Ekle . " FROM set_urunler_asama WHERE Urun_ID = " . $UrunID)->fetch()[$Ekle];
+    $ekle = $baglanti->query("SELECT " . $Ekle . " FROM set_urunler_asama WHERE Urun_ID = " . $UrunID." AND Set_ID=".$SetID)->fetch()[$Ekle];
 
-    $guncelle = $baglanti->prepare("UPDATE set_urunler_asama SET ".$Ekle."= ? WHERE Urun_ID=?");
-    $guncelle->execute(array($Deger+$ekle,$UrunID));
+    $guncelle = $baglanti->prepare("UPDATE set_urunler_asama SET ".$Ekle."= ? WHERE Urun_ID=? AND Set_ID=?");
+    $guncelle->execute(array($Deger+$ekle,$UrunID,$SetID));
 
-    $kaydet = $baglanti->prepare("INSERT INTO loglar SET Set_ID= ?,Urun_ID= ?,Yapilan_is= ?,Adet= ?");
-    $kaydet->execute(array($SetID,$UrunID,$Is,$Deger));
+    $kaydet = $baglanti->prepare("INSERT INTO loglar SET Set_ID= ?,Urun_ID= ?,Yapilan_is= ?,Adet= ?, Tarih= ?");
+    $kaydet->execute(array($SetID,$UrunID,$Is,$Deger,$_POST['Tarih']));
 
     ##########    ##########    ##########    ##########    ##########    ##########    ##########    ##########    ##########    ##########    ##########
 
@@ -159,7 +148,11 @@ if (isset($_POST['Listele'])) {
             echo"<strong class='text-primary bi-clock'> $t[Tarih] </strong><br>";
         $sorgu = $baglanti->query("SELECT Set_ID, UrunAdi, Yapilan_is, Adet FROM loglar INNER JOIN urun ON loglar.Urun_ID = urun.Urun_ID WHERE Tarih='$t[Tarih]' AND Set_ID =" .$_POST['isDurum']." AND Yapilan_is='$_POST[Is]'");
         foreach ($sorgu as $s){
-            echo "<small>$s[Adet] Adet $s[UrunAdi] $s[Yapilan_is].</small><br>";
+            if($s["Adet"]>0){
+                echo "<small>$s[Adet] Adet $s[UrunAdi] $s[Yapilan_is].</small><br>";
+            }else{
+                echo "<small class='text-danger'>$s[Adet] Adet $s[UrunAdi]</small><br>";
+            }
         }
     }
     }else{

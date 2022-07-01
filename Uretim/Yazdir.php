@@ -6,7 +6,7 @@ $Kalinlik = $baglanti->query("SELECT Kalinlik FROM set_icerik INNER JOIN set_uru
 ?>
 <main id="main" class="main">
     <section class="section">
-        <div class="card">        
+        <div class="card">
             <?php
             if (isset($_GET["Levha"])) { ?>
                 <div class="card-body">
@@ -30,7 +30,7 @@ $Kalinlik = $baglanti->query("SELECT Kalinlik FROM set_icerik INNER JOIN set_uru
                                 <?php
                                 $i = 0;
                                 $Topla=0;
-                                $sor = $baglanti->query("SELECT Urun_ID,Adet FROM view_set_urun_sec WHERE Set_ID=" . $_SESSION["Set_ID"]);
+                                $sor = $baglanti->query("SELECT Urun_ID, SUM(Adet) AS Adet FROM view_set_urun_sec WHERE Set_ID =" . $_SESSION["Set_ID"]." GROUP BY Urun_ID");
                                 foreach ($sor as $s) {
                                     $i++;
                                     $sor2 = $baglanti->query("SELECT * FROM urun WHERE Urun_ID=" . $s["Urun_ID"]);

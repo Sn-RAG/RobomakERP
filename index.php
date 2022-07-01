@@ -104,7 +104,7 @@
                                     <div class="col-12">
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox" value="true" id="tik"
-                                                   name="Hatirla">
+                                                   name="Hatirla" checked>
                                             <label class="form-check-label" for="tik">Beni Hatırla</label>
                                         </div>
                                     </div>

@@ -34,6 +34,7 @@ require __DIR__ . '/../controller/Sil.php';
                     </thead>
                     <tbody>
                         <?php
+                        $SorYuzde=isset($_SESSION["SetYuzde"])?$_SESSION["SetYuzde"]:($_SESSION["SetYuzde"]==100?"Yükleme Bekliyor":$_SESSION["SetYuzde"]);
                         $sorgu = $baglanti->query('SELECT Set_ID, SetAdi, Set_icerik_ID FROM view_uretim_setler INNER JOIN set_icerik ON view_uretim_setler.Set_Urun_ID = set_icerik.Set_Urun_ID');
                         foreach ($sorgu as $sonuc) {
                             $id = $sonuc['Set_icerik_ID'];
@@ -45,26 +46,12 @@ require __DIR__ . '/../controller/Sil.php';
                                 <td><?= $Set_ID ?></td>
                                 <?php if (isset($_GET["Sec"])) { ?>
                                     <td><?= $SetAdi ?></td>
-                                    <td>
-                                        <input type="number" class="form-control Adet" placeholder="Adet">
-                                    </td>
-
-                                    <td>
-                                        <div class='form-check'><input class='form-check-input' type='checkbox' id='Check<?=$id?>' value='<?=$id?>'><label class='form-check-label fw-bold' for='Check<?=$id?>'>SEÇ</label></div>
-                                    </td>
+                                    <td><input type="number" class="form-control Adet" placeholder="Adet"></td>
+                                    <td><div class='form-check'><input class='form-check-input' type='checkbox' id='Check<?=$id?>' value='<?=$id?>'><label class='form-check-label fw-bold' for='Check<?=$id?>'>SEÇ</label></div></td>
                                 <?php } else { ?>
-                                <td>
-                                    <a href="SetKontrol/SetKontrol.php?SetAdi=<?= $SetAdi ?>&Set_ID=<?= $Set_ID ?>" class="btn btn-light form-control mt-1 fw-bold"><?= $SetAdi ?></a>
-                                </td>
-                                    <td>
-                                        <div class="progress mt-2" style="height: 25px;">
-                                            <div class="progress-bar" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">50%
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <a href='Setler.php?UretimSetlerSil=<?= $id ?>&Set_ID=<?=$Set_ID?>' class='bi-x-square btn btn-danger'></a>
-                                    </td>
+                                <td><a href="SetKontrol/SetKontrol.php?SetAdi=<?= $SetAdi ?>&Set_ID=<?= $Set_ID ?>" class="btn btn-light form-control mt-1 fw-bold"><?= $SetAdi ?></a></td>
+                                    <td><div class="progress mt-2" style="height: 25px;"><div class="progress-bar" role="progressbar" style="width: <?=$SorYuzde?>%"><?=$SorYuzde?>%</div></div></td>
+                                    <td><a href='Setler.php?UretimSetlerSil=<?= $id ?>&Set_ID=<?=$Set_ID?>' class='bi-x-square btn btn-danger'></a></td>
                             <?php }
                                 echo "</tr>";
                             }
