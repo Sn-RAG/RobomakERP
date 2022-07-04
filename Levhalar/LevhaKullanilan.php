@@ -15,6 +15,7 @@ require __DIR__ . '/../controller/VTHataMesaji.php';
                             <a href="LevhaStok.php" class="btn btn-secondary bi-arrow-left-circle">&nbsp Geri Dön
                             </a>
                             <hr>
+                            <div class="yaz"></div>
                             <table class="table datatablem">
                                 <thead>
                                 <tr class="table-light">
@@ -122,7 +123,7 @@ require __DIR__ . '/../controller/VTHataMesaji.php';
 
                                                             <div class="col-md-12">
                                                                 <div class="form-floating">
-                                                                    <input type="number" class="form-control focus temizle GirAgirlik" id="GirAgirlik<?= $id ?>"  levhastokid="<?= $id ?>">
+                                                                    <input type="number" class="form-control focus temizle GirAgirlikk" id="GirAgirlik<?= $id ?>"  levhastokid="<?= $id ?>">
                                                                     <label>Ağırlık</label>
                                                                 </div>
                                                                 <div class="Hata text-danger py-1"></div>

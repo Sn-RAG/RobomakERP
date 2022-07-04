@@ -133,11 +133,7 @@ require __DIR__ . '/../controller/VTHataMesaji.php';
                                                         </div>
 
                                                         <div class="text-center">
-                                                            <label class="form-check-label">
-                                                                <input class="form-check-input TumuGeldi"
-                                                                       type="checkbox" id="<?= $id ?>">
-                                                                Tamamı Geldi
-                                                            </label>
+                                                        <label class="form-check-label"><input class="form-check-input TumuGeldi" type="checkbox" id="<?= $id ?>">Tamamı Geldi</label>
                                                         </div>
 
                                                         <input type="hidden" class="SipAgirlik<?= $id ?>"

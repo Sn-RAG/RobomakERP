@@ -1,5 +1,5 @@
 <?php
-$host = 'localhost'; //localhost
+$host = 'localhost';
 $dbname = 'robomakerp';
 $username = 'root';
 $password = '';
@@ -22,9 +22,8 @@ try {
 }
 
 /*
-$host = '94.73.150.194'; //localhost
+$host = '94.73.150.194';
 $dbname = 'robomak_com_tr_er';
 $username = 'robomak_com_tr_er';
 $password = 'Serhat8388Serhat8388';
-
 */

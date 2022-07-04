@@ -18,6 +18,12 @@ elseif (isset($_GET['UretimSetlerSil'])) {
                 $sil = $baglanti->query("DELETE FROM set_urun_icerik WHERE Set_ID =" . $Setid);
                 if ($sil) {
                     $sil = $baglanti->query("DELETE FROM set_urunler WHERE Set_ID =" . $Setid);
+                    if ($sil) {
+                        $sil = $baglanti->query("DELETE FROM loglar WHERE Set_ID =" . $Setid);
+                        if ($sil) {
+                            $sil = $baglanti->query("DELETE FROM set_urunler_asama WHERE Set_ID =" . $Setid);
+                        }
+                    }
                 }
             }
         }

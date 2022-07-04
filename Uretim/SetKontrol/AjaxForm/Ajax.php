@@ -54,7 +54,11 @@ $Has=".hasClass('btn-primary')";
                     alert('Hata: ' + xhr.responseText);
                 },
                 success: function (data) {
+                    if (data!="") {
                     $(".isDurum").html(data);
+                    }else{
+                    $(".isDurum").html("<strong class='secondary-font'> İşlem: Başlamadı </strong><small class='text-muted bi-clock'></small>");
+                    }
                 }
             });
         }

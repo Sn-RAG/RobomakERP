@@ -41,7 +41,7 @@ require __DIR__ . '/../../controller/Sil.php';
                                 </thead>
                                 <tbody>
                                 <?php
-                                $sorgu = $baglanti->query('SELECT Levha_Siparis_ID,Levha_Stok_ID,Siparis_ID,Tip,Cap,Kalinlik,Siparis_Adet,Siparis_Agirlik,S_Tarihi FROM view_siparis_levha');
+                                $sorgu = $baglanti->query('SELECT * FROM view_siparis_levha');
                                 foreach ($sorgu as $sonuc) {
                                     $id = $sonuc['Levha_Siparis_ID'];
                                     $Levha_Stok_ID = $sonuc['Levha_Stok_ID'];
@@ -79,21 +79,17 @@ require __DIR__ . '/../../controller/Sil.php';
                                                 </div>
                                                 <div class="modal-body">
                                                     <?php
-                                                    echo "<H5 class='text-center'>KULLAN</H5>";
+                                                    echo "<h5 class='text-center'>KULLAN</h5>";
                                                     $sor = $baglanti->query('SELECT Levha_Giden_ID, Duzenleme_Tarihi FROM levha_giden WHERE Levha_Stok_ID=' . $Levha_Stok_ID);
                                                     foreach ($sor as $sonuc1) {
-
                                                         echo "<a href='LevhaSiparisleri.php?LevhaGidenSil=$sonuc1[Levha_Giden_ID]'><div class='form-floating mb-1'><button class='form-control btn-outline-danger'>$sonuc1[Duzenleme_Tarihi]</button><label>Kullanma Tarihi</label></div></a>";
-
                                                     }
                                                     echo "<h5 class='text-center'>STOK</h5>";
                                                     $sor3 = $baglanti->query('SELECT Levha_Giden_ID FROM levha_giden WHERE Levha_Stok_ID=' . $Levha_Stok_ID)->fetch();
                                                     @$kntrl = $sor3["Levha_Giden_ID"];
                                                     $sor2 = $baglanti->query('SELECT Levha_Gelen_ID, Duzenleme_Tarihi FROM levha_gelen WHERE Levha_Stok_ID=' . $Levha_Stok_ID);
                                                     foreach ($sor2 as $sonuc2) {
-
                                                         echo "<a href='LevhaSiparisleri.php?LevhaGelenSil=$sonuc2[Levha_Gelen_ID]&LevhaGdnKntrl=$kntrl'><div class='form-floating mb-1'><button class='form-control btn-outline-danger'>$sonuc2[Duzenleme_Tarihi]</button><label>Teslim Tarihi</label></div></a>";
-
                                                     }
                                                     ?>
                                                 </div>

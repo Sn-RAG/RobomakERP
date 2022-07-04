@@ -92,7 +92,7 @@ $SorSira=isset($Urunler)?"s2":(isset($Kulp)?"s3":(isset($Kapak)?"s4":(isset($Tep
             var b = <?=$kisa?>(".s1");
             $.Sirala(a,b);
         }
-        <?=isset($Urunler)||isset($Kulp)||isset($Kapak)||isset($Tepe)||isset($Secimler)||isset($Seticerigi)?"$.Urunler();":""?>
+        <?=$_GET?"$.Urunler();":""?>
     });
 //#####    ########    ##########    ########    ##########    ########    ##########    ########    ##########    ########    ##########    ########    #####
 

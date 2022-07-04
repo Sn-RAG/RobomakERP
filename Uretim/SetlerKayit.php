@@ -135,8 +135,8 @@ if (!$_GET){unset($_SESSION["Set_ID"],$_SESSION["SetAdi"],$_SESSION["UrunIDler"]
                                                 <div class="accordion accordion-flush col-md-12"
                                                      id="accordion<?=$sonuc['Kategori_ID']?>">
                                                     <div class="accordion-item">
-                                                        <h2 class="accordion-header d-grid gap-2 mt-3"><button class="collapsed btn btn-light mb-1 fw-bold fs-5 text-end" type="button" data-bs-toggle="collapse" data-bs-target="#flush-<?=$sonuc['Kategori_ID']?>" aria-expanded="false"><?=$sonuc['Kategori_Adi']?></button></h2>
-                                                        <div id="flush-<?=$sonuc['Kategori_ID']?>" class="accordion-collapse collapse show" data-bs-parent="#accordion<?= $sonuc['Kategori_ID'] ?>">
+                                                        <h2 class="accordion-header d-grid gap-2 mt-3"><button class="collapsed btn btn-light mb-1 fw-bold text-start" type="button" data-bs-toggle="collapse" data-bs-target="#flush-<?=$sonuc['Kategori_ID']?>" aria-expanded="false"><?=$sonuc['Kategori_Adi']?></button></h2>
+                                                        <div id="flush-<?=$sonuc['Kategori_ID']?>" class="accordion-collapse collapse" data-bs-parent="#accordion<?= $sonuc['Kategori_ID'] ?>">
                                                             <div class="row">
                                                                 <?php $sorgu2=$baglanti->query("SELECT * FROM urun WHERE Kategori_ID=".$sonuc['Kategori_ID']);
                                                                 foreach ($sorgu2 as $sonuc2) {

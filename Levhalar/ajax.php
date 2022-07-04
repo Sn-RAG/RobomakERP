@@ -29,16 +29,6 @@
         var GirAgirlik = $('#GirAgirlik' + ID + '').val();
         var Kg = GirAgirlik / (c / 1000);
         $('.GirAdet' + ID + '').val(Math.round(Kg));
-        var SipAdet = $('.SipAdet' + ID + '').val();
-        var SipAgirlik = $('.SipAgirlik' + ID + '').val();
-        var GirAdet = $('.GirAdet' + ID + '').val();
-        if (Number(SipAdet) < Number(GirAdet)) {
-            $('.GirAdet' + ID + '').val(SipAdet);
-        }
-        if (Number(GirAgirlik) > Number(SipAgirlik)) {
-            $('#GirAgirlik' + ID + '').val(SipAgirlik);
-            $('.Hata').html("Ağırlığın tamamı girildi!");
-        }
     });
     $('.Gelen').click(function () {
         var ID = $(this).attr("levhastokid");
@@ -68,7 +58,7 @@
                     'GirAdet': GirAdet,
                     'StokEkle': true,
                 },
-                error: function (xhr, textStatus, errorThrown) {
+                error: function (xhr) {
                     alert('Hata: ' + xhr.responseText);
                 },
                 success: function () {
@@ -77,7 +67,6 @@
             })
         }
     });
-
 
 //####################################################################################################################
 
@@ -97,7 +86,7 @@
     });
 
     //Hesap işlemi
-    $(".GirAgirlik").keyup(function () {
+    $(".GirAgirlikk").keyup(function () {
         var ID = $(this).attr("levhastokid");
         var a = $('.Cap' + ID + '').val();
         var b = $('.Kalinlik' + ID + '').val();
@@ -147,11 +136,11 @@
                     'KGirAdet': GirAdet,
                     'Kullan': true,
                 },
-                error: function (xhr, textStatus, errorThrown) {
+                error: function (xhr) {
                     alert('Hata: ' + xhr.responseText);
                 },
                 success: function () {
-                    window.location.assign("LevhaKullanilan.php")
+                    window.location.assign("LevhaKullanilan.php");
                 }
             })
         }
