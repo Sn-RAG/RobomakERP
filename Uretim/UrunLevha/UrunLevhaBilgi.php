@@ -25,7 +25,7 @@ $UrunID = (int)$_GET['Urun_ID'];
                                 </button>
                             </a>
                             <hr>
-                            <table class="table table-borderless datatable">
+                            <table class="table datatable">
                                 <thead>
                                 <tr>
                                     <th scope="col">Urun Adı</th>

@@ -12,8 +12,8 @@ require __DIR__ . '/../controller/VTHataMesaji.php';
                         <div class="card-body">
                             <h5 class="card-title"><?= $page ?></h5>
                             <hr>
-                            <a href="LevhaStok.php" class="btn btn-secondary bi-arrow-left-circle">&nbsp Geri Dön
-                            </a>
+                            <a href="LevhaStok.php" class="btn btn-secondary bi-arrow-left-circle">&nbsp Geri Dön</a>
+                            <a href="SetPres.php">Set Pres</a>
                             <hr>
                             <div class="yaz"></div>
                             <table class="table datatablem">

@@ -35,14 +35,18 @@ require __DIR__ . '/../../controller/Db.php';
                                     $Kategori_Adi = $sonuc['Kategori_Adi'];
                                     $UrunAdi = $sonuc['UrunAdi'];
                                     $UrunFoto = $sonuc['UrunFoto'];
-                                    $Aciklama = $sonuc['Aciklama'];
                                 ?>
                                     <tr>
                                         <th><?= $Urun_ID ?></th>
                                         <th><?= $Kategori_ID ?></th>
                                         <th><?= $Kategori_Adi ?></th>
                                         <td><?= $UrunAdi ?></td>
-                                        <td><?= $Aciklama ?></td>
+                                        <td><?php
+                                        $sorgu=$baglanti->query("SELECT Kalinlik FROM urun_levha_bilgi INNER JOIN levha ON urun_levha_bilgi.Levha_ID = levha.Levha_ID WHERE Urun_ID =".$Urun_ID);
+                                        if($sorgu->rowCount()){
+                                        foreach ($sorgu as $s) {
+echo$s["Kalinlik"]." mm &nbsp ";
+                                        }} ?></td>
                                         <td>
                                             <a href="../UrunLevha/UrunLevhaBilgi.php?Urun_ID=<?= $Urun_ID ?>">
                                                 <button type="button" class="btn btn-info"><i class="bi bi-disc"></i> Levha Bilgisi

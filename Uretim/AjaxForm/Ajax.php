@@ -18,7 +18,7 @@ $SorSira=isset($Urunler)?"s2":(isset($Kulp)?"s3":(isset($Kapak)?"s4":(isset($Tep
                 data: {
                     'Listele': true,
                 },
-                error: function (xhr, textStatus, errorThrown) {
+                error: function (xhr) {
                     alert('Hata: ' + xhr.responseText);
                 },
                 success: function (data) {
@@ -177,91 +177,72 @@ $SorSira=isset($Urunler)?"s2":(isset($Kulp)?"s3":(isset($Kapak)?"s4":(isset($Tep
     $("#KulpSec").click(function () {
 
         var Kulp = $("#Kulp").val();
+        $("#bes").addClass('collapsed');
+        $("#collapsebes").removeClass('show');
+        $("#bes").removeAttr("aria-expanded");
 
-        if (Kulp == "") {
-            $(".KulpSecmedin").html("Kulp Seçmediniz!");
-        } else {
-            $(".KulpSecmedin").html("");
-            $("#bes").addClass('collapsed');
-            $("#collapsebes").removeClass('show');
-            $("#bes").removeAttr("aria-expanded");
+        $("#alti").removeClass('collapsed');
+        $("#collapsealti").addClass('show');
+        $("#alti").attr('aria-expanded', true);
 
-            $("#alti").removeClass('collapsed');
-            $("#collapsealti").addClass('show');
-            $("#alti").attr('aria-expanded', true);
+        var a = <?=$kisa?>(".s3");
+        var b = <?=$kisa?>(".s8");
+        $.Sirala(a,b);
 
-            var a = <?=$kisa?>(".s3");
-            var b = <?=$kisa?>(".s8");
-            $.Sirala(a,b);
-
-            $.ajax({
-                type: "POST",
-                url: "AjaxForm/post.php",
-                data: {'KulpSec': Kulp}
-            })
-        }
+        $.ajax({
+            type: "POST",
+            url: "AjaxForm/post.php",
+            data: {'KulpSec': Kulp}
+        })
     });
     $("#KapakSec").click(function () {
 
         var Kapak = $("#Kapak").val();
-
-        if (Kapak == "") {
-            $(".KapakSecmedin").html("Kapak Seçmediniz!");
-        } else {
-            $(".KapakSecmedin").html("");
-            $("#alti").addClass('collapsed');
-            $("#collapsealti").removeClass('show');
-            $("#alti").removeAttr("aria-expanded");
+        $("#alti").addClass('collapsed');
+        $("#collapsealti").removeClass('show');
+        $("#alti").removeAttr("aria-expanded");
 
 
-            $("#yedi").removeClass('collapsed');
-            $("#collapseyedi").addClass('show');
-            $("#yedi").attr('aria-expanded', true);
+        $("#yedi").removeClass('collapsed');
+        $("#collapseyedi").addClass('show');
+        $("#yedi").attr('aria-expanded', true);
 
-            var a = <?=$kisa?>(".s4");
-            var b = <?=$kisa?>(".s8");
-            $.Sirala(a,b);
+        var a = <?=$kisa?>(".s4");
+        var b = <?=$kisa?>(".s8");
+        $.Sirala(a,b);
 
-            $.ajax({
-                type: "POST",
-                url: "AjaxForm/post.php",
-                data: {'KapakSec': Kapak}
-            })
-        }
+        $.ajax({
+            type: "POST",
+            url: "AjaxForm/post.php",
+            data: {'KapakSec': Kapak}
+        })
     });
     $("#TepeSec").click(function () {
 
         var Tepe = $("#Tepe").val();
+        $("#yedi").addClass('collapsed');
+        $("#collapseyedi").removeClass('show');
+        $("#yedi").removeAttr("aria-expanded");
 
-        if (Tepe == "") {
-            $(".TepeSecmedin").html("Tepe Seçmediniz!");
-        } else {
-            $(".TepeSecmedin").html("");
-            $("#yedi").addClass('collapsed');
-            $("#collapseyedi").removeClass('show');
-            $("#yedi").removeAttr("aria-expanded");
+        $("#sekiz").removeClass('collapsed');
+        $("#collapsesekiz").addClass('show');
+        $("#sekiz").attr('aria-expanded', true);
 
-            $("#sekiz").removeClass('collapsed');
-            $("#collapsesekiz").addClass('show');
-            $("#sekiz").attr('aria-expanded', true);
+        var a = <?=$kisa?>(".s5");
+        var b = <?=$kisa?>(".s8");
+        $.Sirala(a,b);
 
-            var a = <?=$kisa?>(".s5");
-            var b = <?=$kisa?>(".s8");
-            $.Sirala(a,b);
-
-            $.ajax({
-                type: "POST",
-                url: "AjaxForm/post.php",
-                data: {'TepeSec': Tepe}
-            })
-        }
+        $.ajax({
+            type: "POST",
+            url: "AjaxForm/post.php",
+            data: {'TepeSec': Tepe}
+        })
     });
     $("#Secimler").click(function () {
 
         var Kutu = $("#Kutu").val();
-        var Kalinlik = $("#Kalinlik").val();
 
-        if (Kutu == ""||Kalinlik == "") {
+        if (Kutu == "") {
             $(".SecimlerHata").html("* Zorunlu alanları seçmediniz!");
         } else {
             $(".SecimlerHata").html("");
@@ -280,7 +261,7 @@ $SorSira=isset($Urunler)?"s2":(isset($Kulp)?"s3":(isset($Kapak)?"s4":(isset($Tep
             $.ajax({
                 type: "POST",
                 url: "AjaxForm/post.php",
-                data: {'KutuSec': Kutu,'KalinlikSec': Kalinlik}
+                data: {'KutuSec': Kutu}
             })
         }
     });
@@ -356,29 +337,9 @@ $SorSira=isset($Urunler)?"s2":(isset($Kulp)?"s3":(isset($Kapak)?"s4":(isset($Tep
         $.Sirala(a,b);
     });
 
-    $(".UrunSecim").on("click", function () {
-        var ID = $(this).attr("id");
-        var mm=$(".kal"+ID+"").val();//Tıkladığım kalınlık
-        var mmler = [];
-        var UrunIDler = [];
-        $(".UrunSecim:checked").map(function () {
-            $(".kal"+$(this).val()+"").map(function () {
-                mmler.push($(this).val());
-            });
-        });
-        //Seçili olan kalınlıklar ve tıkladığımızı karşılaştırıyoruz
-        $.each(mmler,function(i, sel){
-            if (sel != mm){
-                //$(".kal"+sel[i]+"").prop('checked',false);
-                <?=$Baska?>
-            }
-        });
-    });
-
     $("#SetTamam").click(function () {
 
         var SetAdi = $("#SetAdi").val();
-        var Kalinlik = $("#Kalinlik").val();
         var Kapak = $("#Kapak").val();
         var Kulp = $("#Kulp").val();
         var Tepe = $("#Tepe").val();
@@ -386,8 +347,12 @@ $SorSira=isset($Urunler)?"s2":(isset($Kulp)?"s3":(isset($Kapak)?"s4":(isset($Tep
 
 
         var UrunIDler = [];
+        var mmler = [];
         $(".UrunSecim:checked").map(function () {
             UrunIDler.push($(this).val());
+            $(".kal"+$(this).val()+"").map(function () {
+                mmler.push($(this).val());
+            });
         });
 
         var Adetler = [];
@@ -409,7 +374,7 @@ $SorSira=isset($Urunler)?"s2":(isset($Kulp)?"s3":(isset($Kapak)?"s4":(isset($Tep
         });
 
         for (let i = 0; i < DisBoyalar.length; i++) {
-            if (DisBoyalar[i] == '' || icBoyalar[i] == '' || Adetler[i] == '' || Kalinlik == "" || Kapak == "") {
+            if (DisBoyalar[i] == '' || icBoyalar[i] == '' || Adetler[i] == '') {
                 $(".Fazlainput").text("* Zorunlu alanları doldurun!");
             } else if (i == DisBoyalar.length - 1) {
                 Swal.fire({
@@ -425,8 +390,8 @@ $SorSira=isset($Urunler)?"s2":(isset($Kulp)?"s3":(isset($Kapak)?"s4":(isset($Tep
                             url: "AjaxForm/post.php",
                             data: {
                                 'UrunIDler': UrunIDler,
+                                'mmler':mmler,
                                 'SetAdi': $.trim(SetAdi),
-                                'Kalinlik': Kalinlik,
                                 'Kapak': Kapak,
                                 'Kulp': Kulp,
                                 'Tepe': Tepe,
@@ -436,7 +401,7 @@ $SorSira=isset($Urunler)?"s2":(isset($Kulp)?"s3":(isset($Kapak)?"s4":(isset($Tep
                                 'Adetler': Adetler,
                                 'Sec': true,
                             },
-                            error: function (xhr, textStatus, errorThrown) {
+                            error: function (xhr) {
                                 alert('Hata: ' + xhr.responseText);
                             },
                             success: function () {

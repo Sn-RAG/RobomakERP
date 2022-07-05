@@ -5,7 +5,6 @@ require __DIR__ . '/../../controller/Db.php';
 $id=(int)$_GET["id"];
 $Adet=(int)$_GET["adet"];//Set
 $Ad=$_GET["adi"];//Setadı
-$mm = $baglanti->query("SELECT Kalinlik FROM set_icerik INNER JOIN set_urun_icerik ON set_icerik.Set_Urun_icerik_ID = set_urun_icerik.Set_Urun_icerik_ID WHERE set_urun_icerik.Set_ID =" .$id)->fetch()["Kalinlik"];
 ?>
     <main id="main" class="main">
         <section class="section">
@@ -33,25 +32,25 @@ $mm = $baglanti->query("SELECT Kalinlik FROM set_icerik INNER JOIN set_urun_icer
                                 <?php
                                 $i = 0;
                                 $Topla=0;
-                                $sor = $baglanti->query("SELECT Urun_ID, SUM(Adet) AS Adet FROM view_set_urun_sec WHERE Set_ID =".$id." GROUP BY Urun_ID");
+                                $sor = $baglanti->query("SELECT Urun_ID, UrunAdi, Levha_ID, SUM(Adet) AS Adet FROM view_set_urun_sec WHERE Set_ID =".$id." GROUP BY Urun_ID");
                                 foreach ($sor as $s) {
                                     $i++;
-                                    $sor2 = $baglanti->query("SELECT * FROM urun WHERE Urun_ID=" . $s["Urun_ID"]);
-                                    foreach ($sor2 as $s2) {
-                                        $cap = $baglanti->query("SELECT Cap FROM urun_levha_bilgi INNER JOIN levha ON urun_levha_bilgi.Levha_ID = levha.Levha_ID WHERE Urun_ID =" . $s["Urun_ID"]." AND  Kalinlik =".$mm)->fetch()["Cap"];
-                                        
-                                        $AdetKg=ceil((($cap*$cap*$mm*(0.22))/1000)*$Adet*$s["Adet"]);
-                                        $Topla+=$AdetKg;
+                                        $l = $baglanti->query("SELECT Cap,Kalinlik FROM urun_levha_bilgi INNER JOIN levha ON urun_levha_bilgi.Levha_ID = levha.Levha_ID WHERE Urun_ID =" . $s["Urun_ID"]." AND levha.Levha_ID =".$s["Levha_ID"]);
+                                        $q=$l->fetch();
+                                        $c=$q["Cap"];
+                                        $k=$q["Kalinlik"];
+                                       $AdetKg=ceil((($c*$c*$k*(0.22))/1000)*$Adet*$s["Adet"]);
+                                       $Topla+=$AdetKg;
                                 ?>
                                     <tr>
                                         <td><?=$i?></td>
-                                        <td><?=$cap?></td>
-                                        <td><?=$mm?></td>
-                                        <td><?=$s2["UrunAdi"]?></td>
+                                        <td><?=$c?></td>
+                                        <td><?=$k?></td>
+                                        <td><?=$s["UrunAdi"]?></td>
                                         <td><?=$AdetKg?></td>
                                         <td></td>
                                     </tr>
-                                <?php }}?>
+                                <?php }?>
                                 <tr>
                                     <td></td>
                                     <td></td>

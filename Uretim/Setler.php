@@ -18,7 +18,7 @@ require __DIR__ . '/../controller/Sil.php';
                         <a href="UrunTasarla/UrunTasarla.php<?= isset($_GET["Sec"]) ? '?Sec=true' : "" ?>" class="btn btn-primary bi-hammer">&nbsp Ürün Tasarla</a>
                     </div>
                     <div class="col-md-6 justify-content-end d-flex">
-                        <button type="button" id="Sec" class="btn btn-success bi-check2 col-md-3" <?= isset($_GET["Sec"]) ? "" : "hidden" ?>>&nbsp Tamam</button>
+                        <button type="button" class="btn btn-success bi-check2 col-md-3 Sec" <?= isset($_GET["Sec"]) ? "" : "hidden" ?>>&nbsp Tamam</button>
                     </div>
                 </div>
                 <hr>
@@ -40,7 +40,7 @@ require __DIR__ . '/../controller/Sil.php';
                             $SetID = $sonuc['Set_ID'];
                             $SetAdi = $sonuc['SetAdi'];
                             require __DIR__ . '/SetKontrol/Yuzde.php';
-                            $SorYuzde=$SetYuzde==100?"Yükleme Bekliyor":$SetYuzde;
+                            @$SorYuzde=$SetYuzde==100?"Yükleme Bekliyor":$SetYuzde;
                         ?>
                             <tr>
                                 <td><?= $id ?></td>
@@ -52,7 +52,7 @@ require __DIR__ . '/../controller/Sil.php';
                                 <?php } else { ?>
                                 <td><a href="SetKontrol/SetKontrol.php?SetAdi=<?= $SetAdi ?>&Set_ID=<?= $SetID ?>" class="btn btn-light form-control mt-1 fw-bold"><?= $SetAdi ?></a></td>
                                     <td><div class="progress mt-2" style="height: 25px;"><div class="progress-bar" role="progressbar" style="width: <?=$SorYuzde?>%"><?=$SorYuzde?>%</div></div></td>
-                                    <td><a href='Setler.php?UretimSetlerSil=<?= $id ?>&Set_ID=<?=$SetID?>' class='bi-x-square btn btn-danger'></a></td>
+                                    <td><a href='Setler.php?UretimSetlerSil=<?= $id ?>&Set_ID=<?=$SetID?>' class='bi-trash btn btn-danger'></a></td>
                             <?php }
                                 echo "</tr>";
                             }
@@ -78,7 +78,7 @@ require __DIR__ . '/../controller/Sil.php';
 
     //Seçilen Setleri array olarak sessiona post ediyoruz herşey bu sayfada
 
-    $('#Sec').click(function() {
+    $('.Sec').click(function() {
         var Setsec = [];
         $("input:checkbox:checked").map(function() {
             Setsec.push($(this).val());

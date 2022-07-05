@@ -18,7 +18,7 @@ if (isset($_POST['Listele'])) {
             <div id="hata<?= $Uid ?>">
                 <input type="number" id="deger<?= $Uid ?>" class="form-control-sm me-1 mb-2">
                 <button class="gir btn btn-sm bi-check-lg btn-primary" Urun_ID="<?= $Uid ?>" Set_ID="<?= $s["Set_ID"] ?>"></button>
-                <button class="fire btn btn-sm bi-dash-lg btn-warning" Urun_ID="<?= $Uid ?>" Set_ID="<?= $s["Set_ID"] ?>"></button>
+                <button class="fire btn btn-sm bi-dash-lg btn-warning" Urun_ID="<?= $Uid ?>" Set_ID="<?= $s["Set_ID"] ?>" <?=$HB == "Pres"?"":"hidden"?>></button>
             </div>
 
             <?= $s["UrunAdi"] ?>

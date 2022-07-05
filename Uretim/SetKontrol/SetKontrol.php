@@ -150,7 +150,7 @@ require __DIR__ . '/Yuzde.php';
                     </style>
                     <div class="panel panel-primary col-md-6 mb-3">
                         <div class="panel-heading mb-3">
-                            <span class="fw-bold"> &nbsp Detaylar</span>
+                            <span class="fw-bold mb-3"> &nbsp Detaylar</span>
                         </div>
                         <div class="panel-body">
                             <ul class="chat">
@@ -186,6 +186,7 @@ require __DIR__ . '/Yuzde.php';
 <script>
     $('.datatablem').DataTable({
         responsive: true,
+        order:false,
         columnDefs: [{targets: '_all', orderable: false}],
         paging:false,
         bFilter:false,

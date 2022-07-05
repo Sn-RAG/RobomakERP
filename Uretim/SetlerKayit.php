@@ -4,7 +4,7 @@ $page = "Yeni Set";
 require __DIR__ . '/../controller/Header.php';
 require __DIR__ . '/../controller/Db.php';
 require __DIR__ . '/../controller/Kayit.php';
-if (!$_GET){unset($_SESSION["Set_ID"],$_SESSION["SetAdi"],$_SESSION["UrunIDler"],$_SESSION["KulpSec"],$_SESSION["KapakSec"],$_SESSION["KalinlikSec"],$_SESSION["KutuSec"],$_SESSION["TepeSec"]);}
+if (!$_GET){unset($_SESSION["Set_ID"],$_SESSION["SetAdi"],$_SESSION["UrunIDler"],$_SESSION["KulpSec"],$_SESSION["KapakSec"],$_SESSION["KutuSec"],$_SESSION["TepeSec"]);}
 ?>
     <link href="../assets/css/cbox.css" rel="stylesheet">
     <style>
@@ -71,32 +71,32 @@ if (!$_GET){unset($_SESSION["Set_ID"],$_SESSION["SetAdi"],$_SESSION["UrunIDler"]
                                 </div>
                                 <div class="step-item col-md-1">
                                     <button id="iki" class="step-button text-center collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseiki" aria-expanded="false" aria-controls="collapseiki">2</button>
-                                    <div class="step-title">Ürün Seçimi</div>
+                                    <div class="step-title">Ürün</div>
                                 </div>
                                 <div class="step-item col-md-1">
                                     <button id="bes" class="step-button text-center collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsebes" aria-expanded="false" aria-controls="collapsebes">3</button>
-                                    <div class="step-title">Kulp Seç</div>
+                                    <div class="step-title">Kulp</div>
                                 </div>
                                 <div class="step-item col-md-1">
                                     <button id="alti" class="step-button text-center collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsealti" aria-expanded="false" aria-controls="collapsealti">4</button>
-                                    <div class="step-title">Kapak Seç</div>
+                                    <div class="step-title">Kapak</div>
                                 </div>
                                 <div class="step-item col-md-1">
                                     <button id="yedi" class="step-button text-center collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseyedi" aria-expanded="false" aria-controls="collapseyedi">5</button>
-                                    <div class="step-title">Tepe Seç</div>
+                                    <div class="step-title">Tepe</div>
                                 </div>
                                 <div class="step-item col-md-1">
                                     <button id="sekiz" class="step-button text-center collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsesekiz" aria-expanded="false" aria-controls="collapsesekiz">6</button>
-                                    <div class="step-title">Seçimler</div>
+                                    <div class="step-title">Kutu</div>
                                 </div>
 
                                 <div class="step-item col-md-1">
                                     <button id="dort" class="step-button text-center collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsedort" aria-expanded="false" aria-controls="collapsedort">7</button>
-                                    <div class="step-title">Set içeriği</div>
+                                    <div class="step-title">Renk</div>
                                 </div>
                                 <div class="step-item col-md-1">
                                     <button id="uc" class="step-button text-center collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseuc" aria-expanded="false" aria-controls="collapseuc">8</button>
-                                    <div class="step-title">Ürün Ayarla</div>
+                                    <div class="step-title">Listele</div>
                                 </div>
                             </div>
 
@@ -149,7 +149,7 @@ if (!$_GET){unset($_SESSION["Set_ID"],$_SESSION["SetAdi"],$_SESSION["UrunIDler"]
                                                                             <span class="card2__body-cover-checkbox"><svg class="card2__body-cover-checkbox--svg" viewBox="0 0 12 10"><polyline points="1.5 6 4.5 9 10.5 1"></polyline></svg></span></div>
                                                                             <header class="card2__body-header">
                                                                                 <h2 class="card2__body-header-title"><?= $sonuc2['UrunAdi'] ?></h2>
-                                                                                <p class="card2__body-header-subtitle"><?php foreach($baglanti->query("SELECT Kalinlik FROM urun_levha_bilgi INNER JOIN levha ON urun_levha_bilgi.Levha_ID = levha.Levha_ID WHERE Urun_ID =".$ID) as $Kal){echo $Kal["Kalinlik"]." mm &nbsp &nbsp <input class='kal$ID' type='hidden' value='$Kal[Kalinlik]'>";}?></p>
+                                                                                <p class="card2__body-header-subtitle"><select class='kal<?=$ID?> form-select form-select-sm'><?php foreach($baglanti->query("SELECT levha.Levha_ID AS Lid,Kalinlik FROM urun_levha_bilgi INNER JOIN levha ON urun_levha_bilgi.Levha_ID = levha.Levha_ID WHERE Urun_ID =".$ID) as $K){echo "<option value='$K[Lid]'>$K[Kalinlik] mm</option>";}?></select></p>
                                                                             </header>
                                                                         </div>
                                                                     </label>
@@ -185,7 +185,6 @@ if (!$_GET){unset($_SESSION["Set_ID"],$_SESSION["SetAdi"],$_SESSION["UrunIDler"]
                                                 <button id="KulpSec" type="button" class="btn btn-primary bi-arrow-right"> &nbsp İleri </button>
 
                                             </div>
-                                            <label class="text-danger text-center col-md-12 KulpSecmedin"></label>
                                         </div>
                                     </div>
                                 </div>
@@ -212,7 +211,6 @@ if (!$_GET){unset($_SESSION["Set_ID"],$_SESSION["SetAdi"],$_SESSION["UrunIDler"]
                                                 <button id="KapakSec" type="button" class="btn btn-primary bi-arrow-right"> &nbsp İleri </button>
 
                                             </div>
-                                            <label class="text-danger text-center col-md-12 KapakSecmedin"></label>
                                         </div>
                                     </div>
                                 </div>
@@ -239,7 +237,6 @@ if (!$_GET){unset($_SESSION["Set_ID"],$_SESSION["SetAdi"],$_SESSION["UrunIDler"]
                                                 <button id="TepeSec" type="button" class="btn btn-primary bi-arrow-right"> &nbsp İleri </button>
 
                                             </div>
-                                            <label class="text-danger text-center col-md-12 KulpSecmedin"></label>
                                         </div>
                                     </div>
                                 </div>
@@ -272,19 +269,18 @@ if (!$_GET){unset($_SESSION["Set_ID"],$_SESSION["SetAdi"],$_SESSION["UrunIDler"]
                                                         <a href="../SatinAlma/Siparis/KutuSiparis.php?Setler" type="button" class="input-group-text bi-chevron-left bg-primary-light btn-outline-dark">&nbsp Ekle</a>
                                                     </div>
                                                 </div>
-
-                                                <div class="col-md-4">
+                                                <!--<div class="col-md-4">
                                                     <div class="input-group">
                                                         <select id='Kalinlik' class='form-select'>
                                                             <option value="">* Kalınlık Seç</option>
                                                             <?php $Kalinlik = $baglanti->query("SELECT DISTINCT Kalinlik FROM levha ORDER BY Kalinlik ASC");
                                                             foreach ($Kalinlik as $s){ ?>
-                                                            <option <?=isset($_SESSION["KalinlikSec"])?($_SESSION["KalinlikSec"]==$s["Kalinlik"]?"selected":""):""?> value="<?=$s["Kalinlik"]?>"><?=$s["Kalinlik"]?></option>
+                                                            <option value="<?=$s["Kalinlik"]?>"><?=$s["Kalinlik"]?></option>
                                                             <?php }?>
                                                         </select>
                                                         <a href="../SatinAlma/Siparis/LevhaSiparis.php?Setler" type="button" class="input-group-text bi-chevron-left bg-primary-light btn-outline-dark">&nbsp Ekle</a>
                                                     </div>
-                                                </div>
+                                                </div>-->
                                             </div>
                                         </div>
                                     </div>

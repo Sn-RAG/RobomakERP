@@ -12,7 +12,7 @@ if (isset($_POST['Sec'])) {
     $SetAdi = $_POST['SetAdi'];
     $Urun_IDler = $_POST["UrunIDler"];
 
-    $Kalinlik = $_POST['Kalinlik'];
+    $mmler = $_POST['mmler'];
     $Kapak = $_POST["Kapak"];
     $Kulp = $_POST["Kulp"];
     $Tepe = $_POST["Tepe"];
@@ -29,8 +29,8 @@ if (isset($_POST['Sec'])) {
     $_SESSION["Set_ID"] = $Set_ID;
 
     for ($i = 0; $i < count($Urun_IDler); $i++) {
-        $Kaydet = $baglanti->prepare("INSERT INTO set_urun SET Set_ID= ?, Urun_ID= ?");
-        $Sonuc = $Kaydet->execute(array($Set_ID, $Urun_IDler[$i]));
+        $Kaydet = $baglanti->prepare("INSERT INTO set_urun SET Set_ID= ?, Urun_ID= ?, Levha_ID= ?");
+        $Sonuc = $Kaydet->execute(array($Set_ID, $Urun_IDler[$i],$mmler[$i]));
     }
 
     $Set_Urun_ID = $baglanti->lastInsertId();
@@ -41,14 +41,14 @@ if (isset($_POST['Sec'])) {
 
     $Set_Urun_icerik_ID = $baglanti->lastInsertId();
 
-    $SetKaydet = $baglanti->prepare("INSERT INTO set_icerik SET Set_Urun_ID= ?, Set_Urun_icerik_ID= ?, Kalinlik= ?, Kutu= ?, Kullanici_ID= ?");
-    $Sonuc = $SetKaydet->execute(array($Set_Urun_ID, $Set_Urun_icerik_ID, $Kalinlik, $Kutu, $Kullanici));
+    $SetKaydet = $baglanti->prepare("INSERT INTO set_icerik SET Set_Urun_ID= ?, Set_Urun_icerik_ID= ?, Kutu= ?, Kullanici_ID= ?");
+    $Sonuc = $SetKaydet->execute(array($Set_Urun_ID, $Set_Urun_icerik_ID, $Kutu, $Kullanici));
 ############################################
     // Düzenlemek için Kombinasyonu yapılan verinin bütün varyasyonlarını başka bir veri tabanına ekliyoruz sırf ürüne özel düzenlemeler gerçekleştirmek için
 ###############################################
           
-$baglanti->query("INSERT INTO set_urunler (Set_Urun_icerik_ID, Set_ID, Urun_ID, icBoya_ID, DisBoya_ID, Kulp_ID, Kapak_ID, Tepe_ID, Adet) 
-SELECT set_urun_icerik.Set_Urun_icerik_ID, set_urun.Set_ID, set_urun.Urun_ID, icBoya, DisBoya, Kulp, Kapak, Tepe, Adet 
+$baglanti->query("INSERT INTO set_urunler (Set_Urun_icerik_ID, Set_ID, Urun_ID, Levha_ID, icBoya_ID, DisBoya_ID, Kulp_ID, Kapak_ID, Tepe_ID, Adet) 
+SELECT set_urun_icerik.Set_Urun_icerik_ID, set_urun.Set_ID, set_urun.Urun_ID, set_urun.Levha_ID, icBoya, DisBoya, Kulp, Kapak, Tepe, Adet 
 FROM view_uretim_setler 
 INNER JOIN set_urun_icerik ON view_uretim_setler.Set_ID = set_urun_icerik.Set_ID 
 INNER JOIN set_urun ON view_uretim_setler.Set_ID = set_urun.Set_ID 
@@ -77,7 +77,6 @@ WHERE view_uretim_setler.Set_ID = " . $Set_ID . " GROUP BY set_urun_icerik.Set_U
     $_SESSION["TepeSec"]=$_POST["TepeSec"];
 }elseif (isset($_POST["KalinlikSec"])){
     //Kalınlınlık ve kutu tutuyoruz.ekle yapılırsa
-    $_SESSION["KalinlikSec"]=$_POST["KalinlikSec"];
     $_SESSION["KutuSec"]=$_POST["KutuSec"];
 }
 #############################################################################################################################################
@@ -117,13 +116,13 @@ elseif (isset($_POST["Listele"])) {
                         <br>
 
                         <input type='hidden' name='kapaki<?= $s["Set_Urun_Duzenle_ID"] ?>'
-                               value='<?= $s["Kapak_ID"] ?>'>
+                               value='<?= @$s["Kapak_ID"] ?>'>
                         Kapak:<?= $s["Kapak_ID"] == "" ? "<code>Ayarlanmadı</code>" : "<code class='text-success small'>" . $s["Kapak_ID"] . "</code>" ?>
                         <br>
 
 
                         <input type='hidden' name='kulpu<?= $s["Set_Urun_Duzenle_ID"] ?>'
-                               value='<?= $s["Kulp_ID"] ?>'>
+                               value='<?= @$s["Kulp_ID"] ?>'>
                         Kulp:<?= $s["KulpAdi"] == "" ? "<code>Ayarlanmadı</code>" : "<code class='text-success small'>" . $s["KulpAdi"] . "</code>" ?>
                         <br>
 
