@@ -134,9 +134,9 @@ $SorSira=isset($Urunler)?"s2":(isset($Kulp)?"s3":(isset($Kapak)?"s4":(isset($Tep
     //#####################################################
 
     $("#UrunSec").click(function () {
+        var mmler=[];
         var UrunIDler = [];
-        $(".UrunSecim:checked").map(function () {UrunIDler.push($(this).val());});
-
+        $(".UrunSecim:checked").map(function(){UrunIDler.push($(this).val());});
         if(UrunIDler==""){
             $("#UrunBos").html("Ürün Seçmediniz!");
         }else{
@@ -189,12 +189,15 @@ $SorSira=isset($Urunler)?"s2":(isset($Kulp)?"s3":(isset($Kapak)?"s4":(isset($Tep
         var b = <?=$kisa?>(".s8");
         $.Sirala(a,b);
 
-        $.ajax({
-            type: "POST",
-            url: "AjaxForm/post.php",
-            data: {'KulpSec': Kulp}
-        })
+        if (Kulp!="") {
+            $.ajax({
+                    type: "POST",
+                    url: "AjaxForm/post.php",
+                    data: {'KulpSec': Kulp}
+                })
+        }
     });
+
     $("#KapakSec").click(function () {
 
         var Kapak = $("#Kapak").val();
@@ -344,33 +347,25 @@ $SorSira=isset($Urunler)?"s2":(isset($Kulp)?"s3":(isset($Kapak)?"s4":(isset($Tep
         var Kulp = $("#Kulp").val();
         var Tepe = $("#Tepe").val();
         var Kutu = $("#Kutu").val();
-
-
+        
         var UrunIDler = [];
         var mmler = [];
-        $(".UrunSecim:checked").map(function () {
-            UrunIDler.push($(this).val());
-            $(".kal"+$(this).val()+"").map(function () {
-                mmler.push($(this).val());
-            });
-        });
-
         var Adetler = [];
-        $("input.Adetler").each(function (i, sel) {
-            var selectedVal = $(sel).val();
-            Adetler.push(selectedVal);
-        });
-
         var icBoyalar = [];
-        $("select.icBoyalar").each(function (i, sel) {
-            var selectedVal = $(sel).val();
-            icBoyalar.push(selectedVal);
-        });
-
         var DisBoyalar = [];
-        $("select.DisBoyalar").each(function (i, sel) {
-            var selectedVal = $(sel).val();
-            DisBoyalar.push(selectedVal);
+        $(".UrunSecim:checked").map(function () {
+            var h=$(this).val();
+            UrunIDler.push(h);
+            mmler.push($(".kal"+h+"").val());
+        });
+        $(".Adetler").each(function (i, sel) {
+            Adetler.push($(sel).val());
+        });
+        $(".icBoyalar").each(function (i, sel) {
+            icBoyalar.push($(sel).val());
+        });
+        $(".DisBoyalar").each(function (i, sel) {
+            DisBoyalar.push($(sel).val());
         });
 
         for (let i = 0; i < DisBoyalar.length; i++) {

@@ -1,31 +1,31 @@
 <?php
-$Has=".hasClass('btn-primary')";
+$Has = ".hasClass('btn-primary')";
 ?>
 <script>
-    $(function () {
-        var SetID=$("#SetID").val();
-        $.Listele = function () {
-            var Hangisi = "";
-            var Is = "";
-            if ($("#Pres")<?=$Has?>) {
+    $(function() {
+        var SetID = $("#SetID").val();
+        $.Listele = function() {
+            var Urunler = <?php echo json_encode($Urunler); ?>;
+
+            if ($("#Pres") <?= $Has ?>) {
                 Hangisi = "Pres";
                 Is = "Preslendi";
-            } else if ($("#Telleme")<?=$Has?>) {
+            } else if ($("#Telleme") <?= $Has ?>) {
                 Hangisi = "Telleme";
                 Is = "Tellendi";
-            } else if ($("#Kumlama")<?=$Has?>) {
+            } else if ($("#Kumlama") <?= $Has ?>) {
                 Hangisi = "Kumlama";
                 Is = "Kumlandı";
-            } else if ($("#icBoyama")<?=$Has?>) {
+            } else if ($("#icBoyama") <?= $Has ?>) {
                 Hangisi = "icBoyama";
                 Is = "Boyandı";
-            }else if ($("#DisBoyama")<?=$Has?>) {
+            } else if ($("#DisBoyama") <?= $Has ?>) {
                 Hangisi = "DisBoyama";
                 Is = "Boyandı";
-            } else if ($("#Paketleme")<?=$Has?>) {
+            } else if ($("#Paketleme") <?= $Has ?>) {
                 Hangisi = "Paketleme";
                 Is = "Paketlendi";
-            }else if ($("#Yikama")<?=$Has?>) {
+            } else if ($("#Yikama") <?= $Has ?>) {
                 Hangisi = "Yıkama";
                 Is = "Yıkandı";
             }
@@ -34,123 +34,180 @@ $Has=".hasClass('btn-primary')";
                 url: "AjaxForm/post.php",
                 data: {
                     'Listele': SetID,
-                    'HangiButon':Hangisi,
+                    'HangiButon': Hangisi,
+                    'Urunler': Urunler
                 },
-                error: function (xhr, textStatus, errorThrown) {
+                error: function(xhr) {
                     alert('Hata: ' + xhr.responseText);
                 },
-                success: function (data) {
+                success: function(data) {
+                    //$(".yazsayi" + Uid + "").html(data);
                     $(".UrunYaz").html(data);
                 }
-            });
+            })
             $.ajax({
                 type: "POST",
                 url: "AjaxForm/post.php",
                 data: {
                     'isDurum': SetID,
-                    'Is':Is,
+                    'Is': Is,
                 },
-                error: function (xhr, textStatus, errorThrown) {
+                error: function(xhr) {
                     alert('Hata: ' + xhr.responseText);
                 },
-                success: function (data) {
-                    if (data!="") {
-                    $(".isDurum").html(data);
-                    }else{
-                    $(".isDurum").html("<strong class='secondary-font'> İşlem: Başlamadı </strong><small class='text-muted bi-clock'></small>");
+                success: function(data) {
+                    if (data != "") {
+                        $(".isDurum").html(data);
+                    } else {
+                        $(".isDurum").html("<strong class='secondary-font'> İşlem: Başlamadı </strong><small class='text-muted bi-clock'></small>");
                     }
                 }
-            });
+            })
         }
         $.Listele();
     });
     //##### ########## ########## ########## ########## ########## ########## ########## ########## ########## ########## ########## #####
+    $('.gir').click(function() {
+        var Uid = $(this).attr("Urun_ID");
+        var SetID = $(this).attr("Set_ID");
+        var deger = $("#deger" + Uid + "").val();
+        var Tarih = $(".Tarih").val();
+        if (deger != "" & Number(deger) != 0) {
+            if ($("#Pres") <?= $Has ?>) {
+                Hangisi = "Pres";
+            } else if ($("#Telleme") <?= $Has ?>) {
+                Hangisi = "Telleme";
+            } else if ($("#Kumlama") <?= $Has ?>) {
+                Hangisi = "Kumlama";
+            } else if ($("#icBoyama") <?= $Has ?>) {
+                Hangisi = "icBoyama";
+            } else if ($("#DisBoyama") <?= $Has ?>) {
+                Hangisi = "DisBoyama";
+            } else if ($("#Paketleme") <?= $Has ?>) {
+                Hangisi = "Paketleme";
+            } else if ($("#Yikama") <?= $Has ?>) {
+                Hangisi = "Yıkama";
+            }
 
-    $.tmz = function () {
+            $.ajax({
+                type: "POST",
+                url: "AjaxForm/post.php",
+                data: {
+                    'SetID': SetID,
+                    'UrunID': Uid,
+                    'Deger': deger,
+                    'Hangisi': Hangisi,
+                    'Tarih': Tarih
+                },
+                error: function(xhr) {
+                    alert('Hata: ' + xhr.responseText);
+                },
+                success: function(data) {
+                    $(".yazsayi" + Uid + "").html(data);
+                    $(".temizle").val("");
+                }
+            })
+        } else {
+            if ($("#hata" + Uid + "").children("label").length == 0) {
+                $("#hata" + Uid + "").append($('<label>').html("Değer Giriniz!").addClass("small text-danger"));
+            }
+
+        }
+    });
+    $('.fire').click(function() {
+        var Uid = $(this).attr("Urun_ID");
+        var SetID = $(this).attr("Set_ID");
+        var deger = $("#deger" + Uid + "").val();
+        var Tarih = $(".Tarih").val();
+        var Hangisi = "";
+        if (deger != "" & Number(deger) != 0) {
+            $.ajax({
+                type: "POST",
+                url: "AjaxForm/post.php",
+                data: {
+                    'FSetID': SetID,
+                    'FUrunID': Uid,
+                    'FDeger': deger,
+                    'FTarih': Tarih
+                },
+                error: function(xhr) {
+                    alert('Hata: ' + xhr.responseText);
+                },
+                success: function() {
+                    $.Listele();
+                    $(".temizle").val("");
+                }
+            })
+        } else {
+            if ($("#hata" + Uid + "").children("label").length == 0) {
+                $("#hata" + Uid + "").append($('<label>').html("Değer Giriniz!").addClass("small text-danger"));
+            }
+
+        }
+    });
+
+    //###################################################################################################################################################
+
+    $.tmz = function() {
         $(".t").removeClass("btn-primary");
         $(".t").addClass("btn-outline-dark");
     }
-    $.Spinekle=function (){
-        $(".Spinekle").children("div").remove();
-        $(".Spinekle").prepend($('<div>').addClass('spinner-border text-secondary'));
-    }
 
-    $("#Telleme").click(function () {
+    $("#Telleme").click(function() {
         $.tmz();
         $(this).removeClass("btn-primary");
         $(this).removeClass("btn-outline-dark");
         $(this).addClass("btn-primary");
-        $.Spinekle();
-        $(".Islem").html(" İşlem: Telleme ");
-        $(".Sonuc").html(" 30d önce ");
-        $(".UrunAdet").html("1 Adet 18 Derin Tencere Tellendi.");
         $.Listele();
+        $('.fire').prop("hidden",true);
 
     });
-    $("#Kumlama").click(function () {
+    $("#Kumlama").click(function() {
         $.tmz();
         $(this).removeClass("btn-primary");
         $(this).removeClass("btn-outline-dark");
         $(this).addClass("btn-primary");
-        $.Spinekle();
-        $(".Islem").html(" İşlem: Kumlama ");
-        $(".Sonuc").html(" 30d önce ");
-        $(".UrunAdet").html("1 Adet 18 Derin Tencere Kumlandı.");
         $.Listele();
+        $('.fire').prop("hidden",true);
     });
-    $("#icBoyama").click(function () {
+    $("#icBoyama").click(function() {
         $.tmz();
         $(this).removeClass("btn-primary");
         $(this).removeClass("btn-outline-dark");
         $(this).addClass("btn-primary");
-        $.Spinekle();
-        $(".Islem").html(" İşlem: Boyama ");
-        $(".Sonuc").html(" 30d önce ");
-        $(".UrunAdet").html("1 Adet 18 Derin Tencere Boyandı.");
         $.Listele();
+        $('.fire').prop("hidden",true);
     });
-    $("#DisBoyama").click(function () {
+    $("#DisBoyama").click(function() {
         $.tmz();
         $(this).removeClass("btn-primary");
         $(this).removeClass("btn-outline-dark");
         $(this).addClass("btn-primary");
-        $.Spinekle();
-        $(".Islem").html(" İşlem: Boyama ");
-        $(".Sonuc").html(" 30d önce ");
-        $(".UrunAdet").html("1 Adet 18 Derin Tencere Boyandı.");
         $.Listele();
+        $('.fire').prop("hidden",true);
     });
-    $("#Paketleme").click(function () {
+    $("#Paketleme").click(function() {
         $.tmz();
         $(this).removeClass("btn-primary");
         $(this).removeClass("btn-outline-dark");
         $(this).addClass("btn-primary");
-        $.Spinekle();
-        $(".Islem").html(" İşlem: Paketleme ");
-        $(".Sonuc").html(" 30d önce ");
-        $(".UrunAdet").html("1 Adet 18 Derin Tencere Paketlendi.");
         $.Listele();
+        $('.fire').prop("hidden",true);
     });
-    $("#Pres").click(function () {
+    $("#Pres").click(function() {
         $.tmz();
         $(this).removeClass("btn-primary");
         $(this).removeClass("btn-outline-dark");
         $(this).addClass("btn-primary");
-        $.Spinekle();
-        $(".Islem").html(" İşlem: Pres ");
-        $(".Sonuc").html(" 30d önce ");
-        $(".UrunAdet").html("1 Adet 18 Derin Tencere Preslendi.");
         $.Listele();
+        $('.fire').prop("hidden",false);
     });
-    $("#Yikama").click(function () {
+    $("#Yikama").click(function() {
         $.tmz();
         $(this).removeClass("btn-primary");
         $(this).removeClass("btn-outline-dark");
         $(this).addClass("btn-primary");
-        $.Spinekle();
-        $(".Islem").html(" İşlem: Yıkama ");
-        $(".Sonuc").html(" 30d önce ");
-        $(".UrunAdet").html("1 Adet 18 Derin Tencere Yıkandı.");
         $.Listele();
+        $('.fire').prop("hidden",true);
     });
 </script>

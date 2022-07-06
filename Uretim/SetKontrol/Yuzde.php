@@ -25,24 +25,28 @@ $j = 0;
 $Paket = 0;
 $p = 0;
 
-$sor = $baglanti->query("SELECT Urun_ID, UrunAdi, Levha_ID, SUM(Adet) AS Adet FROM view_set_urun_sec WHERE Set_ID =".$SetID." GROUP BY Urun_ID")->fetchAll();
+$sor = $baglanti->query("SELECT Urun_ID, UrunAdi, Levha_ID, SUM(Adet) AS Adet FROM view_set_urun_sec WHERE Set_ID =" . $SetID . " GROUP BY Urun_ID")->fetchAll();
 foreach ($sor as $s) {
     $UrunID = $s["Urun_ID"];
-    $l = $baglanti->query("SELECT Cap,Kalinlik FROM urun_levha_bilgi INNER JOIN levha ON urun_levha_bilgi.Levha_ID = levha.Levha_ID WHERE Urun_ID =" . $s["Urun_ID"]." AND levha.Levha_ID =".$s["Levha_ID"]);
-    if($l->rowCount()){
-    $q=$l->fetch();
-    $c=$q["Cap"];
-    $k=$q["Kalinlik"];
-    $a += ceil((($c * $c * $k * (0.22)) / 1000) * $s["Adet"]); // Toplam tedarik edilecek levha
-    //echo $a."<br>";
-    $sorstok = $baglanti->query("SELECT Stok_Adet, Stok_Agirlik FROM levha_siparis INNER JOIN levha_gelen ON levha_siparis.Levha_Stok_ID = levha_gelen.Levha_Stok_ID INNER JOIN levha ON levha_siparis.Levha_ID = levha.Levha_ID WHERE levha.Levha_ID =" . $s["Levha_ID"]);
-    if ($sorstok->rowCount()) {
-        foreach ($sorstok as $stk) {
-            $b += $stk["Stok_Agirlik"]; // Stokta olan levha
-            //echo "Stok ".$b."<br>";
-        }
-    } //else echo "<br>Çap= $cap &nbsp Kalinlik= $mm > Stokta yok > <a href='../../SatinAlma/Siparis/LevhaSiparis.php?Kalinlik=$mm&Cap=$cap'>Sipariş</a>";
-}
+    $l = $baglanti->query("SELECT Cap,Kalinlik FROM urun_levha_bilgi INNER JOIN levha ON urun_levha_bilgi.Levha_ID = levha.Levha_ID WHERE Urun_ID =" . $s["Urun_ID"] . " AND levha.Levha_ID =" . $s["Levha_ID"]);
+    if ($l->rowCount()) {
+        $q = $l->fetch();
+        $c = $q["Cap"];
+        $k = $q["Kalinlik"];
+        $o = ceil((($c * $c * $k * (0.22)) / 1000) * $s["Adet"]); // Toplam tedarik edilecek levha
+        $a+=$o;
+        $sorstok = $baglanti->query("SELECT levha.Levha_ID AS LevhaID, Stok_Adet, Stok_Agirlik FROM levha_siparis INNER JOIN levha_gelen ON levha_siparis.Levha_Stok_ID = levha_gelen.Levha_Stok_ID INNER JOIN levha ON levha_siparis.Levha_ID = levha.Levha_ID WHERE levha.Levha_ID =" . $s["Levha_ID"]);
+        if ($sorstok->rowCount()) {
+            foreach ($sorstok as $stk) {
+                $m = $stk["Stok_Agirlik"]; // Stokta olan levha
+                if($o>$m){
+                    $b+=$m;
+                }else{
+                    $b+=$o;
+                }
+            }
+        } //else echo "<br>Çap= $cap &nbsp Kalinlik= $mm > Stokta yok > <a href='../../SatinAlma/Siparis/LevhaSiparis.php?Kalinlik=$mm&Cap=$cap'>Sipariş</a>";
+    }
     //PRES
     $e += $baglanti->query("SELECT SUM(Adet) AS Toplam FROM set_urunler_asama_akis WHERE Yapilan_is='Preslendi' AND Set_ID=" . $SetID . " AND Urun_ID=" . $UrunID)->fetch()["Toplam"];
     //Yıkama
@@ -59,9 +63,10 @@ foreach ($sor as $s) {
 
 //Yüzde Hesabı
 if ($a <> null) { //Levha
-    $Hesap = floor($a / ($b / 100));
+    $Hesap = floor($b / ($a / 100));
     $Hesap = $Hesap > 100 ? 100 : $Hesap;
 }
+
 if ($e <> null) { //Pres
     $Prs = floor($e / ($Toplam / 100));
     $Prs = $Prs > 100 ? 100 : $Prs;

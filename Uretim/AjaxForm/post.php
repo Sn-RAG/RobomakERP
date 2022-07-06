@@ -13,11 +13,39 @@ if (isset($_POST['Sec'])) {
     $Urun_IDler = $_POST["UrunIDler"];
 
     $mmler = $_POST['mmler'];
-    $Kapak = $_POST["Kapak"];
-    $Kulp = $_POST["Kulp"];
-    $Tepe = $_POST["Tepe"];
     $Kutu = $_POST["Kutu"];
 
+    //Kapak Kulp ve Tepe idleri Kendi tablolarında olmayınca Listelenmiyor o yüzden yok adında kayıt kontrolü yapıcaz
+    if ($_POST["Kapak"]=="") {
+        $sor=$baglanti->query("SELECT Kapak_ID FROM kapak WHERE Tip='Yok'");
+        if($sor->rowCount()){
+            $Kapak=$sor->fetch()["Kapak_ID"];
+        }else{
+            $k=$baglanti->prepare("INSERT INTO kapak SET Firma_ID=?, Tip=?, Kapak_No=?, Model_Adi=?");
+            $k->execute(array(0,'Yok',0,'Yok'));
+            $Kapak=$baglanti->lastInsertId();
+        }
+    }
+    if ($_POST["Kulp"]=="") {
+        $sor=$baglanti->query("SELECT Kulp_ID FROM kulp WHERE KulpAdi='Yok'");
+        if($sor->rowCount()){
+            $Kulp=$sor->fetch()["Kulp_ID"];
+        }else{
+            $k=$baglanti->prepare("INSERT INTO kulp SET Firma_ID=?, KulpAdi=?, KulpCesidi=?, Renk=?");
+            $k->execute(array(0,'Yok','Yok','Yok'));
+            $Kulp=$baglanti->lastInsertId();
+        }
+    }
+    if ($_POST["Tepe"]=="") {
+        $sor=$baglanti->query("SELECT Tepe_ID FROM tepe WHERE TepeAdi='Yok'");
+        if($sor->rowCount()){
+            $Tepe=$sor->fetch()["Tepe_ID"];
+        }else{
+            $k=$baglanti->prepare("INSERT INTO tepe SET Firma_ID=?, TepeAdi=?, TepeFoto=?");
+            $k->execute(array(0,'Yok','Yok'));
+            $Tepe=$baglanti->lastInsertId();
+        }
+    }
     $icBoyalar = $_POST["icBoyalar"];
     $DisBoyalar = $_POST["DisBoyalar"];
     $Adetler = $_POST["Adetler"];
