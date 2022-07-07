@@ -46,47 +46,49 @@ if (isset($_POST['Listele'])) {
     } ?>
     <script>
         var Urunler = <?php echo json_encode($Urunler); ?>;
-        <?php if ($HB == "Pres") { ?>
+        <?php
+        $Urn = count($Urunler);
+        if ($HB == "Pres") { ?>
             var Pres = <?php echo json_encode($Pres); ?>;
 
-            for (let i = 1; i <= <?= count($Urunler) ?>; i++) {
+            for (let i = 1; i <= <?= $Urn ?>; i++) {
                 $(".yazsayi" + Urunler[i] + "").html(Pres[i]);
             }
 
         <?php } elseif ($HB == "Telleme") { ?>
             var Telleme = <?php echo json_encode($Telleme); ?>;
 
-            for (let i = 1; i <= <?= count($Urunler) ?>; i++) {
+            for (let i = 1; i <= <?= $Urn ?>; i++) {
                 $(".yazsayi" + Urunler[i] + "").html(Telleme[i]);
             }
         <?php } elseif ($HB == "Kumlama") { ?>
             var Kumlama = <?php echo json_encode($Kumlama); ?>;
 
-            for (let i = 1; i <= <?= count($Urunler) ?>; i++) {
+            for (let i = 1; i <= <?= $Urn ?>; i++) {
                 $(".yazsayi" + Urunler[i] + "").html(Kumlama[i]);
             }
         <?php } elseif ($HB == "icBoyama") { ?>
             var icBoyama = <?php echo json_encode($icBoyama); ?>;
 
-            for (let i = 1; i <= <?= count($Urunler) ?>; i++) {
+            for (let i = 1; i <= <?= $Urn ?>; i++) {
                 $(".yazsayi" + Urunler[i] + "").html(icBoyama[i]);
             }
         <?php } elseif ($HB == "DisBoyama") { ?>
             var DisBoyama = <?php echo json_encode($DisBoyama); ?>;
 
-            for (let i = 1; i <= <?= count($Urunler) ?>; i++) {
+            for (let i = 1; i <= <?= $Urn ?>; i++) {
                 $(".yazsayi" + Urunler[i] + "").html(DisBoyama[i]);
             }
         <?php } elseif ($HB == "Yıkama") { ?>
             var Yikama = <?php echo json_encode($Yikama); ?>;
 
-            for (let i = 1; i <= <?= count($Urunler) ?>; i++) {
+            for (let i = 1; i <= <?= $Urn ?>; i++) {
                 $(".yazsayi" + Urunler[i] + "").html(Yikama[i]);
             }
         <?php } else { ?>
             var Paketle = <?php echo json_encode($Paketle); ?>;
 
-            for (let i = 1; i <= <?= count($Urunler) ?>; i++) {
+            for (let i = 1; i <= <?= $Urn ?>; i++) {
                 $(".yazsayi" + Urunler[i] + "").html(Paketle[i]);
             }
         <?php } ?>
@@ -142,11 +144,12 @@ if (isset($_POST['Listele'])) {
 
 } elseif (isset($_POST["isDurum"])) {
     $is = $_POST["Is"];
-    $sor = $is == "Preslendi" ? "  OR Yapilan_is='Fire'" : "";
+    $id=$_POST['isDurum'];
+    $sor = $is == "Preslendi" ? "  OR Yapilan_is='Fire' AND Set_ID =" . $id : "";
     $Tsorgu = $baglanti->query("SELECT Tarih FROM set_urunler_asama_akis INNER JOIN urun ON set_urunler_asama_akis.Urun_ID = urun.Urun_ID WHERE Set_ID =" . $_POST['isDurum'] . " GROUP BY Tarih");
     if ($Tsorgu->rowCount()) {
         foreach ($Tsorgu as $t) {
-            $sorgu = $baglanti->query("SELECT Set_ID, UrunAdi, Yapilan_is, Adet FROM set_urunler_asama_akis INNER JOIN urun ON set_urunler_asama_akis.Urun_ID = urun.Urun_ID WHERE Tarih='$t[Tarih]' AND Set_ID =" . $_POST['isDurum'] . " AND Yapilan_is='$is' $sor");
+            $sorgu = $baglanti->query("SELECT Set_ID, UrunAdi, Yapilan_is, Adet FROM set_urunler_asama_akis INNER JOIN urun ON set_urunler_asama_akis.Urun_ID = urun.Urun_ID WHERE Tarih='$t[Tarih]' AND Set_ID =" . $id . " AND Yapilan_is='$is' " . $sor);
             if ($sorgu->rowCount()) {
                 echo "<strong class='text-primary bi-clock'> $t[Tarih] </strong><br>";
             }

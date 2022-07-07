@@ -3,8 +3,8 @@ $Has = ".hasClass('btn-primary')";
 ?>
 <script>
     $(function() {
-        var SetID = $("#SetID").val();
         $.Listele = function() {
+            var SetID = $("#SetID").val();
             var Urunler = <?php echo json_encode($Urunler); ?>;
 
             if ($("#Pres") <?= $Has ?>) {
@@ -41,10 +41,9 @@ $Has = ".hasClass('btn-primary')";
                     alert('Hata: ' + xhr.responseText);
                 },
                 success: function(data) {
-                    //$(".yazsayi" + Uid + "").html(data);
                     $(".UrunYaz").html(data);
                 }
-            })
+            });
             $.ajax({
                 type: "POST",
                 url: "AjaxForm/post.php",
@@ -62,9 +61,17 @@ $Has = ".hasClass('btn-primary')";
                         $(".isDurum").html("<strong class='secondary-font'> İşlem: Başlamadı </strong><small class='text-muted bi-clock'></small>");
                     }
                 }
-            })
+            });
         }
         $.Listele();
+
+        <?php if ($CartLevha == null) { ?>
+            $.Gizle();
+            $("#bos").html("<h5>Veri Yok</h5>");
+            $('#bos').prop("hidden", false);
+        <?php } else { ?>
+            $('#ChartLevha').prop("hidden", false);
+        <?php } ?>
     });
     //##### ########## ########## ########## ########## ########## ########## ########## ########## ########## ########## ########## #####
     $('.gir').click(function() {
@@ -72,6 +79,9 @@ $Has = ".hasClass('btn-primary')";
         var SetID = $(this).attr("Set_ID");
         var deger = $("#deger" + Uid + "").val();
         var Tarih = $(".Tarih").val();
+        // if (Number($(".yazsayi" + Uid + "").html()) + Number(deger) >= Number($(".Tadet").val())) {
+        /*<?= $FazlaDeger ?>*/
+        // } else {
         if (deger != "" & Number(deger) != 0) {
             if ($("#Pres") <?= $Has ?>) {
                 Hangisi = "Pres";
@@ -105,6 +115,7 @@ $Has = ".hasClass('btn-primary')";
                 success: function(data) {
                     $(".yazsayi" + Uid + "").html(data);
                     $(".temizle").val("");
+                    $.Listele();
                 }
             })
         } else {
@@ -113,6 +124,7 @@ $Has = ".hasClass('btn-primary')";
             }
 
         }
+        //}
     });
     $('.fire').click(function() {
         var Uid = $(this).attr("Urun_ID");
@@ -134,8 +146,8 @@ $Has = ".hasClass('btn-primary')";
                     alert('Hata: ' + xhr.responseText);
                 },
                 success: function() {
-                    $.Listele();
                     $(".temizle").val("");
+                    $.Listele();
                 }
             })
         } else {
@@ -159,7 +171,7 @@ $Has = ".hasClass('btn-primary')";
         $(this).removeClass("btn-outline-dark");
         $(this).addClass("btn-primary");
         $.Listele();
-        $('.fire').prop("hidden",true);
+        $('.fire').prop("hidden", true);
 
     });
     $("#Kumlama").click(function() {
@@ -168,7 +180,7 @@ $Has = ".hasClass('btn-primary')";
         $(this).removeClass("btn-outline-dark");
         $(this).addClass("btn-primary");
         $.Listele();
-        $('.fire').prop("hidden",true);
+        $('.fire').prop("hidden", true);
     });
     $("#icBoyama").click(function() {
         $.tmz();
@@ -176,7 +188,7 @@ $Has = ".hasClass('btn-primary')";
         $(this).removeClass("btn-outline-dark");
         $(this).addClass("btn-primary");
         $.Listele();
-        $('.fire').prop("hidden",true);
+        $('.fire').prop("hidden", true);
     });
     $("#DisBoyama").click(function() {
         $.tmz();
@@ -184,7 +196,7 @@ $Has = ".hasClass('btn-primary')";
         $(this).removeClass("btn-outline-dark");
         $(this).addClass("btn-primary");
         $.Listele();
-        $('.fire').prop("hidden",true);
+        $('.fire').prop("hidden", true);
     });
     $("#Paketleme").click(function() {
         $.tmz();
@@ -192,7 +204,7 @@ $Has = ".hasClass('btn-primary')";
         $(this).removeClass("btn-outline-dark");
         $(this).addClass("btn-primary");
         $.Listele();
-        $('.fire').prop("hidden",true);
+        $('.fire').prop("hidden", true);
     });
     $("#Pres").click(function() {
         $.tmz();
@@ -200,7 +212,7 @@ $Has = ".hasClass('btn-primary')";
         $(this).removeClass("btn-outline-dark");
         $(this).addClass("btn-primary");
         $.Listele();
-        $('.fire').prop("hidden",false);
+        $('.fire').prop("hidden", false);
     });
     $("#Yikama").click(function() {
         $.tmz();
@@ -208,6 +220,392 @@ $Has = ".hasClass('btn-primary')";
         $(this).removeClass("btn-outline-dark");
         $(this).addClass("btn-primary");
         $.Listele();
-        $('.fire').prop("hidden",true);
+        $('.fire').prop("hidden", true);
     });
+    //#################      ########################################      ########################################      #######################
+    $('.datatablem').DataTable({
+        responsive: true,
+        order: false,
+        columnDefs: [{
+            targets: '_all',
+            orderable: false
+        }, {
+            "width": "25%",
+            "targets": [0,1]
+        }],
+        paging: false,
+        bFilter: false,
+        bInfo: false
+    });
+
+    var live = document.getElementById("ChartLevha");
+    const CLevha = new Chart(live, {
+        type: 'doughnut',
+        data: {
+            labels: [<?php foreach ($UrunAdi as $u) echo '"' . $u . '",'; ?>],
+            datasets: [{
+                data: [<?php
+                        $say = count($UrunAdi) - count($CartLevha);
+                        foreach ($CartLevha as $l) {
+                            echo $l . ',';
+                        }
+                        if ($say > 0) {
+                            for ($i = 0; $i < $say; $i++) {
+                                echo '0,';
+                            }
+                        }
+                        ?>],
+                backgroundColor: [<?php for ($i = 0; $i < count($UrunAdi); $i++) {
+                                        $r = rand(0, 255);
+                                        $g = rand(0, 255);
+                                        $b = rand(0, 255);
+                                        echo '"' . "rgb($r, $g, $b)" . '",';
+                                    }
+                                    ?>]
+            }]
+        }
+    });
+    var live = document.getElementById("ChartPres");
+    const CPres = new Chart(live, {
+        type: 'bar',
+        data: {
+            labels: [<?php foreach ($CartPresT as $t) echo '"' . $t . '",'; ?>],
+            datasets: [{
+                label: 'Toplam',
+                data: [<?php foreach ($CartPresA as $a) echo '"' . $a . '",'; ?>],
+                backgroundColor: [<?php for ($i = 0; $i < count($CartPresT); $i++) {
+                                        $r = rand(0, 255);
+                                        $g = rand(0, 255);
+                                        $b = rand(0, 255);
+                                        echo '"' . "rgba($r, $g, $b, 0.2)" . '",';
+                                    }
+                                    ?>],
+                borderColor: [<?php for ($i = 0; $i < count($CartPresT); $i++) {
+                                    $r = rand(0, 255);
+                                    $g = rand(0, 255);
+                                    $b = rand(0, 255);
+                                    echo '"' . "rgb($r, $g, $b)" . '",';
+                                }
+                                ?>],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    var live = document.getElementById("ChartYika");
+    const CYika = new Chart(live, {
+        type: 'bar',
+        data: {
+            labels: [<?php foreach ($CartYikaT as $t) echo '"' . $t . '",'; ?>],
+            datasets: [{
+                label: 'Toplam',
+                data: [<?php foreach ($CartYikaA as $a) echo '"' . $a . '",'; ?>],
+                backgroundColor: [<?php for ($i = 0; $i < count($CartYikaT); $i++) {
+                                        $r = rand(0, 255);
+                                        $g = rand(0, 255);
+                                        $b = rand(0, 255);
+                                        echo '"' . "rgba($r, $g, $b, 0.2)" . '",';
+                                    }
+                                    ?>],
+                borderColor: [<?php for ($i = 0; $i < count($CartYikaT); $i++) {
+                                    $r = rand(0, 255);
+                                    $g = rand(0, 255);
+                                    $b = rand(0, 255);
+                                    echo '"' . "rgb($r, $g, $b)" . '",';
+                                }
+                                ?>],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+    var live = document.getElementById("ChartKumla");
+    const CKumla = new Chart(live, {
+        type: 'bar',
+        data: {
+            labels: [<?php foreach ($CartKumlaT as $t) echo '"' . $t . '",'; ?>],
+            datasets: [{
+                label: 'Toplam',
+                data: [<?php foreach ($CartKumlaA as $a) echo '"' . $a . '",'; ?>],
+                backgroundColor: [<?php for ($i = 0; $i < count($CartKumlaT); $i++) {
+                                        $r = rand(0, 255);
+                                        $g = rand(0, 255);
+                                        $b = rand(0, 255);
+                                        echo '"' . "rgba($r, $g, $b, 0.2)" . '",';
+                                    }
+                                    ?>],
+                borderColor: [<?php for ($i = 0; $i < count($CartKumlaT); $i++) {
+                                    $r = rand(0, 255);
+                                    $g = rand(0, 255);
+                                    $b = rand(0, 255);
+                                    echo '"' . "rgb($r, $g, $b)" . '",';
+                                }
+                                ?>],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+    var live = document.getElementById("ChartTelle");
+    const CTelle = new Chart(live, {
+        type: 'bar',
+        data: {
+            labels: [<?php foreach ($CartTelleT as $t) echo '"' . $t . '",'; ?>],
+            datasets: [{
+                label: 'Toplam',
+                data: [<?php foreach ($CartTelleA as $a) echo '"' . $a . '",'; ?>],
+                backgroundColor: [<?php for ($i = 0; $i < count($CartTelleT); $i++) {
+                                        $r = rand(0, 255);
+                                        $g = rand(0, 255);
+                                        $b = rand(0, 255);
+                                        echo '"' . "rgba($r, $g, $b, 0.2)" . '",';
+                                    }
+                                    ?>],
+                borderColor: [<?php for ($i = 0; $i < count($CartTelleT); $i++) {
+                                    $r = rand(0, 255);
+                                    $g = rand(0, 255);
+                                    $b = rand(0, 255);
+                                    echo '"' . "rgb($r, $g, $b)" . '",';
+                                }
+                                ?>],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    var live = document.getElementById("ChartBoya");
+    const CBoya = new Chart(live, {
+        type: 'bar',
+        data: {
+            labels: [<?php foreach ($CartBoyaT as $t) echo '"' . $t . '",'; ?>],
+            datasets: [{
+                label: 'Toplam',
+                data: [<?php foreach ($CartBoyaA as $a) echo '"' . $a . '",'; ?>],
+                backgroundColor: [<?php for ($i = 0; $i < count($CartBoyaT); $i++) {
+                                        $r = rand(0, 255);
+                                        $g = rand(0, 255);
+                                        $b = rand(0, 255);
+                                        echo '"' . "rgba($r, $g, $b, 0.2)" . '",';
+                                    }
+                                    ?>],
+                borderColor: [<?php for ($i = 0; $i < count($CartBoyaT); $i++) {
+                                    $r = rand(0, 255);
+                                    $g = rand(0, 255);
+                                    $b = rand(0, 255);
+                                    echo '"' . "rgb($r, $g, $b)" . '",';
+                                }
+                                ?>],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    var live = document.getElementById("ChartPaket");
+    const CPaket = new Chart(live, {
+        type: 'bar',
+        data: {
+            labels: [<?php foreach ($CartPaketT as $t) echo '"' . $t . '",'; ?>],
+            datasets: [{
+                label: 'Toplam',
+                data: [<?php foreach ($CartPaketA as $a) echo '"' . $a . '",'; ?>],
+                backgroundColor: [<?php for ($i = 0; $i < count($CartPaketT); $i++) {
+                                        $r = rand(0, 255);
+                                        $g = rand(0, 255);
+                                        $b = rand(0, 255);
+                                        echo '"' . "rgba($r, $g, $b, 0.2)" . '",';
+                                    }
+                                    ?>],
+                borderColor: [<?php for ($i = 0; $i < count($CartPaketT); $i++) {
+                                    $r = rand(0, 255);
+                                    $g = rand(0, 255);
+                                    $b = rand(0, 255);
+                                    echo '"' . "rgb($r, $g, $b)" . '",';
+                                }
+                                ?>],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+    $.Gizle = function() {
+        $('#ChartLevha').prop("hidden", true);
+        $('#ChartPres').prop("hidden", true);
+        $('#ChartYika').prop("hidden", true);
+        $('#ChartKumla').prop("hidden", true);
+        $('#ChartTelle').prop("hidden", true);
+        $('#ChartBoya').prop("hidden", true);
+        $('#ChartPaket').prop("hidden", true);
+    };
+
+    function Levha() {
+        <?php if ($CartLevha == null) { ?>
+            $.Gizle();
+            $("#bos").html("<h5>Veri Yok</h5>");
+            $('#bos').prop("hidden", false);
+        <?php } else { ?>
+            $('#ChartLevha').prop("hidden", false);
+            $('#ChartPres').prop("hidden", true);
+            $('#ChartYika').prop("hidden", true);
+            $('#ChartKumla').prop("hidden", true);
+            $('#ChartTelle').prop("hidden", true);
+            $('#ChartBoya').prop("hidden", true);
+            $('#ChartPaket').prop("hidden", true);
+            $('#bos').prop("hidden", true);
+            CLevha.reset();
+            CLevha.update();
+        <?php } ?>
+    }
+
+    function Press() {
+        <?php if ($CartPresT == null) { ?>
+            $.Gizle();
+            $("#bos").html("<h5>Veri Yok</h5>");
+            $('#bos').prop("hidden", false);
+        <?php } else { ?>
+            $('#ChartLevha').prop("hidden", true);
+            $('#ChartPres').prop("hidden", false);
+            $('#ChartYika').prop("hidden", true);
+            $('#ChartKumla').prop("hidden", true);
+            $('#ChartTelle').prop("hidden", true);
+            $('#ChartBoya').prop("hidden", true);
+            $('#ChartPaket').prop("hidden", true);
+            $('#bos').prop("hidden", true);
+            CPres.reset();
+            CPres.update();
+        <?php } ?>
+    }
+
+    function Yika() {
+        <?php if ($CartYikaT == null) { ?>
+            $.Gizle();
+            $("#bos").html("<h5>Veri Yok</h5>");
+            $('#bos').prop("hidden", false);
+        <?php } else { ?>
+            $('#ChartLevha').prop("hidden", true);
+            $('#ChartPres').prop("hidden", true);
+            $('#ChartYika').prop("hidden", false);
+            $('#ChartKumla').prop("hidden", true);
+            $('#ChartTelle').prop("hidden", true);
+            $('#ChartBoya').prop("hidden", true);
+            $('#ChartPaket').prop("hidden", true);
+            $('#bos').prop("hidden", true);
+            CYika.reset();
+            CYika.update();
+        <?php } ?>
+    }
+
+    function Kumla() {
+        <?php if ($CartKumlaT == null) { ?>
+            $.Gizle();
+            $("#bos").html("<h5>Kumlama verisi yok</h5>");
+            $('#bos').prop("hidden", false);
+        <?php } else { ?>
+            $('#ChartLevha').prop("hidden", true);
+            $('#ChartPres').prop("hidden", true);
+            $('#ChartYika').prop("hidden", true);
+            $('#ChartKumla').prop("hidden", false);
+            $('#ChartTelle').prop("hidden", true);
+            $('#ChartBoya').prop("hidden", true);
+            $('#ChartPaket').prop("hidden", true);
+            $('#bos').prop("hidden", true);
+            CKumla.reset();
+            CKumla.update();
+        <?php } ?>
+    }
+
+    function Telle() {
+        <?php if ($CartTelleT == null) { ?>
+            $.Gizle();
+            $("#bos").html("<h5>Teleme verisi yok</h5>");
+            $('#bos').prop("hidden", false);
+        <?php } else { ?>
+            $('#ChartLevha').prop("hidden", true);
+            $('#ChartPres').prop("hidden", true);
+            $('#ChartYika').prop("hidden", true);
+            $('#ChartKumla').prop("hidden", true);
+            $('#ChartTelle').prop("hidden", false);
+            $('#ChartBoya').prop("hidden", true);
+            $('#ChartPaket').prop("hidden", true);
+            $('#bos').prop("hidden", true);
+            CTelle.reset();
+            CTelle.update();
+        <?php } ?>
+    }
+
+    function Boya() {
+        <?php if ($CartBoyaT == null) { ?>
+            $.Gizle();
+            $("#bos").html("<h5>Boya verisi yok</h5>");
+            $('#bos').prop("hidden", false);
+        <?php } else { ?>
+            $('#ChartLevha').prop("hidden", true);
+            $('#ChartPres').prop("hidden", true);
+            $('#ChartYika').prop("hidden", true);
+            $('#ChartKumla').prop("hidden", true);
+            $('#ChartTelle').prop("hidden", true);
+            $('#ChartBoya').prop("hidden", false);
+            $('#ChartPaket').prop("hidden", true);
+            $('#bos').prop("hidden", true);
+            CBoya.reset();
+            CBoya.update();
+        <?php } ?>
+    }
+
+    function Paket() {
+        <?php if ($CartPaketT == null) { ?>
+            $.Gizle();
+            $("#bos").html("<h5>Veri Yok</h5>");
+            $('#bos').prop("hidden", false);
+        <?php } else { ?>
+            $('#ChartLevha').prop("hidden", true);
+            $('#ChartPres').prop("hidden", true);
+            $('#ChartYika').prop("hidden", true);
+            $('#ChartKumla').prop("hidden", true);
+            $('#ChartTelle').prop("hidden", true);
+            $('#ChartBoya').prop("hidden", true);
+            $('#ChartPaket').prop("hidden", false);
+            $('#bos').prop("hidden", true);
+            CPaket.reset();
+            CPaket.update();
+        <?php } ?>
+    }
 </script>

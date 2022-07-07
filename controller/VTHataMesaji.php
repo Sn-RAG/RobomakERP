@@ -9,7 +9,7 @@ $DbHata = "<script>Swal.fire({
 $FazlaDeger = "Swal.fire({
         icon: 'warning',
         title: 'Fazla Değer!',
-        text: 'Mevcut değerden fazlasını kullanamazsın!',
+        text: 'Toplam değerden fazla!',
         confirmButtonText: 'Tamam',
     })";
 

@@ -36,6 +36,7 @@ $Ad=$_GET["adi"];//Setadı
                                 foreach ($sor as $s) {
                                     $i++;
                                         $l = $baglanti->query("SELECT Cap,Kalinlik FROM urun_levha_bilgi INNER JOIN levha ON urun_levha_bilgi.Levha_ID = levha.Levha_ID WHERE Urun_ID =" . $s["Urun_ID"]." AND levha.Levha_ID =".$s["Levha_ID"]);
+                                        if($l->rowCount()){
                                         $q=$l->fetch();
                                         $c=$q["Cap"];
                                         $k=$q["Kalinlik"];
@@ -50,7 +51,7 @@ $Ad=$_GET["adi"];//Setadı
                                         <td><?=$AdetKg?></td>
                                         <td></td>
                                     </tr>
-                                <?php }?>
+                                <?php }}?>
                                 <tr>
                                     <td></td>
                                     <td></td>

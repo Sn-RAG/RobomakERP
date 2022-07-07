@@ -3,6 +3,8 @@
 //$SetID=(int)$_GET["Set_ID"];
 /*Toplam Set içerik Adeti*/ $Toplam = $baglanti->query('SELECT SUM(Adet) AS Toplam FROM view_set_urun_sec WHERE Set_ID =' . $SetID)->fetch()["Toplam"];
 //Levha
+$CartLevha = [];
+$i = 0;
 $Hesap = 0;
 $a = 0;
 $b = 0;
@@ -24,7 +26,6 @@ $j = 0;
 //Paketleme
 $Paket = 0;
 $p = 0;
-
 $sor = $baglanti->query("SELECT Urun_ID, UrunAdi, Levha_ID, SUM(Adet) AS Adet FROM view_set_urun_sec WHERE Set_ID =" . $SetID . " GROUP BY Urun_ID")->fetchAll();
 foreach ($sor as $s) {
     $UrunID = $s["Urun_ID"];
@@ -34,15 +35,17 @@ foreach ($sor as $s) {
         $c = $q["Cap"];
         $k = $q["Kalinlik"];
         $o = ceil((($c * $c * $k * (0.22)) / 1000) * $s["Adet"]); // Toplam tedarik edilecek levha
-        $a+=$o;
+        $a += $o;
         $sorstok = $baglanti->query("SELECT levha.Levha_ID AS LevhaID, Stok_Adet, Stok_Agirlik FROM levha_siparis INNER JOIN levha_gelen ON levha_siparis.Levha_Stok_ID = levha_gelen.Levha_Stok_ID INNER JOIN levha ON levha_siparis.Levha_ID = levha.Levha_ID WHERE levha.Levha_ID =" . $s["Levha_ID"]);
         if ($sorstok->rowCount()) {
             foreach ($sorstok as $stk) {
                 $m = $stk["Stok_Agirlik"]; // Stokta olan levha
-                if($o>$m){
-                    $b+=$m;
-                }else{
-                    $b+=$o;
+                $i++;
+                $CartLevha[$i] = $m;
+                if ($o > $m) {
+                    $b += $m;
+                } else {
+                    $b += $o;
                 }
             }
         } //else echo "<br>Çap= $cap &nbsp Kalinlik= $mm > Stokta yok > <a href='../../SatinAlma/Siparis/LevhaSiparis.php?Kalinlik=$mm&Cap=$cap'>Sipariş</a>";
@@ -60,6 +63,82 @@ foreach ($sor as $s) {
     //Paketleme
     $p += $baglanti->query("SELECT SUM(Adet) AS Toplam FROM set_urunler_asama_akis WHERE Yapilan_is='Paketlendi' AND Set_ID=" . $SetID . " AND Urun_ID=" . $UrunID)->fetch()["Toplam"];
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//PRES
+$CartPresA = [];
+$CartPresT = [];
+$i = 0;
+$Cart = $baglanti->query("SELECT SUM(Adet) AS Tadet, Tarih FROM set_urunler_asama_akis WHERE Yapilan_is='Preslendi' AND Set_ID=" . $SetID . " GROUP BY Tarih");
+if ($Cart->rowCount()) {
+    foreach ($Cart as $cc) {
+        $i++;
+        $CartPresA[$i] = $cc["Tadet"];
+        $CartPresT[$i] = $cc["Tarih"];
+    }
+}
+
+//Yıkama
+$CartYikaA = [];
+$CartYikaT = [];
+$Cart = $baglanti->query("SELECT SUM(Adet) AS Tadet, Tarih FROM set_urunler_asama_akis WHERE Yapilan_is='Yıkandı' AND Set_ID=" . $SetID . " GROUP BY Tarih");
+if ($Cart->rowCount()) {
+    foreach ($Cart as $cc) {
+        $i++;
+        $CartYikaA[$i] = $cc["Tadet"];
+        $CartYikaT[$i] = $cc["Tarih"];
+    }
+}
+
+//Kumlama
+$CartKumlaA = [];
+$CartKumlaT = [];
+$Cart = $baglanti->query("SELECT SUM(Adet) AS Tadet, Tarih FROM set_urunler_asama_akis WHERE Yapilan_is='Kumlandı' AND Set_ID=" . $SetID . " GROUP BY Tarih");
+if ($Cart->rowCount()) {
+    foreach ($Cart as $cc) {
+        $i++;
+        $CartKumlaA[$i] = $cc["Tadet"];
+        $CartKumlaT[$i] = $cc["Tarih"];
+    }
+}
+
+//Telleme
+$CartTelleA = [];
+$CartTelleT = [];
+$Cart = $baglanti->query("SELECT SUM(Adet) AS Tadet, Tarih FROM set_urunler_asama_akis WHERE Yapilan_is='Tellendi' AND Set_ID=" . $SetID . " GROUP BY Tarih");
+if ($Cart->rowCount()) {
+    foreach ($Cart as $cc) {
+        $i++;
+        $CartTelleA[$i] = $cc["Tadet"];
+        $CartTelleT[$i] = $cc["Tarih"];
+    }
+}
+
+//Boyama
+$CartBoyaA = [];
+$CartBoyaT = [];
+$Cart = $baglanti->query("SELECT SUM(Adet) AS Tadet, Tarih FROM set_urunler_asama_akis WHERE Yapilan_is='Boyandı' AND Set_ID=" . $SetID . " GROUP BY Tarih");
+if ($Cart->rowCount()) {
+    foreach ($Cart as $cc) {
+        $i++;
+        $CartBoyaA[$i] = $cc["Tadet"];
+        $CartBoyaT[$i] = $cc["Tarih"];
+    }
+}
+
+//Paketleme
+$CartPaketA = [];
+$CartPaketT = [];
+$Cart = $baglanti->query("SELECT SUM(Adet) AS Tadet, Tarih FROM set_urunler_asama_akis WHERE Yapilan_is='Paketlendi' AND Set_ID=" . $SetID . " GROUP BY Tarih");
+if ($Cart->rowCount()) {
+    foreach ($Cart as $cc) {
+        $i++;
+        $CartPaketA[$i] = $cc["Tadet"];
+        $CartPaketT[$i] = $cc["Tarih"];
+    }
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //Yüzde Hesabı
 if ($a <> null) { //Levha
