@@ -64,14 +64,6 @@ $Has = ".hasClass('btn-primary')";
             });
         }
         $.Listele();
-
-        <?php if ($CartLevha == null) { ?>
-            $.Gizle();
-            $("#bos").html("<h5>Veri Yok</h5>");
-            $('#bos').prop("hidden", false);
-        <?php } else { ?>
-            $('#ChartLevha').prop("hidden", false);
-        <?php } ?>
     });
     //##### ########## ########## ########## ########## ########## ########## ########## ########## ########## ########## ########## #####
     $('.gir').click(function() {
@@ -231,7 +223,7 @@ $Has = ".hasClass('btn-primary')";
             orderable: false
         }, {
             "width": "25%",
-            "targets": [0,1]
+            "targets": [0, 1]
         }],
         paging: false,
         bFilter: false,
@@ -475,12 +467,16 @@ $Has = ".hasClass('btn-primary')";
         $('#ChartBoya').prop("hidden", true);
         $('#ChartPaket').prop("hidden", true);
     };
+    $(".col-md-6").click(function() {
+        $.Gizle();
+        $('.bos').prop("hidden", true);
+    });
 
     function Levha() {
         <?php if ($CartLevha == null) { ?>
             $.Gizle();
-            $("#bos").html("<h5>Veri Yok</h5>");
-            $('#bos').prop("hidden", false);
+            $("#bosl").html("<h5>Levha verisi yok</h5>");
+            $('#bosl').prop("hidden", false);
         <?php } else { ?>
             $('#ChartLevha').prop("hidden", false);
             $('#ChartPres').prop("hidden", true);
@@ -489,7 +485,7 @@ $Has = ".hasClass('btn-primary')";
             $('#ChartTelle').prop("hidden", true);
             $('#ChartBoya').prop("hidden", true);
             $('#ChartPaket').prop("hidden", true);
-            $('#bos').prop("hidden", true);
+            $('.bos').prop("hidden", true);
             CLevha.reset();
             CLevha.update();
         <?php } ?>
@@ -498,8 +494,8 @@ $Has = ".hasClass('btn-primary')";
     function Press() {
         <?php if ($CartPresT == null) { ?>
             $.Gizle();
-            $("#bos").html("<h5>Veri Yok</h5>");
-            $('#bos').prop("hidden", false);
+            $("#bospr").html("<h5>Pres verisi yok</h5>");
+            $('#bospr').prop("hidden", false);
         <?php } else { ?>
             $('#ChartLevha').prop("hidden", true);
             $('#ChartPres').prop("hidden", false);
@@ -508,7 +504,7 @@ $Has = ".hasClass('btn-primary')";
             $('#ChartTelle').prop("hidden", true);
             $('#ChartBoya').prop("hidden", true);
             $('#ChartPaket').prop("hidden", true);
-            $('#bos').prop("hidden", true);
+            $('.bos').prop("hidden", true);
             CPres.reset();
             CPres.update();
         <?php } ?>
@@ -517,8 +513,8 @@ $Has = ".hasClass('btn-primary')";
     function Yika() {
         <?php if ($CartYikaT == null) { ?>
             $.Gizle();
-            $("#bos").html("<h5>Veri Yok</h5>");
-            $('#bos').prop("hidden", false);
+            $("#bosy").html("<h5>Yıkama verisi yok</h5>");
+            $('#bosy').prop("hidden", false);
         <?php } else { ?>
             $('#ChartLevha').prop("hidden", true);
             $('#ChartPres').prop("hidden", true);
@@ -527,7 +523,7 @@ $Has = ".hasClass('btn-primary')";
             $('#ChartTelle').prop("hidden", true);
             $('#ChartBoya').prop("hidden", true);
             $('#ChartPaket').prop("hidden", true);
-            $('#bos').prop("hidden", true);
+            $('.bos').prop("hidden", true);
             CYika.reset();
             CYika.update();
         <?php } ?>
@@ -536,8 +532,8 @@ $Has = ".hasClass('btn-primary')";
     function Kumla() {
         <?php if ($CartKumlaT == null) { ?>
             $.Gizle();
-            $("#bos").html("<h5>Kumlama verisi yok</h5>");
-            $('#bos').prop("hidden", false);
+            $("#bosk").html("<h5>Kumlama verisi yok</h5>");
+            $('#bosk').prop("hidden", false);
         <?php } else { ?>
             $('#ChartLevha').prop("hidden", true);
             $('#ChartPres').prop("hidden", true);
@@ -546,7 +542,7 @@ $Has = ".hasClass('btn-primary')";
             $('#ChartTelle').prop("hidden", true);
             $('#ChartBoya').prop("hidden", true);
             $('#ChartPaket').prop("hidden", true);
-            $('#bos').prop("hidden", true);
+            $('.bos').prop("hidden", true);
             CKumla.reset();
             CKumla.update();
         <?php } ?>
@@ -555,8 +551,8 @@ $Has = ".hasClass('btn-primary')";
     function Telle() {
         <?php if ($CartTelleT == null) { ?>
             $.Gizle();
-            $("#bos").html("<h5>Teleme verisi yok</h5>");
-            $('#bos').prop("hidden", false);
+            $("#bost").html("<h5>Telleme verisi yok</h5>");
+            $('#bost').prop("hidden", false);
         <?php } else { ?>
             $('#ChartLevha').prop("hidden", true);
             $('#ChartPres').prop("hidden", true);
@@ -565,7 +561,7 @@ $Has = ".hasClass('btn-primary')";
             $('#ChartTelle').prop("hidden", false);
             $('#ChartBoya').prop("hidden", true);
             $('#ChartPaket').prop("hidden", true);
-            $('#bos').prop("hidden", true);
+            $('.bos').prop("hidden", true);
             CTelle.reset();
             CTelle.update();
         <?php } ?>
@@ -574,8 +570,8 @@ $Has = ".hasClass('btn-primary')";
     function Boya() {
         <?php if ($CartBoyaT == null) { ?>
             $.Gizle();
-            $("#bos").html("<h5>Boya verisi yok</h5>");
-            $('#bos').prop("hidden", false);
+            $("#bosb").html("<h5>Boyama verisi yok</h5>");
+            $('#bosb').prop("hidden", false);
         <?php } else { ?>
             $('#ChartLevha').prop("hidden", true);
             $('#ChartPres').prop("hidden", true);
@@ -584,7 +580,7 @@ $Has = ".hasClass('btn-primary')";
             $('#ChartTelle').prop("hidden", true);
             $('#ChartBoya').prop("hidden", false);
             $('#ChartPaket').prop("hidden", true);
-            $('#bos').prop("hidden", true);
+            $('.bos').prop("hidden", true);
             CBoya.reset();
             CBoya.update();
         <?php } ?>
@@ -593,8 +589,8 @@ $Has = ".hasClass('btn-primary')";
     function Paket() {
         <?php if ($CartPaketT == null) { ?>
             $.Gizle();
-            $("#bos").html("<h5>Veri Yok</h5>");
-            $('#bos').prop("hidden", false);
+            $("#bosp").html("<h5>Paketleme verisi yok</h5>");
+            $('#bosp').prop("hidden", false);
         <?php } else { ?>
             $('#ChartLevha').prop("hidden", true);
             $('#ChartPres').prop("hidden", true);
@@ -603,7 +599,7 @@ $Has = ".hasClass('btn-primary')";
             $('#ChartTelle').prop("hidden", true);
             $('#ChartBoya').prop("hidden", true);
             $('#ChartPaket').prop("hidden", false);
-            $('#bos').prop("hidden", true);
+            $('.bos').prop("hidden", true);
             CPaket.reset();
             CPaket.update();
         <?php } ?>

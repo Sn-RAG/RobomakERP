@@ -21,77 +21,95 @@ require __DIR__ . '/Yuzde.php';
                 <div class="col-md-2"><a href="../Setler.php" class="bi-arrow-left btn btn-secondary"> &nbsp&nbsp Geri Dön</a></div>
                 <h5 class='card-title text-center col-md-8 fs-5'><?= $_SESSION["SetAdi"] ?></h5>
             </div>
-            <div class="card-body row g-3">
-                <div class="col-6 row g-3 border-end border-bottom me-2">
-                    <div class="btn text-start" onclick="Levha()">
-                        <label class="fw-bold">Levha Tedarik</label>
+            <div class="card-body row">
+                <div class="col-md-12">
+                    <h1></h1>
+                    <div class="row mb-3" onclick="Levha()">
+                        <label class="col-md-2 fw-bold">Levha Tedarik</label>
+                        <div class="col-md-10">
                         <div class="progress mt-1" style="height: 25px;">
                             <div class="progress-bar" role="progressbar" style="font-size: 15px;width: <?= $Hesap ?>%;background: linear-gradient(to left, #009341 -112%, #3921ff 110%);"><?= $Hesap ?>%
                             </div>
                         </div>
+                        </div>
+                        <canvas hidden id="ChartLevha" style="max-height: 400px; display: block; box-sizing: border-box; height: 400px; width: 491px;" width="491" height="400"></canvas>
+                        <code id="bosl" class="bos" hidden></code>
                     </div>
 
-                    <div class="btn text-start" onclick="Press()">
-                        <label class="fw-bold">Pres Aşaması</label>
-                        <div class="progress mt-1" style="height: 25px;">
-                            <div class="progress-bar" role="progressbar" style="width: <?= $Prs ?>%;background: linear-gradient(to left, #004576 0%, #28047b 100%);font-size: 15px;"><?= $Prs ?>%
+                    <div class="row mb-3" onclick="Press()">
+                        <label class="col-md-2 fw-bold">Pres Aşaması</label>
+                        <div class="col-md-10">
+                            <div class="progress mt-1" style="height: 25px;">
+                                <div class="progress-bar" role="progressbar" style="width: <?= $Prs ?>%;background: linear-gradient(to left, #004576 0%, #28047b 100%);font-size: 15px;"><?= $Prs ?>%
+                                </div>
                             </div>
                         </div>
+                        <canvas hidden id="ChartPres" style="max-height: 400px; display: block; box-sizing: border-box; height: 245px; width: 491px;" width="491" height="245"></canvas>
+                        <code id="bospr" class="bos" hidden></code>
                     </div>
 
-                    <div class="btn text-start" onclick="Yika()">
-                        <label class="fw-bold">Yıkama Aşaması</label>
-                        <div class="progress mt-1" style="height: 25px;">
-                            <div class="progress-bar" role="progressbar" style="width: <?= $Yika ?>%;background: linear-gradient(to left, #24e70c 0%, #2e9d00 100%);color: #ffffff;font-size: 15px;"><?= $Yika ?>%
+                    <div class="row mb-3" onclick="Yika()">
+                        <label class="col-md-2 fw-bold">Yıkama Aşaması</label>
+                        <div class="col-md-10">
+                            <div class="progress mt-1" style="height: 25px;">
+                                <div class="progress-bar" role="progressbar" style="width: <?= $Yika ?>%;background: linear-gradient(to left, #24e70c 0%, #2e9d00 100%);color: #ffffff;font-size: 15px;"><?= $Yika ?>%
+                                </div>
                             </div>
                         </div>
+                        <canvas hidden id="ChartYika" style="max-height: 400px; display: block; box-sizing: border-box; height: 245px; width: 491px;" width="491" height="245"></canvas>
+                        <code id="bosy" class="bos" hidden></code>
                     </div>
 
-                    <div class="btn text-start" onclick="Kumla()">
-                        <label class="fw-bold">Kumlama Aşaması</label>
-                        <div class="progress mt-1" style="height: 25px;">
-                            <div class="progress-bar" role="progressbar" style="width: <?= $Kumla ?>%;background: linear-gradient(to left, #b5861d 0%, #ff3a30 100%);font-size: 15px;"><?= $Kumla ?>%
+                    <div class="row mb-3" onclick="Kumla()">
+                        <label class="col-md-2 fw-bold">Kumlama Aşaması</label>
+                        <div class="col-md-10">
+                            <div class="progress mt-1" style="height: 25px;">
+                                <div class="progress-bar" role="progressbar" style="width: <?= $Kumla ?>%;background: linear-gradient(to left, #b5861d 0%, #ff3a30 100%);font-size: 15px;"><?= $Kumla ?>%
+                                </div>
                             </div>
                         </div>
+                        <canvas hidden id="ChartKumla" style="max-height: 400px; display: block; box-sizing: border-box; height: 245px; width: 491px;" width="491" height="245"></canvas>
+                        <code id="bosk" class="bos" hidden></code>
                     </div>
 
-                    <div class="btn text-start" onclick="Telle()">
-                        <label class="fw-bold">Telleme Aşaması</label>
-                        <div class="progress mt-1" style="height: 25px;">
-                            <div class="progress-bar" role="progressbar" style="width: <?= $Telle ?>%;background: linear-gradient(to left, #0059ff 0%, #af7297 100%);font-size: 15px;"><?= $Telle ?>%
+                    <div class="row mb-3" onclick="Telle()">
+                        <label class="col-md-2 fw-bold">Telleme Aşaması</label>
+                        <div class="col-md-10">
+                            <div class="progress mt-1" style="height: 25px;">
+                                <div class="progress-bar" role="progressbar" style="width: <?= $Telle ?>%;background: linear-gradient(to left, #0059ff 0%, #af7297 100%);font-size: 15px;"><?= $Telle ?>%
+                                </div>
                             </div>
                         </div>
+                        <canvas hidden id="ChartTelle" style="max-height: 400px; display: block; box-sizing: border-box; height: 245px; width: 491px;" width="491" height="245"></canvas>
+                        <code id="bost" class="bos" hidden></code>
                     </div>
 
-                    <div class="btn text-start" onclick="Boya()">
-                        <label class="fw-bold">Boyama Aşaması</label>
-                        <div class="progress mt-1" style="height: 25px;">
-                            <div class="progress-bar" role="progressbar" style="width: <?= $Boya ?>%;background: linear-gradient(to left, #9a11c7 0%, #7b27b0 100%);font-size: 15px;"><?= $Boya ?>%
+                    <div class="row mb-3" onclick="Boya()">
+                        <label class="col-md-2 fw-bold">Boyama Aşaması</label>
+                        <div class="col-md-10">
+                            <div class="progress mt-1" style="height: 25px;">
+                                <div class="progress-bar" role="progressbar" style="width: <?= $Boya ?>%;background: linear-gradient(to left, #9a11c7 0%, #7b27b0 100%);font-size: 15px;"><?= $Boya ?>%
+                                </div>
                             </div>
                         </div>
+                        <canvas hidden id="ChartBoya" style="max-height: 400px; display: block; box-sizing: border-box; height: 245px; width: 491px;" width="491" height="245"></canvas>
+                        <code id="bosb" class="bos" hidden></code>
                     </div>
 
-                    <div class="btn text-start" onclick="Paket()">
-                        <label class="fw-bold">Paketleme Aşaması</label>
-                        <div class="progress mt-1" style="height: 25px;">
-                            <div class="progress-bar" role="progressbar" style="width: <?= $Paket ?>%;background: linear-gradient(to left, #24e70c 0%, #2e9d00 100%);color: #ffffff;font-size: 15px;"><?= $Paket ?>%
+                    <div class="row mb-3" onclick="Paket()">
+                        <label class="col-md-2 fw-bold">Paketleme Aşaması</label>
+                        <div class="col-md-10">
+                            <div class="progress mt-1" style="height: 25px;">
+                                <div class="progress-bar" role="progressbar" style="width: <?= $Paket ?>%;background: linear-gradient(to left, #24e70c 0%, #2e9d00 100%);color: #ffffff;font-size: 15px;"><?= $Paket ?>%
+                                </div>
                             </div>
                         </div>
+                        <canvas hidden id="ChartPaket" style="max-height: 400px; display: block; box-sizing: border-box; height: 245px; width: 491px;" width="491" height="245"></canvas>
+                        <code id="bosp" class="bos" hidden></code>
                     </div>
                     <h5></h5>
                 </div>
-
-                <div class="col-6 border-bottom d-flex justify-content-center align-items-center">
-                    <h5 id="bos" hidden></h5>
-                    <canvas hidden id="ChartLevha" style="max-height: 400px; display: block; box-sizing: border-box; height: 400px; width: 491px;" width="491" height="400"></canvas>
-                    <canvas hidden id="ChartPres" style="max-height: 400px; display: block; box-sizing: border-box; height: 245px; width: 491px;" width="491" height="245"></canvas>
-                    <canvas hidden id="ChartYika" style="max-height: 400px; display: block; box-sizing: border-box; height: 245px; width: 491px;" width="491" height="245"></canvas>
-                    <canvas hidden id="ChartKumla" style="max-height: 400px; display: block; box-sizing: border-box; height: 245px; width: 491px;" width="491" height="245"></canvas>
-                    <canvas hidden id="ChartTelle" style="max-height: 400px; display: block; box-sizing: border-box; height: 245px; width: 491px;" width="491" height="245"></canvas>
-                    <canvas hidden id="ChartBoya" style="max-height: 400px; display: block; box-sizing: border-box; height: 245px; width: 491px;" width="491" height="245"></canvas>
-                    <canvas hidden id="ChartPaket" style="max-height: 400px; display: block; box-sizing: border-box; height: 245px; width: 491px;" width="491" height="245"></canvas>
-                </div>
-
+                <hr>
                 <!-- Scroll Bar -->
                 <style>
                     .chat {
@@ -139,7 +157,7 @@ require __DIR__ . '/Yuzde.php';
                         <button class="mb-3 me-2 btn btn-outline-dark t" id="Paketleme">Paketleme</button>
                     </div>
 
-                    <table class="table small table-bordered datatablem">
+                    <table class="table  table-bordered datatablem">
                         <thead>
                             <tr class="table-light">
                                 <th>Ürünler</th>
