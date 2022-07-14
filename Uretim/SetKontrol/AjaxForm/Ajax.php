@@ -7,28 +7,37 @@ $Has = ".hasClass('btn-primary')";
             var SetID = $("#SetID").val();
             var Urunler = <?php echo json_encode($Urunler); ?>;
 
-            if ($("#Pres") <?= $Has ?>) {
-                Hangisi = "Pres";
-                Is = "Preslendi";
-            } else if ($("#Telleme") <?= $Has ?>) {
-                Hangisi = "Telleme";
-                Is = "Tellendi";
-            } else if ($("#Kumlama") <?= $Has ?>) {
-                Hangisi = "Kumlama";
-                Is = "Kumlandı";
-            } else if ($("#icBoyama") <?= $Has ?>) {
-                Hangisi = "icBoyama";
-                Is = "Boyandı";
-            } else if ($("#DisBoyama") <?= $Has ?>) {
-                Hangisi = "DisBoyama";
-                Is = "Boyandı";
-            } else if ($("#Paketleme") <?= $Has ?>) {
-                Hangisi = "Paketleme";
-                Is = "Paketlendi";
-            } else if ($("#Yikama") <?= $Has ?>) {
-                Hangisi = "Yıkama";
-                Is = "Yıkandı";
+            switch (true) {
+                case $("#Pres") <?= $Has ?>:
+                    Hangisi = "Pres";
+                    Is = "Preslendi";
+                    break;
+                case $("#Telleme") <?= $Has ?>:
+                    Hangisi = "Telleme";
+                    Is = "Tellendi";
+                    break;
+                case $("#Kumlama") <?= $Has ?>:
+                    Hangisi = "Kumlama";
+                    Is = "Kumlandı";
+                    break;
+                case $("#icBoyama") <?= $Has ?>:
+                    Hangisi = "icBoyama";
+                    Is = "Boyandı";
+                    break;
+                case $("#DisBoyama") <?= $Has ?>:
+                    Hangisi = "DisBoyama";
+                    Is = "Boyandı";
+                    break;
+                case $("#Paketleme") <?= $Has ?>:
+                    Hangisi = "Paketleme";
+                    Is = "Paketlendi";
+                    break;
+                case $("#Yikama") <?= $Has ?>:
+                    Hangisi = "Yikama";
+                    Is = "Yıkandı";
+                    break;
             }
+
             $.ajax({
                 type: "POST",
                 url: "AjaxForm/post.php",
@@ -75,20 +84,29 @@ $Has = ".hasClass('btn-primary')";
         /*<?= $FazlaDeger ?>*/
         // } else {
         if (deger != "" & Number(deger) != 0) {
-            if ($("#Pres") <?= $Has ?>) {
-                Hangisi = "Pres";
-            } else if ($("#Telleme") <?= $Has ?>) {
-                Hangisi = "Telleme";
-            } else if ($("#Kumlama") <?= $Has ?>) {
-                Hangisi = "Kumlama";
-            } else if ($("#icBoyama") <?= $Has ?>) {
-                Hangisi = "icBoyama";
-            } else if ($("#DisBoyama") <?= $Has ?>) {
-                Hangisi = "DisBoyama";
-            } else if ($("#Paketleme") <?= $Has ?>) {
-                Hangisi = "Paketleme";
-            } else if ($("#Yikama") <?= $Has ?>) {
-                Hangisi = "Yıkama";
+
+            switch (true) {
+                case $("#Pres") <?= $Has ?>:
+                    Hangisi = "Pres";
+                    break;
+                case $("#Telleme") <?= $Has ?>:
+                    Hangisi = "Telleme";
+                    break;
+                case $("#Kumlama") <?= $Has ?>:
+                    Hangisi = "Kumlama";
+                    break;
+                case $("#icBoyama") <?= $Has ?>:
+                    Hangisi = "icBoyama";
+                    break;
+                case $("#DisBoyama") <?= $Has ?>:
+                    Hangisi = "DisBoyama";
+                    break;
+                case $("#Paketleme") <?= $Has ?>:
+                    Hangisi = "Paketleme";
+                    break;
+                case $("#Yikama") <?= $Has ?>:
+                    Hangisi = "Yikama";
+                    break;
             }
 
             $.ajax({
@@ -215,21 +233,7 @@ $Has = ".hasClass('btn-primary')";
         $('.fire').prop("hidden", true);
     });
     //#################      ########################################      ########################################      #######################
-    $('.datatablem').DataTable({
-        responsive: true,
-        order: false,
-        columnDefs: [{
-            targets: '_all',
-            orderable: false
-        }, {
-            "width": "25%",
-            "targets": [0, 1]
-        }],
-        paging: false,
-        bFilter: false,
-        bInfo: false
-    });
-
+    
     var live = document.getElementById("ChartLevha");
     const CLevha = new Chart(live, {
         type: 'doughnut',
@@ -458,150 +462,18 @@ $Has = ".hasClass('btn-primary')";
             }
         }
     });
-    $.Gizle = function() {
-        $('#ChartLevha').prop("hidden", true);
-        $('#ChartPres').prop("hidden", true);
-        $('#ChartYika').prop("hidden", true);
-        $('#ChartKumla').prop("hidden", true);
-        $('#ChartTelle').prop("hidden", true);
-        $('#ChartBoya').prop("hidden", true);
-        $('#ChartPaket').prop("hidden", true);
-    };
-    $(".col-md-6").click(function() {
-        $.Gizle();
-        $('.bos').prop("hidden", true);
+    
+    /////////////////////////////////////////////////////////////////////////////////////////////
+
+    $('.datatablem').DataTable({
+        responsive: true,
+        order: false,
+        columnDefs: [{
+            targets: '_all',
+            orderable: false
+        }],
+        paging: false,
+        bFilter: false,
+        bInfo: false
     });
-
-    function Levha() {
-        <?php if ($CartLevha == null) { ?>
-            $.Gizle();
-            $("#bosl").html("<h5>Levha verisi yok</h5>");
-            $('#bosl').prop("hidden", false);
-        <?php } else { ?>
-            $('#ChartLevha').prop("hidden", false);
-            $('#ChartPres').prop("hidden", true);
-            $('#ChartYika').prop("hidden", true);
-            $('#ChartKumla').prop("hidden", true);
-            $('#ChartTelle').prop("hidden", true);
-            $('#ChartBoya').prop("hidden", true);
-            $('#ChartPaket').prop("hidden", true);
-            $('.bos').prop("hidden", true);
-            CLevha.reset();
-            CLevha.update();
-        <?php } ?>
-    }
-
-    function Press() {
-        <?php if ($CartPresT == null) { ?>
-            $.Gizle();
-            $("#bospr").html("<h5>Pres verisi yok</h5>");
-            $('#bospr').prop("hidden", false);
-        <?php } else { ?>
-            $('#ChartLevha').prop("hidden", true);
-            $('#ChartPres').prop("hidden", false);
-            $('#ChartYika').prop("hidden", true);
-            $('#ChartKumla').prop("hidden", true);
-            $('#ChartTelle').prop("hidden", true);
-            $('#ChartBoya').prop("hidden", true);
-            $('#ChartPaket').prop("hidden", true);
-            $('.bos').prop("hidden", true);
-            CPres.reset();
-            CPres.update();
-        <?php } ?>
-    }
-
-    function Yika() {
-        <?php if ($CartYikaT == null) { ?>
-            $.Gizle();
-            $("#bosy").html("<h5>Yıkama verisi yok</h5>");
-            $('#bosy').prop("hidden", false);
-        <?php } else { ?>
-            $('#ChartLevha').prop("hidden", true);
-            $('#ChartPres').prop("hidden", true);
-            $('#ChartYika').prop("hidden", false);
-            $('#ChartKumla').prop("hidden", true);
-            $('#ChartTelle').prop("hidden", true);
-            $('#ChartBoya').prop("hidden", true);
-            $('#ChartPaket').prop("hidden", true);
-            $('.bos').prop("hidden", true);
-            CYika.reset();
-            CYika.update();
-        <?php } ?>
-    }
-
-    function Kumla() {
-        <?php if ($CartKumlaT == null) { ?>
-            $.Gizle();
-            $("#bosk").html("<h5>Kumlama verisi yok</h5>");
-            $('#bosk').prop("hidden", false);
-        <?php } else { ?>
-            $('#ChartLevha').prop("hidden", true);
-            $('#ChartPres').prop("hidden", true);
-            $('#ChartYika').prop("hidden", true);
-            $('#ChartKumla').prop("hidden", false);
-            $('#ChartTelle').prop("hidden", true);
-            $('#ChartBoya').prop("hidden", true);
-            $('#ChartPaket').prop("hidden", true);
-            $('.bos').prop("hidden", true);
-            CKumla.reset();
-            CKumla.update();
-        <?php } ?>
-    }
-
-    function Telle() {
-        <?php if ($CartTelleT == null) { ?>
-            $.Gizle();
-            $("#bost").html("<h5>Telleme verisi yok</h5>");
-            $('#bost').prop("hidden", false);
-        <?php } else { ?>
-            $('#ChartLevha').prop("hidden", true);
-            $('#ChartPres').prop("hidden", true);
-            $('#ChartYika').prop("hidden", true);
-            $('#ChartKumla').prop("hidden", true);
-            $('#ChartTelle').prop("hidden", false);
-            $('#ChartBoya').prop("hidden", true);
-            $('#ChartPaket').prop("hidden", true);
-            $('.bos').prop("hidden", true);
-            CTelle.reset();
-            CTelle.update();
-        <?php } ?>
-    }
-
-    function Boya() {
-        <?php if ($CartBoyaT == null) { ?>
-            $.Gizle();
-            $("#bosb").html("<h5>Boyama verisi yok</h5>");
-            $('#bosb').prop("hidden", false);
-        <?php } else { ?>
-            $('#ChartLevha').prop("hidden", true);
-            $('#ChartPres').prop("hidden", true);
-            $('#ChartYika').prop("hidden", true);
-            $('#ChartKumla').prop("hidden", true);
-            $('#ChartTelle').prop("hidden", true);
-            $('#ChartBoya').prop("hidden", false);
-            $('#ChartPaket').prop("hidden", true);
-            $('.bos').prop("hidden", true);
-            CBoya.reset();
-            CBoya.update();
-        <?php } ?>
-    }
-
-    function Paket() {
-        <?php if ($CartPaketT == null) { ?>
-            $.Gizle();
-            $("#bosp").html("<h5>Paketleme verisi yok</h5>");
-            $('#bosp').prop("hidden", false);
-        <?php } else { ?>
-            $('#ChartLevha').prop("hidden", true);
-            $('#ChartPres').prop("hidden", true);
-            $('#ChartYika').prop("hidden", true);
-            $('#ChartKumla').prop("hidden", true);
-            $('#ChartTelle').prop("hidden", true);
-            $('#ChartBoya').prop("hidden", true);
-            $('#ChartPaket').prop("hidden", false);
-            $('.bos').prop("hidden", true);
-            CPaket.reset();
-            CPaket.update();
-        <?php } ?>
-    }
 </script>

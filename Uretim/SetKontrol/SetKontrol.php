@@ -13,7 +13,38 @@ $tarih = new DateTime("now");
 $tarih = date("Y-m-d");
 require __DIR__ . '/Yuzde.php';
 ?>
+<style>
+    .progress-bar {
+        height: 25px;
+    }
+
+    .chat {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .panel-body {
+        overflow-y: scroll;
+        height: 400px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background-color: #F5F5F5;
+    }
+
+    ::-webkit-scrollbar {
+        width: 12px;
+        background-color: #F5F5F5;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background-color: #555;
+    }
+</style>
+
 <input id="SetID" type="hidden" value="<?= $SetID ?>">
+
 <main id="main" class="main">
     <section class="section">
         <div class="card">
@@ -23,119 +54,98 @@ require __DIR__ . '/Yuzde.php';
             </div>
             <div class="card-body row">
                 <div class="col-md-12">
-                    <h1></h1>
-                    <div class="row mb-3" onclick="Levha()">
-                        <label class="col-md-2 fw-bold">Levha Tedarik</label>
-                        <div class="col-md-10">
-                        <div class="progress mt-1" style="height: 25px;">
-                            <div class="progress-bar" role="progressbar" style="font-size: 15px;width: <?= $Hesap ?>%;background: linear-gradient(to left, #009341 -112%, #3921ff 110%);"><?= $Hesap ?>%
-                            </div>
-                        </div>
-                        </div>
-                        <canvas hidden id="ChartLevha" style="max-height: 400px; display: block; box-sizing: border-box; height: 400px; width: 491px;" width="491" height="400"></canvas>
-                        <code id="bosl" class="bos" hidden></code>
-                    </div>
-
-                    <div class="row mb-3" onclick="Press()">
-                        <label class="col-md-2 fw-bold">Pres Aşaması</label>
-                        <div class="col-md-10">
-                            <div class="progress mt-1" style="height: 25px;">
-                                <div class="progress-bar" role="progressbar" style="width: <?= $Prs ?>%;background: linear-gradient(to left, #004576 0%, #28047b 100%);font-size: 15px;"><?= $Prs ?>%
+                    <!-- Akordiyon -->
+                    <div class="accordion accordion-flush" id="accordionExample">
+                        <div class="accordion-item row mb-1">
+                            <label class="col-md-2 fw-bold">Levha Tedarik</label>
+                            <h2 class="col-md-10" type="button" data-bs-toggle="collapse" data-bs-target="#Levha">
+                                <div class="progress-bar" style="font-size: 15px;width: <?= $Hesap <= 5 ? 5 : $Hesap ?>%;background: linear-gradient(to left, #009341 -112%, #3921ff 110%);"><?= $Hesap ?>%</div>
+                            </h2>
+                            <div id="Levha" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    <canvas id="ChartLevha" style="max-height: 400px; display: block; box-sizing: border-box; height: 400px; width: 491px;" width="491" height="400"></canvas>
                                 </div>
                             </div>
                         </div>
-                        <canvas hidden id="ChartPres" style="max-height: 400px; display: block; box-sizing: border-box; height: 245px; width: 491px;" width="491" height="245"></canvas>
-                        <code id="bospr" class="bos" hidden></code>
-                    </div>
 
-                    <div class="row mb-3" onclick="Yika()">
-                        <label class="col-md-2 fw-bold">Yıkama Aşaması</label>
-                        <div class="col-md-10">
-                            <div class="progress mt-1" style="height: 25px;">
-                                <div class="progress-bar" role="progressbar" style="width: <?= $Yika ?>%;background: linear-gradient(to left, #24e70c 0%, #2e9d00 100%);color: #ffffff;font-size: 15px;"><?= $Yika ?>%
+                        <div class="accordion-item row mb-1">
+                            <label class="col-md-2 fw-bold">Pres Aşaması</label>
+                            <h2 class="col-md-10" type="button" data-bs-toggle="collapse" data-bs-target="#Prs">
+                                <div class="progress-bar" role="progressbar" style="width: <?= $Prs <= 5 ? 5 : $Prs ?>%;background: linear-gradient(to left, #004576 0%, #28047b 100%);font-size: 15px;"><?= $Prs ?>%</div>
+                            </h2>
+                            <div id="Prs" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    <canvas id="ChartPres" style="max-height: 400px; display: block; box-sizing: border-box; height: 245px; width: 491px;" width="491" height="245"></canvas>
                                 </div>
                             </div>
                         </div>
-                        <canvas hidden id="ChartYika" style="max-height: 400px; display: block; box-sizing: border-box; height: 245px; width: 491px;" width="491" height="245"></canvas>
-                        <code id="bosy" class="bos" hidden></code>
-                    </div>
 
-                    <div class="row mb-3" onclick="Kumla()">
-                        <label class="col-md-2 fw-bold">Kumlama Aşaması</label>
-                        <div class="col-md-10">
-                            <div class="progress mt-1" style="height: 25px;">
-                                <div class="progress-bar" role="progressbar" style="width: <?= $Kumla ?>%;background: linear-gradient(to left, #b5861d 0%, #ff3a30 100%);font-size: 15px;"><?= $Kumla ?>%
+                        <div class="accordion-item row mb-1">
+                            <label class="col-md-2 fw-bold">Yıkama Aşaması</label>
+                            <h2 class="col-md-10" type="button" data-bs-toggle="collapse" data-bs-target="#Yika">
+                                <div class="progress-bar" role="progressbar" style="width: <?= $Yika <= 5 ? 5 : $Yika ?>%;background: linear-gradient(to left, #24e70c 0%, #2e9d00 100%);color: #ffffff;font-size: 15px;"><?= $Yika ?>%</div>
+                            </h2>
+                            <div id="Yika" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    <canvas id="ChartYika" style="max-height: 400px; display: block; box-sizing: border-box; height: 245px; width: 491px;" width="491" height="245"></canvas>
                                 </div>
                             </div>
                         </div>
-                        <canvas hidden id="ChartKumla" style="max-height: 400px; display: block; box-sizing: border-box; height: 245px; width: 491px;" width="491" height="245"></canvas>
-                        <code id="bosk" class="bos" hidden></code>
-                    </div>
 
-                    <div class="row mb-3" onclick="Telle()">
-                        <label class="col-md-2 fw-bold">Telleme Aşaması</label>
-                        <div class="col-md-10">
-                            <div class="progress mt-1" style="height: 25px;">
-                                <div class="progress-bar" role="progressbar" style="width: <?= $Telle ?>%;background: linear-gradient(to left, #0059ff 0%, #af7297 100%);font-size: 15px;"><?= $Telle ?>%
+                        <div class="accordion-item row mb-1">
+                            <label class="col-md-2 fw-bold">Kumlama Aşaması</label>
+                            <h2 class="col-md-10" type="button" data-bs-toggle="collapse" data-bs-target="#Kum">
+                                <div class="progress-bar" role="progressbar" style="width: <?= $Kumla <= 5 ? 5 : $Kumla ?>%;background: linear-gradient(to left, #b5861d 0%, #ff3a30 100%);font-size: 15px;"><?= $Kumla ?>%</div>
+                            </h2>
+                            <div id="Kum" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    <canvas id="ChartKumla" style="max-height: 400px; display: block; box-sizing: border-box; height: 245px; width: 491px;" width="491" height="245"></canvas>
                                 </div>
                             </div>
                         </div>
-                        <canvas hidden id="ChartTelle" style="max-height: 400px; display: block; box-sizing: border-box; height: 245px; width: 491px;" width="491" height="245"></canvas>
-                        <code id="bost" class="bos" hidden></code>
-                    </div>
 
-                    <div class="row mb-3" onclick="Boya()">
-                        <label class="col-md-2 fw-bold">Boyama Aşaması</label>
-                        <div class="col-md-10">
-                            <div class="progress mt-1" style="height: 25px;">
-                                <div class="progress-bar" role="progressbar" style="width: <?= $Boya ?>%;background: linear-gradient(to left, #9a11c7 0%, #7b27b0 100%);font-size: 15px;"><?= $Boya ?>%
+                        <div class="accordion-item row">
+                            <label class="col-md-2 fw-bold">Telleme Aşaması</label>
+                            <h2 class="col-md-10" type="button" data-bs-toggle="collapse" data-bs-target="#Tel">
+                                <div class="progress-bar" role="progressbar" style="width: <?= $Telle <= 5 ? 5 : $Telle ?>%;background: linear-gradient(to left, #0059ff 0%, #af7297 100%);font-size: 15px;"><?= $Telle ?>%</div>
+                            </h2>
+                            <div id="Tel" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+
+                                    <canvas id="ChartTelle" style="max-height: 400px; display: block; box-sizing: border-box; height: 245px; width: 491px;" width="491" height="245"></canvas>
+
                                 </div>
                             </div>
                         </div>
-                        <canvas hidden id="ChartBoya" style="max-height: 400px; display: block; box-sizing: border-box; height: 245px; width: 491px;" width="491" height="245"></canvas>
-                        <code id="bosb" class="bos" hidden></code>
-                    </div>
 
-                    <div class="row mb-3" onclick="Paket()">
-                        <label class="col-md-2 fw-bold">Paketleme Aşaması</label>
-                        <div class="col-md-10">
-                            <div class="progress mt-1" style="height: 25px;">
-                                <div class="progress-bar" role="progressbar" style="width: <?= $Paket ?>%;background: linear-gradient(to left, #24e70c 0%, #2e9d00 100%);color: #ffffff;font-size: 15px;"><?= $Paket ?>%
+                        <div class="accordion-item row">
+                            <label class="col-md-2 fw-bold">Boyama Aşaması</label>
+                            <h2 class="col-md-10" type="button" data-bs-toggle="collapse" data-bs-target="#Boya">
+                                <div class="progress-bar" role="progressbar" style="width: <?= $Boya <= 5 ? 5 : $Boya ?>%;background: linear-gradient(to left, #9a11c7 0%, #7b27b0 100%);font-size: 15px;"><?= $Boya ?>%</div>
+                            </h2>
+                            <div id="Boya" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    <canvas id="ChartBoya" style="max-height: 400px; display: block; box-sizing: border-box; height: 245px; width: 491px;" width="491" height="245"></canvas>
                                 </div>
                             </div>
                         </div>
-                        <canvas hidden id="ChartPaket" style="max-height: 400px; display: block; box-sizing: border-box; height: 245px; width: 491px;" width="491" height="245"></canvas>
-                        <code id="bosp" class="bos" hidden></code>
+
+                        <div class="accordion-item row">
+                            <label class="col-md-2 fw-bold">Paketleme Aşaması</label>
+                            <h2 class="col-md-10" type="button" data-bs-toggle="collapse" data-bs-target="#Paket">
+                                <div class="progress-bar" role="progressbar" style="width: <?= $Paket <= 5 ? 5 : $Paket ?>%;background: linear-gradient(to left, #24e70c 0%, #2e9d00 100%);color: #ffffff;font-size: 15px;"><?= $Paket ?>%</div>
+                            </h2>
+                            <div id="Paket" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    <canvas id="ChartPaket" style="max-height: 400px; display: block; box-sizing: border-box; height: 245px; width: 491px;" width="491" height="245"></canvas>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <h5></h5>
+                    <!-- Akordiyon SON -->
                 </div>
                 <hr>
                 <!-- Scroll Bar -->
-                <style>
-                    .chat {
-                        list-style: none;
-                        margin: 0;
-                        padding: 0;
-                    }
-
-                    .panel-body {
-                        overflow-y: scroll;
-                        height: 350px;
-                    }
-
-                    ::-webkit-scrollbar-track {
-                        background-color: #F5F5F5;
-                    }
-
-                    ::-webkit-scrollbar {
-                        width: 12px;
-                        background-color: #F5F5F5;
-                    }
-
-                    ::-webkit-scrollbar-thumb {
-                        background-color: #555;
-                    }
-                </style>
                 <div class="col-md-6">
                     <h5> &nbsp Detaylar</h5>
                     <div class="panel-body border">
@@ -190,7 +200,7 @@ require __DIR__ . '/Yuzde.php';
                                     <td><?= $s['TepeAdi'] ?></td>
                                     <td class="fw-bold fs-6 yazsayi<?= $Uid ?>"></td>
                                     <td>
-                                        <div class="btn-group input-group-sm"><input id="deger<?= $Uid ?>" class="temizle form-control me-1"><button class="gir btn btn-primary bi-check me-1" Urun_ID="<?= $Uid ?>" Set_ID="<?= $SetID ?>"></button><button class="fire btn btn-warning bi-dash" Urun_ID="<?= $Uid ?>" Set_ID="<?= $SetID ?>"></button></div>
+                                        <div class="btn-group input-group-sm"><input type="number" id="deger<?= $Uid ?>" class="temizle form-control me-1"><button class="gir btn btn-primary bi-check me-1" Urun_ID="<?= $Uid ?>" Set_ID="<?= $SetID ?>"></button><button class="fire btn btn-warning bi-dash" Urun_ID="<?= $Uid ?>" Set_ID="<?= $SetID ?>"></button></div>
                                     </td>
                                 </tr>
                             <?php } ?>

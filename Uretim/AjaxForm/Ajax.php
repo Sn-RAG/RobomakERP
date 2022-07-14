@@ -1,37 +1,26 @@
-<?php
-$kisa="document.querySelector";
-@$Urunler=$_GET["Urunler"];
-@$Kulp=$_GET["Kulp"];
-@$Kapak=$_GET["Kapak"];
-@$Tepe=$_GET["Tepe"];
-@$Secimler=$_GET["Secimler"];
-@$Seticerigi=$_GET["Seticerigi"];
-$SorAc=isset($Urunler)?"iki":(isset($Kulp)?"bes":(isset($Kapak)?"alti":(isset($Tepe)?"yedi":(isset($Secimler)?"sekiz":(isset($Seticerigi)?"dort":"")))));
-$SorSira=isset($Urunler)?"s2":(isset($Kulp)?"s3":(isset($Kapak)?"s4":(isset($Tepe)?"s5":(isset($Secimler)?"s6":(isset($Seticerigi)?"s7":"")))));
-?>
 <script>
-    $(function () {
-        $.Listele = function () {
+    $(function() {
+        $.Listele = function() {
             $.ajax({
                 type: "POST",
                 url: "AjaxForm/post.php",
                 data: {
                     'Listele': true,
                 },
-                error: function (xhr) {
+                error: function(xhr) {
                     alert('Hata: ' + xhr.responseText);
                 },
-                success: function (data) {
+                success: function(data) {
                     $(".UrunleriGoster").html(data);
                 }
             })
         }
-        <?=isset($_SESSION["Set_ID"]) ? "$.Listele();" : "" ?>
+        <?= isset($_SESSION["Set_ID"]) ? "$.Listele();" : "" ?>
 
         //##################################################### form input ekle
-        $(document).on('click', '.input-ekle', function (e) {
+        $(document).on('click', '.input-ekle', function(e) {
             var DisBoyalar = [];
-            $("select.DisBoyalar").each(function (i, sel) {
+            $("select.DisBoyalar").each(function(i, sel) {
                 var selectedVal = $(sel).val();
                 DisBoyalar.push(selectedVal);
             });
@@ -46,13 +35,13 @@ $SorSira=isset($Urunler)?"s2":(isset($Kulp)?"s3":(isset($Kapak)?"s4":(isset($Tep
             clone.append($('<button>').addClass('btn col-md-1 btn-danger bi-trash input-sil'));
             return examsList.append(clone);
         });
-        $(document).on('click', '.input-sil', function (e) {
+        $(document).on('click', '.input-sil', function(e) {
             var DisBoyalar = [];
-            $("select.DisBoyalar").each(function (i, sel) {
+            $("select.DisBoyalar").each(function(i, sel) {
                 var selectedVal = $(sel).val();
                 DisBoyalar.push(selectedVal);
             });
-            if (DisBoyalar.length <= 8) {// O anki değeri geriden geldiği için
+            if (DisBoyalar.length <= 8) { // O anki değeri geriden geldiği için
                 $(".input-ekle").prop("disabled", false)
                 $("#SetTamam").prop("disabled", false)
             }
@@ -60,43 +49,14 @@ $SorSira=isset($Urunler)?"s2":(isset($Kulp)?"s3":(isset($Kapak)?"s4":(isset($Tep
             return $(this).parent().remove();
         });
 
-
-        /*$("#bir").attr("disabled", "");
-        $("#iki").attr("disabled", "");
-        $("#uc").attr("disabled", "");
-        $("#dort").attr("disabled", "");
-        $("#bes").attr("disabled", "");
-        $("#alti").attr("disabled", "");
-        $("#yedi").attr("disabled", "");
-        $("#sekiz").attr("disabled", "");*/
-
-//#####    ########    ##########    ########    ##########    ########    ##########    ########    ##########    ########    ##########    ########    #####
+        //#####    ########    ##########    ########    ##########    ########    ##########    ########    ##########    ########    ##########    ########    #####
         // Yapılan iş Bu kısımda navigasyonlarda veriyi hem kaybetmemek hem kaldığı yerden devam etmesi için
 
 
-        $.Sirala=function (deneme,abc){
-            var ustDiv = <?=$kisa?>(".Sirala");
-            ustDiv.insertBefore(deneme, abc);
-        };
-        $.Urunler=function () {
-            $("#bir").addClass('collapsed');
-            $("#collapsebir").removeClass('show');
-            $("#bir").removeAttr("aria-expanded")
-
-            $("#<?=$SorAc?>").removeClass('collapsed');
-            $("#collapse<?=$SorAc?>").addClass('show');
-            $("#<?=$SorAc?>").attr('aria-expanded', true);
-
-            //Sıralama
-            var a = <?=$kisa?>(".<?=$SorSira?>");
-            var b = <?=$kisa?>(".s1");
-            $.Sirala(a,b);
-        }
-        <?=$_GET?"$.Urunler();":""?>
     });
-//#####    ########    ##########    ########    ##########    ########    ##########    ########    ##########    ########    ##########    ########    #####
+    //#####    ########    ##########    ########    ##########    ########    ##########    ########    ##########    ########    ##########    ########    #####
 
-    $("#Set").click(function () {
+    $("#ileriUrun").click(function() {
 
         var SetAdi = $("#SetAdi").val();
         if (SetAdi == "") {
@@ -108,263 +68,117 @@ $SorSira=isset($Urunler)?"s2":(isset($Kulp)?"s3":(isset($Kapak)?"s4":(isset($Tep
                 data: {
                     'SetAdiKontrol': $.trim(SetAdi).toString(),
                 },
-                error: function (xhr) {
+                error: function(xhr) {
                     alert('Hata: ' + xhr.responseText);
                 },
-                success: function (data) {
+                success: function(data) {
                     $("#SetAdiKontrol").html(data);
                     if (data == "") {
-                        $("#bir").addClass('collapsed');
-                        $("#collapsebir").removeClass('show');
-                        $("#bir").removeAttr("aria-expanded")
-
-                        $("#iki").removeClass('collapsed');
-                        $("#collapseiki").addClass('show');
-                        $("#iki").attr('aria-expanded', true);
-
-                        var a = <?=$kisa?>(".s1");
-                        var b = <?=$kisa?>(".s8");
-                        $.Sirala(a,b);
+                        $("#Setadii").removeClass("active");
+                        $("#ad").removeClass("active show");
+                        $("#Urunn").addClass("active");
+                        $("#Urun").addClass("active show");
                     }
                 }
             })
         }
     });
 
-    //#####################################################
-
-    $("#UrunSec").click(function () {
-        var mmler=[];
+    $("#GeriSetAdi").click(function() {
+        $("#Setadii").addClass("active");
+        $("#ad").addClass("active show");
+        $("#Urunn").removeClass("active");
+        $("#Urun").removeClass("active show");
+    });
+    
+    $("#ileriKutu").click(function() {
+        var Kapaklar = [];
+        var Tepeler = [];
+        var Kulplar = [];
+        var mmler = [];
         var UrunIDler = [];
-        $(".UrunSecim:checked").map(function(){UrunIDler.push($(this).val());});
-        if(UrunIDler==""){
+        $(".UrunSecim:checked").map(function() {
+            var h = $(this).val();
+            UrunIDler.push(h);
+            mmler.push($(".kal" + h + "").val());
+            Kapaklar.push($("#Kapak" + h + "").val());
+            Tepeler.push($("#Tepe" + h + "").val());
+            Kulplar.push($("#Kulp" + h + "").val());
+        });
+
+        if (UrunIDler == "") {
             $("#UrunBos").html("Ürün Seçmediniz!");
-        }else{
-            $("#UrunBos").html("");
-            $("#iki").addClass('collapsed');
-            $("#collapseiki").removeClass('show');
-            $("#iki").removeAttr("aria-expanded")
-
-            $("#bes").removeClass('collapsed');
-            $("#collapsebes").addClass('show');
-            $("#bes").attr('aria-expanded', true);
-
-            var a = <?=$kisa?>(".s2");
-            var b = <?=$kisa?>(".s8");
-            $.Sirala(a,b);
-
-            $.ajax({
-                type: "POST",
-                url: "AjaxForm/post.php",
-                data: {'UrunIDler': UrunIDler}
-            })
-        }
-    });
-    $("#GeriSetAdi").click(function () {
-        $("#iki").addClass('collapsed');
-        $("#collapseiki").removeClass('show');
-        $("#iki").removeAttr("aria-expanded")
-
-        $("#bir").removeClass('collapsed');
-        $("#collapsebir").addClass('show');
-        $("#bir").attr('aria-expanded', true);
-
-        var a = <?=$kisa?>(".s1");
-        var b = <?=$kisa?>(".s2");
-        $.Sirala(a,b);
-    });
-    //#####################################################
-    $("#KulpSec").click(function () {
-
-        var Kulp = $("#Kulp").val();
-        $("#bes").addClass('collapsed');
-        $("#collapsebes").removeClass('show');
-        $("#bes").removeAttr("aria-expanded");
-
-        $("#alti").removeClass('collapsed');
-        $("#collapsealti").addClass('show');
-        $("#alti").attr('aria-expanded', true);
-
-        var a = <?=$kisa?>(".s3");
-        var b = <?=$kisa?>(".s8");
-        $.Sirala(a,b);
-
-        if (Kulp!="") {
-            $.ajax({
-                    type: "POST",
-                    url: "AjaxForm/post.php",
-                    data: {'KulpSec': Kulp}
-                })
-        }
-    });
-
-    $("#KapakSec").click(function () {
-
-        var Kapak = $("#Kapak").val();
-        $("#alti").addClass('collapsed');
-        $("#collapsealti").removeClass('show');
-        $("#alti").removeAttr("aria-expanded");
-
-
-        $("#yedi").removeClass('collapsed');
-        $("#collapseyedi").addClass('show');
-        $("#yedi").attr('aria-expanded', true);
-
-        var a = <?=$kisa?>(".s4");
-        var b = <?=$kisa?>(".s8");
-        $.Sirala(a,b);
-
-        $.ajax({
-            type: "POST",
-            url: "AjaxForm/post.php",
-            data: {'KapakSec': Kapak}
-        })
-    });
-    $("#TepeSec").click(function () {
-
-        var Tepe = $("#Tepe").val();
-        $("#yedi").addClass('collapsed');
-        $("#collapseyedi").removeClass('show');
-        $("#yedi").removeAttr("aria-expanded");
-
-        $("#sekiz").removeClass('collapsed');
-        $("#collapsesekiz").addClass('show');
-        $("#sekiz").attr('aria-expanded', true);
-
-        var a = <?=$kisa?>(".s5");
-        var b = <?=$kisa?>(".s8");
-        $.Sirala(a,b);
-
-        $.ajax({
-            type: "POST",
-            url: "AjaxForm/post.php",
-            data: {'TepeSec': Tepe}
-        })
-    });
-    $("#Secimler").click(function () {
-
-        var Kutu = $("#Kutu").val();
-
-        if (Kutu == "") {
-            $(".SecimlerHata").html("* Zorunlu alanları seçmediniz!");
         } else {
-            $(".SecimlerHata").html("");
-            $("#sekiz").addClass('collapsed');
-            $("#collapsesekiz").removeClass('show');
-            $("#sekiz").removeAttr("aria-expanded");
+            $("#UrunBos").html("");
 
+            $("#Urunn").removeClass("active");
+            $("#Urun").removeClass("active show");
+            $("#Kutuu").addClass("active");
+            $("#Kutuuu").addClass("active show");
 
-            $("#dort").removeClass('collapsed');
-            $("#collapsedort").addClass('show');
-            $("#dort").attr('aria-expanded', true);
-
-            var a = <?=$kisa?>(".s6");
-            var b = <?=$kisa?>(".s8");
-            $.Sirala(a,b);
             $.ajax({
                 type: "POST",
                 url: "AjaxForm/post.php",
-                data: {'KutuSec': Kutu}
+                data: {
+                    'UrunIDler': UrunIDler,
+                    'KulpSec': Kulplar,
+                    'KapakSec': Kapaklar,
+                    'TepeSec': Tepeler,
+                }
             })
         }
     });
-    $("#GeriSecimler").click(function () {
-        $("#dort").addClass('collapsed');
-        $("#collapsedort").removeClass('show');
-        $("#dort").removeAttr("aria-expanded")
 
-        $("#sekiz").removeClass('collapsed');
-        $("#collapsesekiz").addClass('show');
-        $("#sekiz").attr('aria-expanded', true);
-
-        //Sıralama
-        var a = <?=$kisa?>(".s6");
-        var b = <?=$kisa?>(".s7");
-        $.Sirala(a,b);
-    });
-    $("#GeriTepeSec").click(function () {
-        $("#sekiz").addClass('collapsed');
-        $("#collapsesekiz").removeClass('show');
-        $("#sekiz").removeAttr("aria-expanded")
-
-        $("#yedi").removeClass('collapsed');
-        $("#collapseyedi").addClass('show');
-        $("#yedi").attr('aria-expanded', true);
-
-        //Sıralama
-        var a = <?=$kisa?>(".s5");
-        var b = <?=$kisa?>(".s6");
-        $.Sirala(a,b);
-    });
-    $("#GeriKapakSec").click(function () {
-        $("#yedi").addClass('collapsed');
-        $("#collapseyedi").removeClass('show');
-        $("#yedi").removeAttr("aria-expanded")
-
-        $("#alti").removeClass('collapsed');
-        $("#collapsealti").addClass('show');
-        $("#alti").attr('aria-expanded', true);
-
-        //Sıralama
-        var a = <?=$kisa?>(".s4");
-        var b = <?=$kisa?>(".s5");
-        $.Sirala(a,b);
-    });
-    $("#GeriUrunSec").click(function () {
-        $("#bes").addClass('collapsed');
-        $("#collapsebes").removeClass('show');
-        $("#bes").removeAttr("aria-expanded")
-
-        $("#iki").removeClass('collapsed');
-        $("#collapseiki").addClass('show');
-        $("#iki").attr('aria-expanded', true);
-
-        //Sıralama
-        var a = <?=$kisa?>(".s2");
-        var b = <?=$kisa?>(".s3");
-        $.Sirala(a,b);
-    });
-    //#####################################################
-    $("#GeriKulpSec").click(function () {
-        $("#alti").addClass('collapsed');
-        $("#collapsealti").removeClass('show');
-        $("#alti").removeAttr("aria-expanded")
-
-        $("#bes").removeClass('collapsed');
-        $("#collapsebes").addClass('show');
-        $("#bes").attr('aria-expanded', true);
-
-        //Sıralama
-        var a = <?=$kisa?>(".s3");
-        var b = <?=$kisa?>(".s4");
-        $.Sirala(a,b);
+    $("#GeriUrun").click(function() {
+        $("#Urunn").addClass("active");
+        $("#Urun").addClass("active show");
+        $("#Kutuu").removeClass("active");
+        $("#Kutuuu").removeClass("active show");
     });
 
-    $("#SetTamam").click(function () {
+    $("#ileriRenkler").click(function() {
+        $("#Kutuu").removeClass("active");
+        $("#Kutuuu").removeClass("active show");
+        $("#Renkk").addClass("active");
+        $("#Renk").addClass("active show");
+    });
+
+    $("#GeriKutu").click(function() {
+        $("#Kutuu").addClass("active");
+        $("#Kutuuu").addClass("active show");
+        $("#Renkk").removeClass("active");
+        $("#Renk").removeClass("active show");
+    });
+
+    $("#SetTamam").click(function() {
 
         var SetAdi = $("#SetAdi").val();
-        var Kapak = $("#Kapak").val();
-        var Kulp = $("#Kulp").val();
-        var Tepe = $("#Tepe").val();
         var Kutu = $("#Kutu").val();
-        
-        var UrunIDler = [];
+
+        var Kapaklar = [];
+        var Tepeler = [];
+        var Kulplar = [];
         var mmler = [];
+        var UrunIDler = [];
         var Adetler = [];
         var icBoyalar = [];
         var DisBoyalar = [];
-        $(".UrunSecim:checked").map(function () {
-            var h=$(this).val();
+        $(".UrunSecim:checked").map(function() {
+            var h = $(this).val();
             UrunIDler.push(h);
-            mmler.push($(".kal"+h+"").val());
+            mmler.push($(".kal" + h + "").val());
+            Kapaklar.push($("#Kapak" + h + "").val());
+            Tepeler.push($("#Tepe" + h + "").val());
+            Kulplar.push($("#Kulp" + h + "").val());
         });
-        $(".Adetler").each(function (i, sel) {
+
+        $(".Adetler").each(function(i, sel) {
             Adetler.push($(sel).val());
         });
-        $(".icBoyalar").each(function (i, sel) {
+        $(".icBoyalar").each(function(i, sel) {
             icBoyalar.push($(sel).val());
         });
-        $(".DisBoyalar").each(function (i, sel) {
+        $(".DisBoyalar").each(function(i, sel) {
             DisBoyalar.push($(sel).val());
         });
 
@@ -385,36 +199,29 @@ $SorSira=isset($Urunler)?"s2":(isset($Kulp)?"s3":(isset($Kapak)?"s4":(isset($Tep
                             url: "AjaxForm/post.php",
                             data: {
                                 'UrunIDler': UrunIDler,
-                                'mmler':mmler,
+                                'mmler': mmler,
                                 'SetAdi': $.trim(SetAdi),
-                                'Kapak': Kapak,
-                                'Kulp': Kulp,
-                                'Tepe': Tepe,
+                                'Kapaklar': Kapaklar,
+                                'Kulplar': Kulplar,
+                                'Tepeler': Tepeler,
                                 'Kutu': Kutu,
                                 'icBoyalar': icBoyalar,
                                 'DisBoyalar': DisBoyalar,
                                 'Adetler': Adetler,
                                 'Sec': true,
                             },
-                            error: function (xhr) {
+                            error: function(xhr) {
                                 alert('Hata: ' + xhr.responseText);
                             },
-                            success: function () {
+                            success: function() {
                                 $.Listele();
                             }
                         })
-                        $("#dort").addClass('collapsed');
-                        $("#collapsedort").removeClass('show');
-                        $("#dort").removeAttr("aria-expanded")
 
-
-                        $("#uc").removeClass('collapsed');
-                        $("#collapseuc").addClass('show');
-                        $("#uc").attr('aria-expanded', true);
-
-                        var a = <?=$kisa?>(".s8");
-                        var b = <?=$kisa?>(".s7");
-                        $.Sirala(a,b);
+                        $("#Renkk").removeClass("active");
+                        $("#Renk").removeClass("active show");
+                        $("#Listee").addClass("active");
+                        $("#Liste").addClass("active show");
 
                     } else if (result.isDenied) {
                         $(".Fazlainput").html("");
@@ -424,9 +231,9 @@ $SorSira=isset($Urunler)?"s2":(isset($Kulp)?"s3":(isset($Kapak)?"s4":(isset($Tep
         }
     });
 
-
     //#####################################################
-    $("#icerikSec").click(function () {
+
+    $("#icerikSec").click(function() {
         var Set_Urun_Duzenle_ID = $("input[name=Set_Urun_Duzenle_ID]").val();
 
         if (Set_Urun_Duzenle_ID != "" || Set_Urun_Duzenle_ID != null) {
@@ -450,10 +257,10 @@ $SorSira=isset($Urunler)?"s2":(isset($Kulp)?"s3":(isset($Kapak)?"s4":(isset($Tep
                     'UKulp': Kulp,
                     'Urunicerik': true,
                 },
-                error: function (xhr, textStatus, errorThrown) {
+                error: function(xhr, textStatus, errorThrown) {
                     alert('Hata: ' + xhr.responseText);
                 },
-                success: function (data) {
+                success: function(data) {
                     $.Listele();
                 }
             })
@@ -467,5 +274,4 @@ $SorSira=isset($Urunler)?"s2":(isset($Kulp)?"s3":(isset($Kapak)?"s4":(isset($Tep
         $("select[name=Kulp]").val("");
         $("button[name=Urunler]").attr("disabled", false);
     });
-
 </script>

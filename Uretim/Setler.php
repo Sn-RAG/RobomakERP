@@ -1,7 +1,8 @@
 <?php
 $page = "Devam eden";
-if (isset($_SESSION["Set_ID"])){unset($_SESSION["Set_ID"]);}
-if(isset($_SESSION["SetAdi"])){unset($_SESSION["SetAdi"]);}
+if (isset($_SESSION["Set_ID"]) && isset($_SESSION["SetAdi"])) {
+    unset($_SESSION["Set_ID"], $_SESSION["SetAdi"]);
+}
 require __DIR__ . '/../controller/Header.php';
 require __DIR__ . '/../controller/Db.php';
 require __DIR__ . '/../controller/Sil.php';
@@ -28,7 +29,7 @@ require __DIR__ . '/../controller/Sil.php';
                             <th>#</th>
                             <th>Set ID</th>
                             <th>Set</th>
-                            <th><?=isset($_GET["Sec"])?"Adet":"Durum"?></th>
+                            <th><?= isset($_GET["Sec"]) ? "Adet" : "Durum" ?></th>
                             <th>&nbsp</th>
                         </tr>
                     </thead>
@@ -40,7 +41,7 @@ require __DIR__ . '/../controller/Sil.php';
                             $SetID = $sonuc['Set_ID'];
                             $SetAdi = $sonuc['SetAdi'];
                             require __DIR__ . '/SetKontrol/Yuzde.php';
-                            @$SorYuzde=$SetYuzde==100?"Yükleme Bekliyor":$SetYuzde;
+                            @$SorYuzde = $SetYuzde == 100 ? "Yükleme Bekliyor" : $SetYuzde;
                         ?>
                             <tr>
                                 <td><?= $id ?></td>
@@ -48,11 +49,17 @@ require __DIR__ . '/../controller/Sil.php';
                                 <?php if (isset($_GET["Sec"])) { ?>
                                     <td><?= $SetAdi ?></td>
                                     <td><input type="number" class="form-control Adet" placeholder="Adet"></td>
-                                    <td><div class='form-check'><input class='form-check-input' type='checkbox' id='Check<?=$id?>' value='<?=$id?>'><label class='form-check-label fw-bold' for='Check<?=$id?>'>SEÇ</label></div></td>
+                                    <td>
+                                        <div class='form-check'><input class='form-check-input' type='checkbox' id='Check<?= $id ?>' value='<?= $id ?>'><label class='form-check-label fw-bold' for='Check<?= $id ?>'>SEÇ</label></div>
+                                    </td>
                                 <?php } else { ?>
-                                <td><a href="SetKontrol/SetKontrol.php?SetAdi=<?= $SetAdi ?>&Set_ID=<?= $SetID ?>" class="btn btn-light form-control mt-1 fw-bold"><?= $SetAdi ?></a></td>
-                                    <td><div class="progress mt-2" style="height: 25px;"><div class="progress-bar" role="progressbar" style="width: <?=$SorYuzde?>%"><?=$SorYuzde?>%</div></div></td>
-                                    <td><a href='Setler.php?UretimSetlerSil=<?= $id ?>&Set_ID=<?=$SetID?>' class='bi-trash btn btn-danger'></a></td>
+                                    <td><a href="SetKontrol/SetKontrol.php?SetAdi=<?= $SetAdi ?>&Set_ID=<?= $SetID ?>" class="btn btn-light form-control mt-1 fw-bold"><?= $SetAdi ?></a></td>
+                                    <td>
+                                        <div class="progress mt-2" style="height: 25px;">
+                                            <div class="progress-bar" role="progressbar" style="width: <?= $SorYuzde ?>%"><?= $SorYuzde ?>%</div>
+                                        </div>
+                                    </td>
+                                    <td><a href='Setler.php?UretimSetlerSil=<?= $id ?>&Set_ID=<?= $SetID ?>' class='bi-trash btn btn-danger'></a></td>
                             <?php }
                                 echo "</tr>";
                             }
@@ -66,12 +73,18 @@ require __DIR__ . '/../controller/Sil.php';
 <script>
     $('.datatablem').DataTable({
         responsive: true,
-        columnDefs: [
-            {visible: false,targets: [0, 1]},
-            {targets: 4,orderable: false}
+        columnDefs: [{
+                visible: false,
+                targets: [0, 1]
+            },
+            {
+                targets: 4,
+                orderable: false
+            }
         ],
         pageLength: 100,
-        lengthMenu: [[25, 50, 100, -1],
+        lengthMenu: [
+            [25, 50, 100, -1],
             ['25 Adet', '50 Adet', '100 Adet', 'Tümü'],
         ],
     });
@@ -83,13 +96,17 @@ require __DIR__ . '/../controller/Sil.php';
         $("input:checkbox:checked").map(function() {
             Setsec.push($(this).val());
         });
-        var Adet = $(".Adet").map(function(){if ($(this).val()!="") {return $(this).val();}}).get();
+        var Adet = $(".Adet").map(function() {
+            if ($(this).val() != "") {
+                return $(this).val();
+            }
+        }).get();
         $.ajax({
             type: "POST",
             url: "Setler.php",
             data: {
                 'Setsec': Setsec,
-                'Adet':Adet
+                'Adet': Adet
             },
             error: function(xhr) {
                 alert('Hata: ' + xhr.responseText);
