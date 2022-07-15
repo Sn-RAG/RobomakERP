@@ -79,6 +79,7 @@ $Has = ".hasClass('btn-primary')";
         var Uid = $(this).attr("Urun_ID");
         var SetID = $(this).attr("Set_ID");
         var deger = $("#deger" + Uid + "").val();
+        var LevhaID = $("#deger" + Uid + "").attr("LevhaID");
         var Tarih = $(".Tarih").val();
         // if (Number($(".yazsayi" + Uid + "").html()) + Number(deger) >= Number($(".Tadet").val())) {
         /*<?= $FazlaDeger ?>*/
@@ -116,6 +117,7 @@ $Has = ".hasClass('btn-primary')";
                     'SetID': SetID,
                     'UrunID': Uid,
                     'Deger': deger,
+                    'LevhaID': LevhaID,
                     'Hangisi': Hangisi,
                     'Tarih': Tarih
                 },
@@ -140,6 +142,7 @@ $Has = ".hasClass('btn-primary')";
         var Uid = $(this).attr("Urun_ID");
         var SetID = $(this).attr("Set_ID");
         var deger = $("#deger" + Uid + "").val();
+        var LevhaID = $("#deger" + Uid + "").attr("LevhaID");
         var Tarih = $(".Tarih").val();
         var Hangisi = "";
         if (deger != "" & Number(deger) != 0) {
@@ -150,6 +153,7 @@ $Has = ".hasClass('btn-primary')";
                     'FSetID': SetID,
                     'FUrunID': Uid,
                     'FDeger': deger,
+                    'LevhaID': LevhaID,
                     'FTarih': Tarih
                 },
                 error: function(xhr) {
@@ -233,7 +237,7 @@ $Has = ".hasClass('btn-primary')";
         $('.fire').prop("hidden", true);
     });
     //#################      ########################################      ########################################      #######################
-    
+
     var live = document.getElementById("ChartLevha");
     const CLevha = new Chart(live, {
         type: 'doughnut',
@@ -462,7 +466,7 @@ $Has = ".hasClass('btn-primary')";
             }
         }
     });
-    
+
     /////////////////////////////////////////////////////////////////////////////////////////////
 
     $('.datatablem').DataTable({

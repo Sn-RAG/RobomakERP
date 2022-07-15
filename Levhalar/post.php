@@ -52,17 +52,17 @@ if (isset($_POST['Kullan'])) {
     $Levha_Stok_ID = $_POST['LevhaStokID'];
     $K_Tarihi = $_POST['KTarihi'];
 
-    //Levha Stok
+    //Stok
 
     $Stok_Adet = $_POST['KStokAdet'];
     $Stok_Agirlik = $_POST['KStokAgirlik'];
 
-    //Kullanılan Edilen
+    //Kullanılan
 
     $KAdet = $_POST['KAdet'];
     $KAgirlik = $_POST['KAgirlik'];
 
-    //Gelen Miktar
+    //Girilen
     $GAdet = $_POST['KGirAdet'];
     $GAgirlik = $_POST['KGirAgirlik'];
 

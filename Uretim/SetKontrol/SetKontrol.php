@@ -52,7 +52,7 @@ require __DIR__ . '/Yuzde.php';
                 <div class="col-md-2"><a href="../Setler.php" class="bi-arrow-left btn btn-secondary"> &nbsp&nbsp Geri Dön</a></div>
                 <h5 class='card-title text-center col-md-8 fs-5'><?= $_SESSION["SetAdi"] ?></h5>
             </div>
-            <div class="card-body row">
+            <div class="card-body row g-3">
                 <div class="col-md-12">
                     <!-- Akordiyon -->
                     <div class="accordion accordion-flush" id="accordionExample">
@@ -62,7 +62,8 @@ require __DIR__ . '/Yuzde.php';
                                 <div class="progress-bar" style="font-size: 15px;width: <?= $Hesap <= 5 ? 5 : $Hesap ?>%;background: linear-gradient(to left, #009341 -112%, #3921ff 110%);"><?= $Hesap ?>%</div>
                             </h2>
                             <div id="Levha" class="accordion-collapse collapse">
-                                <div class="accordion-body">
+                                <div class="accordion-body text-center">
+                                    <label class="fw-bold">Stok KG</label>
                                     <canvas id="ChartLevha" style="max-height: 400px; display: block; box-sizing: border-box; height: 400px; width: 491px;" width="491" height="400"></canvas>
                                 </div>
                             </div>
@@ -148,9 +149,9 @@ require __DIR__ . '/Yuzde.php';
                 <!-- Scroll Bar -->
                 <div class="col-md-6">
                     <h5> &nbsp Detaylar</h5>
-                    <div class="panel-body border">
+                    <div class="panel-body border-top border-start">
                         <ul class="chat m-2">
-                            <li class="isDurum"></li>
+                            <li class="isDurum row"></li>
                         </ul>
                     </div>
                 </div>
@@ -167,13 +168,10 @@ require __DIR__ . '/Yuzde.php';
                         <button class="mb-3 me-2 btn btn-outline-dark t" id="Paketleme">Paketleme</button>
                     </div>
 
-                    <table class="table  table-bordered datatablem">
+                    <table class="table table-sm table-bordered datatablem">
                         <thead>
                             <tr class="table-light">
                                 <th>Ürünler</th>
-                                <th>Kulp</th>
-                                <th>Kapak</th>
-                                <th>Tepe</th>
                                 <th>İmalat</th>
                                 <th>
                                     <div class="form-floating"><input type="date" class="form-control Tarih" value="<?= $tarih ?>"><label>Tarih</label></div>
@@ -182,11 +180,39 @@ require __DIR__ . '/Yuzde.php';
                         </thead>
                         <tbody>
                             <?php
+                            $Listele = $baglanti->query('SELECT Kategori_ID,Urun_ID,UrunAdi,KulpAdi,Model_Adi,TepeAdi,icBoya_ID,Levha_ID FROM view_set_urun_sec WHERE Set_ID = ' . $SetID . " GROUP BY Urun_ID ORDER BY Kategori_ID ASC")->fetchAll();
+                            foreach ($sor as $s) {
+                                $Uid = $s['Urun_ID'];
+                            ?>
+                                <tr>
+                                    <td><?= $s['UrunAdi'] ?></td>
+                                    <td class="text-center yazsayi<?= $Uid ?>"></td>
+                                    <td>
+                                        <div class="input-group input-group-sm"><input type="number" id="deger<?= $Uid ?>" LevhaID="<?= $s['Levha_ID'] ?>" class="temizle form-control form-control me-1"><button class="gir btn btn-primary bi-check me-1" Urun_ID="<?= $Uid ?>" Set_ID="<?= $SetID ?>"></button><button class="fire btn btn-warning bi-dash" Urun_ID="<?= $Uid ?>" Set_ID="<?= $SetID ?>"></button></div>
+                                    </td>
+                                </tr>
+                            <?php } ?>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-12">
+                    <table class="table table-sm table-bordered datatablem">
+                        <thead>
+                            <tr class="table-light">
+                                <th>Ürünler</th>
+                                <th>Kulp</th>
+                                <th>Kapak</th>
+                                <th>Tepe</th>
+                                <th>Çap</th>
+                                <th>Kalınlık</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
                             $Urunler = [];
                             $UrunAdi = [];
                             $i = 0;
-                            $sor = $baglanti->query('SELECT Kategori_ID,Urun_ID,UrunAdi,KulpAdi,Model_Adi,TepeAdi,icBoya_ID FROM view_set_urun_sec WHERE Set_ID = ' . $SetID . " GROUP BY Urun_ID ORDER BY Kategori_ID ASC");
-                            foreach ($sor as $s) {
+                            foreach ($Listele as $s) {
                                 $Uid = $s['Urun_ID'];
                                 $ad = $s['UrunAdi'];
                                 $i++;
@@ -198,10 +224,8 @@ require __DIR__ . '/Yuzde.php';
                                     <td><?= $s['KulpAdi'] ?></td>
                                     <td><?= $s['Model_Adi'] ?></td>
                                     <td><?= $s['TepeAdi'] ?></td>
-                                    <td class="fw-bold fs-6 yazsayi<?= $Uid ?>"></td>
-                                    <td>
-                                        <div class="btn-group input-group-sm"><input type="number" id="deger<?= $Uid ?>" class="temizle form-control me-1"><button class="gir btn btn-primary bi-check me-1" Urun_ID="<?= $Uid ?>" Set_ID="<?= $SetID ?>"></button><button class="fire btn btn-warning bi-dash" Urun_ID="<?= $Uid ?>" Set_ID="<?= $SetID ?>"></button></div>
-                                    </td>
+                                    <td><?= $baglanti->query("SELECT Cap FROM view_urun_levha_bilgi WHERE Levha_ID=" . $s['Levha_ID'] . " AND Urun_ID=" . $Uid)->fetch()["Cap"] ?> cm</td>
+                                    <td><?= $baglanti->query("SELECT Kalinlik FROM view_urun_levha_bilgi WHERE Levha_ID=" . $s['Levha_ID'] . " AND Urun_ID=" . $Uid)->fetch()["Kalinlik"] ?> mm</td>
                                 </tr>
                             <?php } ?>
                         </tbody>
@@ -209,7 +233,7 @@ require __DIR__ . '/Yuzde.php';
                             <tr class="table-primary">
                                 <th>İç Boya</th>
                                 <th>Dış Boya</th>
-                                <th>Adet</th>
+                                <th></th>
                                 <th></th>
                                 <th></th>
                                 <th></th>
@@ -229,19 +253,13 @@ require __DIR__ . '/Yuzde.php';
                                     }
                                     ?>
                                 </td>
-                                <td><?php
-                                    $sor = $baglanti->query('SELECT Adet FROM set_urun_icerik WHERE Set_ID =' . $SetID);
-                                    foreach ($sor as $s) {
-                                        echo  "<input class='Tadet' type='hidden' value='$s[Adet]'>" . $s['Adet'] . "<br>";
-                                    }
-                                    ?></td>
+                                <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
                             </tr>
                         </tfoot>
                     </table>
-
                 </div>
             </div>
         </div>

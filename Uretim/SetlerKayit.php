@@ -16,7 +16,8 @@ $kulp = $baglanti->query("SELECT Kulp_ID, KulpAdi FROM kulp GROUP BY KulpAdi")->
     <section class="section">
         <div class="card">
             <div class="card-body">
-            <div class="col-md-2 m-3"><a href="Setler.php" class="bi-arrow-left btn btn-secondary"> &nbsp;&nbsp; Geri Dön</a></div>
+                <a href="Setler.php" class="bi-arrow-left btn btn-secondary m-3"> &nbsp;&nbsp; Geri Dön</a>
+                <hr>
                 <!-- Pills Tabs -->
                 <ul class="nav nav-pills mb-3 steps">
                     <progress id="progress" value="0" max="100"></progress>
@@ -46,143 +47,146 @@ $kulp = $baglanti->query("SELECT Kulp_ID, KulpAdi FROM kulp GROUP BY KulpAdi")->
 
                     <div class="tab-pane fade active show" id="ad">
 
-                        <div class="row">
-                            <div class="col-md-4">
+                        <div class="row border-top">
+                            <div class="col-md-4 py-3 mb-3">
                                 <input type="text" id="SetAdi" class="form-control" value="<?= isset($_SESSION["SetAdi"]) ? $_SESSION["SetAdi"] : "" ?>" placeholder="Set Adı">
                             </div>
-                            <div class="col-md-8">
+                            <div class="col-md-4 py-4 mb-3 text-end">
+                                <label id="SetAdiKontrol" class="text-danger"></label>
+                            </div>
+                            <div class="col-md-4 d-flex justify-content-end py-3 mb-3">
                                 <button id="ileriUrun" type="button" class="btn btn-primary bi-arrow-right"> &nbsp İleri</button>
                             </div>
-                            <label id="SetAdiKontrol" class="text-danger"></label>
                         </div>
 
                     </div>
                     <div class="tab-pane fade" id="Urun">
-
-                        <div class="d-flex justify-content-between mb-2 py-2">
-                            <button id="GeriSetAdi" type="button" class="btn btn-secondary bi-arrow-left"> &nbsp Geri</button>
-                            <label id="UrunBos" class="text-danger"></label>
-                            <button id="ileriKutu" type="button" class="btn btn-primary bi-arrow-right"> &nbsp İleri</button>
-                        </div>
-                        <div class="text-center"><a href="Urun/UrunEkle.php?Setler" type="button" class="btn bg-primary-light btn-outline-dark">&nbsp Ürün Ekle</a></div>
-                        <?php
-                        $sorgu = $baglanti->query("SELECT * FROM kategori");
-                        foreach ($sorgu as $sonuc) {
-                        ?>
-                            <div class="accordion accordion-flush col-md-12" id="accordion<?= $sonuc['Kategori_ID'] ?>">
-                                <div class="accordion-item">
-                                    <h2 class="accordion-header d-grid gap-2 mt-3"><button class="collapsed btn btn-light mb-1 fw-bold text-start" type="button" data-bs-toggle="collapse" data-bs-target="#flush-<?= $sonuc['Kategori_ID'] ?>" aria-expanded="false"><?= $sonuc['Kategori_Adi'] ?></button></h2>
-                                    <div id="flush-<?= $sonuc['Kategori_ID'] ?>" class="accordion-collapse collapse" data-bs-parent="#accordion<?= $sonuc['Kategori_ID'] ?>">
-                                        <div class="row">
-                                            <?php $sorgu2 = $baglanti->query("SELECT * FROM urun WHERE Kategori_ID=" . $sonuc['Kategori_ID']);
-                                            foreach ($sorgu2 as $sonuc2) {
-                                                $ID = $sonuc2['Urun_ID'];
-                                                $Foto = $sonuc2['UrunFoto']; ?>
-                                                <label class="row mb-3 col-md-3" for="<?= $ID ?>">
-                                                    <input class="card2__input UrunSecim" type="checkbox" id="<?= $ID ?>" value="<?= $ID ?>" name="UrunIDler[]" <?php if (isset($_SESSION["UrunIDler"])) {
-                                                                                                                                                                    foreach ($_SESSION["UrunIDler"] as $A) {
-                                                                                                                                                                        if ($A == $ID) {
-                                                                                                                                                                            echo "checked";
+                        <div class="border-top">
+                            <div class="d-flex justify-content-between py-3">
+                                <button id="GeriSetAdi" type="button" class="btn btn-secondary bi-arrow-left"> &nbsp Geri</button>
+                                <label id="UrunBos" class="text-danger"></label>
+                                <button id="ileriKutu" type="button" class="btn btn-primary bi-arrow-right"> &nbsp İleri</button>
+                            </div>
+                            <div class="text-center"><a href="Urun/UrunEkle.php?Setler" type="button" class="btn bg-primary-light btn-outline-dark">&nbsp Ürün Ekle</a></div>
+                            <?php
+                            $sorgu = $baglanti->query("SELECT * FROM kategori");
+                            foreach ($sorgu as $sonuc) {
+                            ?>
+                                <div class="accordion accordion-flush col-md-12" id="accordion<?= $sonuc['Kategori_ID'] ?>">
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header d-grid gap-2 mt-3"><button class="collapsed btn btn-light mb-1 fw-bold text-start" type="button" data-bs-toggle="collapse" data-bs-target="#flush-<?= $sonuc['Kategori_ID'] ?>" aria-expanded="false"><?= $sonuc['Kategori_Adi'] ?></button></h2>
+                                        <div id="flush-<?= $sonuc['Kategori_ID'] ?>" class="accordion-collapse collapse" data-bs-parent="#accordion<?= $sonuc['Kategori_ID'] ?>">
+                                            <div class="row">
+                                                <?php $sorgu2 = $baglanti->query("SELECT * FROM urun WHERE Kategori_ID=" . $sonuc['Kategori_ID']);
+                                                foreach ($sorgu2 as $sonuc2) {
+                                                    $ID = $sonuc2['Urun_ID'];
+                                                    $Foto = $sonuc2['UrunFoto']; ?>
+                                                    <label class="row mb-3 col-md-3" for="<?= $ID ?>">
+                                                        <input class="card2__input UrunSecim" type="checkbox" id="<?= $ID ?>" value="<?= $ID ?>" name="UrunIDler[]" <?php if (isset($_SESSION["UrunIDler"])) {
+                                                                                                                                                                        foreach ($_SESSION["UrunIDler"] as $A) {
+                                                                                                                                                                            if ($A == $ID) {
+                                                                                                                                                                                echo "checked";
+                                                                                                                                                                            }
                                                                                                                                                                         }
-                                                                                                                                                                    }
-                                                                                                                                                                } ?>>
-                                                    <div class="card2__body">
-                                                        <div class="row">
-                                                            <div class="col-md-7">
-                                                                <div class="card2__body-cover">
-                                                                    <img class="card2__body-cover-image" src="../assets/img/Keksan/<?= $Foto == "yok" || $Foto == "" || $Foto == null ? "" : $Foto ?>">
-                                                                    <span class="card2__body-cover-checkbox"><svg class="card2__body-cover-checkbox--svg" viewBox="0 0 12 10">
-                                                                            <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
-                                                                        </svg></span>
+                                                                                                                                                                    } ?>>
+                                                        <div class="card2__body">
+                                                            <div class="row">
+                                                                <div class="col-md-7">
+                                                                    <div class="card2__body-cover">
+                                                                        <img class="card2__body-cover-image" src="../assets/img/Keksan/<?= $Foto == "yok" || $Foto == "" || $Foto == null ? "" : $Foto ?>">
+                                                                        <span class="card2__body-cover-checkbox"><svg class="card2__body-cover-checkbox--svg" viewBox="0 0 12 10">
+                                                                                <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                                                                            </svg></span>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                            <div class="col-md-5">
-                                                                <div class="row g-3 col-md-4">
-                                                                    <h5></h5>
-                                                                    <div class="btn-group">
-                                                                        <button class="btn btn-outline-primary dropdown-toggle btn-sm" type="button" data-bs-toggle="dropdown">Kalınlık</button>
-                                                                        <ul class="dropdown-menu card-body py-3">
-                                                                            <select class='kal<?= $ID ?> form-select form-select-sm mm' id="Kalinlik" urunid="<?= $ID ?>"><?php foreach ($baglanti->query("SELECT levha.Levha_ID AS Lid,Kalinlik FROM urun_levha_bilgi INNER JOIN levha ON urun_levha_bilgi.Levha_ID = levha.Levha_ID WHERE Urun_ID =" . $ID) as $K) {
-                                                                                                                                            echo "<option value='$K[Lid]'>$K[Kalinlik] mm</option>";
-                                                                                                                                        } ?>
-                                                                            </select>
-                                                                        </ul>
-                                                                    </div>
-
-                                                                    <div class="btn-group">
-                                                                        <button class="btn btn-outline-primary dropdown-toggle btn-sm" type="button" data-bs-toggle="dropdown">Kulp</button>
-                                                                        <ul class="dropdown-menu card-body py-3">
-                                                                            <div class="input-group-sm">
-                                                                                <select id='Kulp<?= $ID ?>' class='form-select etkin mb-2'>
-                                                                                    <option value="">Kulp Seç</option>
-                                                                                    <?php
-                                                                                    foreach ($kulp as $s) { ?>
-                                                                                        <option <?= isset($_SESSION["KulpSec"]) ? ($_SESSION["KulpSec"] == $s["Kulp_ID"] ? "selected" : "") : "" ?> value="<?= $s["Kulp_ID"] ?>"><?= $s["KulpAdi"] ?></option>
-                                                                                    <?php } ?>
+                                                                <div class="col-md-5">
+                                                                    <div class="row g-3 col-md-4">
+                                                                        <h5></h5>
+                                                                        <div class="btn-group">
+                                                                            <button class="btn btn-outline-primary dropdown-toggle btn-sm" type="button" data-bs-toggle="dropdown">Kalınlık</button>
+                                                                            <ul class="dropdown-menu card-body py-3">
+                                                                                <select class='kal<?= $ID ?> form-select form-select-sm mm' id="Kalinlik" urunid="<?= $ID ?>"><?php foreach ($baglanti->query("SELECT levha.Levha_ID AS Lid,Kalinlik FROM urun_levha_bilgi INNER JOIN levha ON urun_levha_bilgi.Levha_ID = levha.Levha_ID WHERE Urun_ID =" . $ID) as $K) {
+                                                                                                                                                                                    echo "<option value='$K[Lid]'>$K[Kalinlik] mm</option>";
+                                                                                                                                                                                } ?>
                                                                                 </select>
-                                                                                <a href="../SatinAlma/Siparis/KulpSiparis.php?Setler" type="button" class="input-group-text bg-primary-light text-center">Ekle</a>
-                                                                            </div>
-                                                                        </ul>
-                                                                    </div>
+                                                                            </ul>
+                                                                        </div>
 
-                                                                    <div class="btn-group">
-                                                                        <button class="btn btn-outline-primary dropdown-toggle btn-sm" type="button" data-bs-toggle="dropdown">Tepe</button>
-                                                                        <ul class="dropdown-menu card-body py-3">
-                                                                            <div class="input-group-sm">
-                                                                                <select id='Tepe<?= $ID ?>' class='form-select etkin mb-2'>
-                                                                                    <option value="">Tepe Seç</option>
-                                                                                    <?php 
-                                                                                    foreach ($Tepe as $s) { ?>
-                                                                                        <option <?= isset($_SESSION["TepeSec"]) ? ($_SESSION["TepeSec"] == $s["Tepe_ID"] ? "selected" : "") : "" ?> value="<?= $s["Tepe_ID"] ?>"><?= $s["TepeAdi"] ?></option>
-                                                                                    <?php } ?>
-                                                                                </select>
-                                                                                <a href="../SatinAlma/Siparis/TepeSiparis.php?Setler" type="button" class="input-group-text bg-primary-light text-center">Ekle</a>
-                                                                            </div>
-                                                                        </ul>
-                                                                    </div>
+                                                                        <div class="btn-group">
+                                                                            <button class="btn btn-outline-primary dropdown-toggle btn-sm" type="button" data-bs-toggle="dropdown">Kulp</button>
+                                                                            <ul class="dropdown-menu card-body py-3">
+                                                                                <div class="input-group-sm">
+                                                                                    <select id='Kulp<?= $ID ?>' class='form-select etkin mb-2'>
+                                                                                        <option value="">Kulp Seç</option>
+                                                                                        <?php
+                                                                                        foreach ($kulp as $s) { ?>
+                                                                                            <option <?= isset($_SESSION["KulpSec"]) ? ($_SESSION["KulpSec"] == $s["Kulp_ID"] ? "selected" : "") : "" ?> value="<?= $s["Kulp_ID"] ?>"><?= $s["KulpAdi"] ?></option>
+                                                                                        <?php } ?>
+                                                                                    </select>
+                                                                                    <a href="../SatinAlma/Siparis/KulpSiparis.php?Setler" type="button" class="input-group-text bg-primary-light text-center">Ekle</a>
+                                                                                </div>
+                                                                            </ul>
+                                                                        </div>
 
-                                                                    <div class="btn-group">
-                                                                        <button class="btn btn-outline-primary dropdown-toggle btn-sm" type="button" data-bs-toggle="dropdown">Kapak</button>
-                                                                        <ul class="dropdown-menu card-body py-3">
-                                                                            <div class="input-group-sm">
-                                                                                <select id='Kapak<?= $ID ?>' urunid="<?= $ID ?>" class='form-select etkin mb-2 Kapak'>
-                                                                                    <option value="">Kapak Seç</option>
-                                                                                    <?php 
-                                                                                    foreach ($kapak as $s) { ?>
-                                                                                        <option <?= isset($_SESSION["KapakSec"]) ? ($_SESSION["KapakSec"] == $s["Kapak_ID"] ? "selected" : "") : "" ?> value="<?= $s["Kapak_ID"] ?>"><?= $s["Model_Adi"] ?></option>
-                                                                                    <?php } ?>
-                                                                                </select>
-                                                                                <a href="../SatinAlma/Siparis/KapakSiparis.php?Setler" type="button" class="input-group-text bg-primary-light text-center">Ekle</a>
-                                                                            </div>
-                                                                        </ul>
-                                                                    </div>
+                                                                        <div class="btn-group">
+                                                                            <button class="btn btn-outline-primary dropdown-toggle btn-sm" type="button" data-bs-toggle="dropdown">Tepe</button>
+                                                                            <ul class="dropdown-menu card-body py-3">
+                                                                                <div class="input-group-sm">
+                                                                                    <select id='Tepe<?= $ID ?>' class='form-select etkin mb-2'>
+                                                                                        <option value="">Tepe Seç</option>
+                                                                                        <?php
+                                                                                        foreach ($Tepe as $s) { ?>
+                                                                                            <option <?= isset($_SESSION["TepeSec"]) ? ($_SESSION["TepeSec"] == $s["Tepe_ID"] ? "selected" : "") : "" ?> value="<?= $s["Tepe_ID"] ?>"><?= $s["TepeAdi"] ?></option>
+                                                                                        <?php } ?>
+                                                                                    </select>
+                                                                                    <a href="../SatinAlma/Siparis/TepeSiparis.php?Setler" type="button" class="input-group-text bg-primary-light text-center">Ekle</a>
+                                                                                </div>
+                                                                            </ul>
+                                                                        </div>
 
+                                                                        <div class="btn-group">
+                                                                            <button class="btn btn-outline-primary dropdown-toggle btn-sm" type="button" data-bs-toggle="dropdown">Kapak</button>
+                                                                            <ul class="dropdown-menu card-body py-3">
+                                                                                <div class="input-group-sm">
+                                                                                    <select id='Kapak<?= $ID ?>' urunid="<?= $ID ?>" class='form-select etkin mb-2 Kapak'>
+                                                                                        <option value="">Kapak Seç</option>
+                                                                                        <?php
+                                                                                        foreach ($kapak as $s) { ?>
+                                                                                            <option <?= isset($_SESSION["KapakSec"]) ? ($_SESSION["KapakSec"] == $s["Kapak_ID"] ? "selected" : "") : "" ?> value="<?= $s["Kapak_ID"] ?>"><?= $s["Model_Adi"] ?></option>
+                                                                                        <?php } ?>
+                                                                                    </select>
+                                                                                    <a href="../SatinAlma/Siparis/KapakSiparis.php?Setler" type="button" class="input-group-text bg-primary-light text-center">Ekle</a>
+                                                                                </div>
+                                                                            </ul>
+                                                                        </div>
+
+                                                                    </div>
                                                                 </div>
+                                                                <header class="card2__body-header">
+                                                                    <h2 class="card2__body-header-title"><?= $sonuc2['UrunAdi'] ?></h2>
+                                                                    <p class="card2__body-header-subtitle row">
+                                                                        <code id="mm<?= $ID ?>"></code>
+                                                                        <code id="Kulp<?= $ID ?>"></code>
+                                                                        <code id="Tepe<?= $ID ?>"></code>
+                                                                        <code id="Kapak<?= $ID ?>"></code>
+                                                                    </p>
+                                                                </header>
                                                             </div>
-                                                            <header class="card2__body-header">
-                                                                <h2 class="card2__body-header-title"><?= $sonuc2['UrunAdi'] ?></h2>
-                                                                <p class="card2__body-header-subtitle row">
-                                                                    <code id="mm<?= $ID ?>"></code>
-                                                                    <code id="Kulp<?= $ID ?>"></code>
-                                                                    <code id="Tepe<?= $ID ?>"></code>
-                                                                    <code id="Kapak<?= $ID ?>"></code>
-                                                                </p>
-                                                            </header>
+
                                                         </div>
-
-                                                    </div>
-                                                </label>
-                                            <?php } ?>
+                                                    </label>
+                                                <?php } ?>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        <?php } ?>
+                            <?php } ?>
+                        </div>
                     </div>
                     <div class="tab-pane fade" id="Kutuuu">
 
-                        <div class="row">
-                            <div class="d-flex justify-content-between py-2">
+                        <div class="row border-top">
+                            <div class="d-flex justify-content-between py-3">
                                 <button id="GeriUrun" type="button" class="btn btn-secondary bi-arrow-left"> &nbsp Geri</button>
                                 <label class="text-danger text-center col-md-10 SecimlerHata"></label>
                                 <button id="ileriRenkler" type="button" class="btn btn-primary bi-arrow-right"> &nbsp İleri </button>
@@ -210,52 +214,51 @@ $kulp = $baglanti->query("SELECT Kulp_ID, KulpAdi FROM kulp GROUP BY KulpAdi")->
                         </div>
                     </div>
                     <div class="tab-pane fade" id="Renk">
-
-                        <div class="d-flex justify-content-between py-2">
-                            <button id="GeriKutu" type="button" class="btn btn-secondary bi-arrow-left"> &nbsp Geri</button>
-                            <a href="../SatinAlma/Siparis/BoyaSiparis.php?Setler" class="btn btn-outline-dark bi-brush"> &nbsp Boya Ekle</a>
-                            <div class="text-danger Fazlainput"></div>
-                            <button id="SetTamam" type="button" class="btn btn-primary bi-arrow-right"> &nbsp İleri</button>
-                        </div>
-                        <div class="py-3">
-                            <div class="inputlar">
-                                <div class="form-group row g-3 mb-3">
-                                    <div class="col-md-4">
-                                        <select name='icBoyalar' class='form-select icBoyalar'>
-                                            <option value=''>* İç Boya Seç</option>
-                                            <?php $boya = $baglanti->query("SELECT Boya_ID, Renk FROM boya GROUP BY Renk")->fetchAll();
-                                            foreach ($boya as $s) { ?>
-                                                <option <?= isset($_SESSION["icBoyaSec"]) ? ($_SESSION["icBoyaSec"] == $s["Boya_ID"] ? "selected" : "") : "" ?> value="<?= $s["Boya_ID"] ?>"><?= $s["Renk"] ?></option>
-                                            <?php } ?>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <select name='DisBoyalar' class='form-select DisBoyalar'>
-                                            <option value=''>* Dış Boya Seç</option>
-                                            <?php foreach ($boya as $s) { ?>
-                                                <option <?= isset($_SESSION["DisBoyaSec"]) ? ($_SESSION["DisBoyaSec"] == $s["Boya_ID"] ? "selected" : "") : "" ?> value="<?= $s["Boya_ID"] ?>"><?= $s["Renk"] ?></option>
-                                            <?php } ?>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <input type="number" name="Adetler" class="form-control Adetler" placeholder="* Adet gir">
+                        <div class="border-top">
+                            <div class="d-flex justify-content-between mb-3 py-3">
+                                <button id="GeriKutu" type="button" class="btn btn-secondary bi-arrow-left"> &nbsp Geri</button>
+                                <a href="../SatinAlma/Siparis/BoyaSiparis.php?Setler" class="btn btn-outline-dark bi-brush"> &nbsp Boya Ekle</a>
+                                <div class="text-danger Fazlainput"></div>
+                                <button id="SetTamam" type="button" class="btn btn-primary bi-arrow-right"> &nbsp İleri</button>
+                            </div>
+                            <div class="mb-3">
+                                <div class="inputlar">
+                                    <div class="form-group row g-3 mb-3">
+                                        <div class="col-md-4">
+                                            <select name='icBoyalar' class='form-select icBoyalar'>
+                                                <option value=''>* İç Boya Seç</option>
+                                                <?php $boya = $baglanti->query("SELECT Boya_ID, Renk FROM boya GROUP BY Renk")->fetchAll();
+                                                foreach ($boya as $s) { ?>
+                                                    <option <?= isset($_SESSION["icBoyaSec"]) ? ($_SESSION["icBoyaSec"] == $s["Boya_ID"] ? "selected" : "") : "" ?> value="<?= $s["Boya_ID"] ?>"><?= $s["Renk"] ?></option>
+                                                <?php } ?>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <select name='DisBoyalar' class='form-select DisBoyalar'>
+                                                <option value=''>* Dış Boya Seç</option>
+                                                <?php foreach ($boya as $s) { ?>
+                                                    <option <?= isset($_SESSION["DisBoyaSec"]) ? ($_SESSION["DisBoyaSec"] == $s["Boya_ID"] ? "selected" : "") : "" ?> value="<?= $s["Boya_ID"] ?>"><?= $s["Renk"] ?></option>
+                                                <?php } ?>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input type="number" name="Adetler" class="form-control Adetler" placeholder="* Adet gir">
+                                        </div>
                                     </div>
                                 </div>
+                                <button class="btn btn-success mb-3 input-ekle bi-plus-lg"></button>
                             </div>
-                            <button class="btn btn-success mb-3 input-ekle bi-plus-lg"></button>
                         </div>
-
                     </div>
                     <div class="tab-pane fade" id="Liste">
-                        <div class='row g-0'>
+                        <div class='row g-0 border-top'>
                             <div class='col-md-3 resim'></div>
 
                             <input type="hidden" name="Set_Urun_Duzenle_ID">
                             <div class='col-md-8'>
                                 <div class='card-body'>
-                                    <h5 class='card-title text-center baslik'>
-                                        &nbsp</h5>
-                                    <div class="card-text text-center row">
+                                    <h5 class='card-title text-center baslik'>&nbsp</h5>
+                                    <div class="row">
 
                                         <div class="col-md-3 py-3">
                                             <label>İç Renk</label>

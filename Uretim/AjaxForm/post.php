@@ -8,43 +8,62 @@ $bakKul = $SorKullanici->fetch();
 $Kullanici = $bakKul['Kullanici_ID'];
 
 if (isset($_POST['Sec'])) {
-
-    $SetAdi = $_POST['SetAdi'];
-    $Urun_IDler = $_POST["UrunIDler"];
-
-    $mmler = $_POST['mmler'];
-    $Kutu = $_POST["Kutu"];
-    $Tepeler = $_POST["Tepeler"];
-    $Kapaklar = $_POST["Kapaklar"];
-    $Kulplar = $_POST["Kulplar"];
-
+    $UIDler = $_POST["UrunIDler"];
     //Kapak Kulp ve Tepe idleri Kendi tablolarında olmayınca Listelenmiyor o yüzden yok adında kayıt kontrolü yapıcaz
-
-    $icBoyalar = $_POST["icBoyalar"];
-    $DisBoyalar = $_POST["DisBoyalar"];
     $Adetler = $_POST["Adetler"];
 
     $SetKaydet = $baglanti->prepare("INSERT INTO `set` SET SetAdi= ?");
-    $SonucSor = $SetKaydet->execute(array($SetAdi));
+    $SonucSor = $SetKaydet->execute(array($_POST['SetAdi']));
     $Set_ID = $baglanti->lastInsertId();
 
     $_SESSION["Set_ID"] = $Set_ID;
 
-    for ($i = 0; $i < count($Urun_IDler); $i++) {
+    for ($i = 0; $i < count($UIDler); $i++) {
+        //Kapak Kulp ve Tepe idleri Kendi tablolarında olmayınca Listelenmiyor o yüzden yok adında kayıt kontrolü yapıcaz
+    if ($_POST["Kapaklar"][$i]=="") {
+        $sor=$baglanti->query("SELECT Kapak_ID FROM kapak WHERE Tip='Yok'");
+        if($sor->rowCount()){
+            $Kapak=$sor->fetch()["Kapak_ID"];
+        }else{
+            $k=$baglanti->prepare("INSERT INTO kapak SET Firma_ID=?, Tip=?, Kapak_No=?, Model_Adi=?");
+            $k->execute(array(0,'Yok',0,'Yok'));
+            $Kapak=$baglanti->lastInsertId();
+        }
+    }
+    if ($_POST["Kulplar"][$i]=="") {
+        $sor=$baglanti->query("SELECT Kulp_ID FROM kulp WHERE KulpAdi='Yok'");
+        if($sor->rowCount()){
+            $Kulp=$sor->fetch()["Kulp_ID"];
+        }else{
+            $k=$baglanti->prepare("INSERT INTO kulp SET Firma_ID=?, KulpAdi=?, KulpCesidi=?, Renk=?");
+            $k->execute(array(0,'Yok','Yok','Yok'));
+            $Kulp=$baglanti->lastInsertId();
+        }
+    }
+    if ($_POST["Tepeler"][$i]=="") {
+        $sor=$baglanti->query("SELECT Tepe_ID FROM tepe WHERE TepeAdi='Yok'");
+        if($sor->rowCount()){
+            $Tepe=$sor->fetch()["Tepe_ID"];
+        }else{
+            $k=$baglanti->prepare("INSERT INTO tepe SET Firma_ID=?, TepeAdi=?, TepeFoto=?");
+            $k->execute(array(0,'Yok','Yok'));
+            $Tepe=$baglanti->lastInsertId();
+        }
+    }
         $Kaydet = $baglanti->prepare("INSERT INTO set_urun SET Set_ID= ?, Urun_ID= ?, Levha_ID= ?, Kapak_ID= ?, Kulp_ID= ?, Tepe_ID= ?");
-        $Sonuc = $Kaydet->execute(array($Set_ID, $Urun_IDler[$i], $mmler[$i], $Kapaklar[$i], $Kulplar[$i], $Tepeler[$i]));
+        $Sonuc = $Kaydet->execute(array($Set_ID, $UIDler[$i], $_POST['mmler'][$i], $Kapak, $Kulp, $Tepe));
     }
 
     $Set_Urun_ID = $baglanti->lastInsertId();
     for ($i = 0; $i < count($Adetler); $i++) {
         $Kaydet = $baglanti->prepare("INSERT INTO set_urun_icerik SET Set_ID= ?, Adet= ?, DisBoya= ?, icBoya= ?");
-        $Sonuc = $Kaydet->execute(array($Set_ID, $Adetler[$i], $DisBoyalar[$i], $icBoyalar[$i]));
+        $Sonuc = $Kaydet->execute(array($Set_ID, $Adetler[$i], $_POST["DisBoyalar"][$i], $_POST["icBoyalar"][$i]));
     }
 
     $Set_Urun_icerik_ID = $baglanti->lastInsertId();
 
     $SetKaydet = $baglanti->prepare("INSERT INTO set_icerik SET Set_Urun_ID= ?, Set_Urun_icerik_ID= ?, Kutu= ?, Kullanici_ID= ?");
-    $Sonuc = $SetKaydet->execute(array($Set_Urun_ID, $Set_Urun_icerik_ID, $Kutu, $Kullanici));
+    $Sonuc = $SetKaydet->execute(array($Set_Urun_ID, $Set_Urun_icerik_ID, $_POST["Kutu"], $Kullanici));
     ############################################
     // Düzenlemek için Kombinasyonu yapılan verinin bütün varyasyonlarını başka bir veri tabanına ekliyoruz sırf ürüne özel düzenlemeler gerçekleştirmek için
     ###############################################

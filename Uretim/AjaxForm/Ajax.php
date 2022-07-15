@@ -26,7 +26,6 @@
             });
             if (DisBoyalar.length > 5) {
                 $(".input-ekle").prop("disabled", true)
-                $("#SetTamam").prop("disabled", true)
             }
             var clone, examsList;
             e.preventDefault();
@@ -42,19 +41,17 @@
                 DisBoyalar.push(selectedVal);
             });
             if (DisBoyalar.length <= 8) { // O anki değeri geriden geldiği için
-                $(".input-ekle").prop("disabled", false)
-                $("#SetTamam").prop("disabled", false)
+                $(".input-ekle").prop("disabled", false);
             }
             e.preventDefault();
             return $(this).parent().remove();
         });
-
-        //#####    ########    ##########    ########    ##########    ########    ##########    ########    ##########    ########    ##########    ########    #####
-        // Yapılan iş Bu kısımda navigasyonlarda veriyi hem kaybetmemek hem kaldığı yerden devam etmesi için
-
-
+        $("#Setadii").prop("disabled", true);
+        $("#Urunn").prop("disabled", true);
+        $("#Kutuu").prop("disabled", true);
+        $("#Renkk").prop("disabled", true);
+        $("#Listee").prop("disabled", true);
     });
-    //#####    ########    ##########    ########    ##########    ########    ##########    ########    ##########    ########    ##########    ########    #####
 
     $("#ileriUrun").click(function() {
 

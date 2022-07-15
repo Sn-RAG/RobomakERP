@@ -1,11 +1,14 @@
 <?php
 $page = "Devam eden";
-if (isset($_SESSION["Set_ID"]) && isset($_SESSION["SetAdi"])) {
-    unset($_SESSION["Set_ID"], $_SESSION["SetAdi"]);
-}
 require __DIR__ . '/../controller/Header.php';
 require __DIR__ . '/../controller/Db.php';
 require __DIR__ . '/../controller/Sil.php';
+if (isset($_SESSION["Set_ID"])) {
+    unset($_SESSION["Set_ID"]);
+}
+if (isset($_SESSION["SetAdi"])) {
+    unset($_SESSION["SetAdi"]);
+}
 ?>
 <main id="main" class="main">
     <section class="section">

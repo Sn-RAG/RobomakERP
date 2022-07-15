@@ -28,7 +28,7 @@
         var c = a * a * b * (0.22);
         var GirAgirlik = $('#GirAgirlik' + ID + '').val();
         var Kg = GirAgirlik / (c / 1000);
-        $('.GirAdet' + ID + '').val(Math.round(Kg));
+        $('.GirAdet' + ID + '').val(Math.ceil(Kg));
     });
     $('.Gelen').click(function () {
         var ID = $(this).attr("levhastokid");
@@ -93,7 +93,7 @@
         var c = a * a * b * (0.22);
         var GirAgirlik = $('#GirAgirlik' + ID + '').val();
         var Kg = GirAgirlik / (c / 1000);
-        $('.GirAdet' + ID + '').val(Math.round(Kg));
+        $('.GirAdet' + ID + '').val(Math.ceil(Kg));
         var StokAdet = $('.StokAdet' + ID + '').val();
         var StokAgirlik = $('.StokAgirlik' + ID + '').val();
         var GirAdet = $('.GirAdet' + ID + '').val();
