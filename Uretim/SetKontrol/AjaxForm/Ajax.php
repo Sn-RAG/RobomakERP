@@ -81,62 +81,66 @@ $Has = ".hasClass('btn-primary')";
         var deger = $("#deger" + Uid + "").val();
         var LevhaID = $("#deger" + Uid + "").attr("LevhaID");
         var Tarih = $(".Tarih").val();
-        // if (Number($(".yazsayi" + Uid + "").html()) + Number(deger) >= Number($(".Tadet").val())) {
-        /*<?= $FazlaDeger ?>*/
-        // } else {
-        if (deger != "" & Number(deger) != 0) {
-
-            switch (true) {
-                case $("#Pres") <?= $Has ?>:
-                    Hangisi = "Pres";
-                    break;
-                case $("#Telleme") <?= $Has ?>:
-                    Hangisi = "Telleme";
-                    break;
-                case $("#Kumlama") <?= $Has ?>:
-                    Hangisi = "Kumlama";
-                    break;
-                case $("#icBoyama") <?= $Has ?>:
-                    Hangisi = "icBoyama";
-                    break;
-                case $("#DisBoyama") <?= $Has ?>:
-                    Hangisi = "DisBoyama";
-                    break;
-                case $("#Paketleme") <?= $Has ?>:
-                    Hangisi = "Paketleme";
-                    break;
-                case $("#Yikama") <?= $Has ?>:
-                    Hangisi = "Yikama";
-                    break;
-            }
-
-            $.ajax({
-                type: "POST",
-                url: "AjaxForm/post.php",
-                data: {
-                    'SetID': SetID,
-                    'UrunID': Uid,
-                    'Deger': deger,
-                    'LevhaID': LevhaID,
-                    'Hangisi': Hangisi,
-                    'Tarih': Tarih
-                },
-                error: function(xhr) {
-                    alert('Hata: ' + xhr.responseText);
-                },
-                success: function(data) {
-                    $(".yazsayi" + Uid + "").html(data);
-                    $(".temizle").val("");
-                    $.Listele();
-                }
-            })
+        if (Number($(".yazsayi" + Uid + "").html()) + Number(deger) > Number($(".Tadet").val())) {
+            <?= $FazlaDeger ?>
+            $(".temizle").val("");
+        } else if (Number(deger) <= 0 || Number(deger) == "") {
+            <?= $Gecersiz ?>
+            $(".temizle").val("");
         } else {
-            if ($("#hata" + Uid + "").children("label").length == 0) {
-                $("#hata" + Uid + "").append($('<label>').html("Değer Giriniz!").addClass("small text-danger"));
-            }
+            if (deger != "" & Number(deger) != 0) {
 
+                switch (true) {
+                    case $("#Pres") <?= $Has ?>:
+                        Hangisi = "Pres";
+                        break;
+                    case $("#Telleme") <?= $Has ?>:
+                        Hangisi = "Telleme";
+                        break;
+                    case $("#Kumlama") <?= $Has ?>:
+                        Hangisi = "Kumlama";
+                        break;
+                    case $("#icBoyama") <?= $Has ?>:
+                        Hangisi = "icBoyama";
+                        break;
+                    case $("#DisBoyama") <?= $Has ?>:
+                        Hangisi = "DisBoyama";
+                        break;
+                    case $("#Paketleme") <?= $Has ?>:
+                        Hangisi = "Paketleme";
+                        break;
+                    case $("#Yikama") <?= $Has ?>:
+                        Hangisi = "Yikama";
+                        break;
+                }
+
+                $.ajax({
+                    type: "POST",
+                    url: "AjaxForm/post.php",
+                    data: {
+                        'SetID': SetID,
+                        'UrunID': Uid,
+                        'Deger': deger,
+                        'LevhaID': LevhaID,
+                        'Hangisi': Hangisi,
+                        'Tarih': Tarih
+                    },
+                    error: function(xhr) {
+                        alert('Hata: ' + xhr.responseText);
+                    },
+                    success: function(data) {
+                        $(".yazsayi" + Uid + "").html(data);
+                        $(".temizle").val("");
+                        $.Listele();
+                    }
+                })
+            } else {
+                if ($("#hata" + Uid + "").children("label").length == 0) {
+                    $("#hata" + Uid + "").append($('<label>').html("Değer Giriniz!").addClass("small text-danger"));
+                }
+
+            }
         }
-        //}
     });
     $('.fire').click(function() {
         var Uid = $(this).attr("Urun_ID");

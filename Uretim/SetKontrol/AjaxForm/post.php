@@ -151,26 +151,64 @@ if (isset($_POST['Listele'])) {
 
 } elseif (isset($_POST["isDurum"])) {
     $is = $_POST["Is"];
-    $id = $_POST['isDurum'];
-    $Tsorgu = $baglanti->query("SELECT Tarih FROM set_urunler_asama_akis INNER JOIN urun ON set_urunler_asama_akis.Urun_ID = urun.Urun_ID WHERE Set_ID =" . $_POST['isDurum'] . " GROUP BY Tarih");
-    if ($Tsorgu->rowCount()) {
-        foreach ($Tsorgu as $t) {
-            $Firegor = $is == "Preslendi" ? "  OR Tarih='$t[Tarih]' AND Yapilan_is='Fire' AND Set_ID =" . $id : "";
-            $sorgu = $baglanti->query("SELECT Set_ID, UrunAdi, Yapilan_is, Adet FROM set_urunler_asama_akis INNER JOIN urun ON set_urunler_asama_akis.Urun_ID = urun.Urun_ID WHERE Tarih='$t[Tarih]' AND Set_ID =" . $id . " AND Yapilan_is='$is' " . $Firegor);
-            if ($sorgu->rowCount()) {
-                $SumFire=$baglanti->query("SELECT SUM(Adet) AS Toplam FROM set_urunler_asama_akis WHERE Tarih='$t[Tarih]' AND Yapilan_is='Fire' AND Set_ID =" . $id)->fetch()["Toplam"];
-                $srou=$SumFire<>null?$SumFire:0;
-                echo "<p class='text-primary bi-clock py-3 mb-0 text-center'> $t[Tarih] <label class='text-black small'> Toplam Fire= " . $srou . "</label></p>";
-            }
-            foreach ($sorgu as $s) {
-                if ($s["Adet"] > 0) {
-                    echo "<small class='col-md-6 border-end'>$s[Adet] Adet $s[UrunAdi] $s[Yapilan_is].</small><br>";
-                } else {
-                    echo "<small class='text-danger'>$s[Adet] Adet $s[UrunAdi]</small><br>";
+    $id = $_POST['isDurum']; ?>
+    <table class="table table-responsive Tablois">
+        <thead>
+            <tr class="table-light">
+                <th>#</th>
+                <th>Ürünler</th>
+                <th>Adet</th>
+                <th>Tarih</th>
+                <th>&nbsp</th>
+            </tr>
+        </thead>
+        <tbody><?php
+                $sorgu = $baglanti->query("SELECT Set_ID, urun.Urun_ID, UrunAdi, Yapilan_is, Adet, Tarih FROM set_urunler_asama_akis INNER JOIN urun ON set_urunler_asama_akis.Urun_ID = urun.Urun_ID WHERE Set_ID =" . $id . " AND Yapilan_is='$is'");
+                foreach ($sorgu as $t) { ?>
+                <tr>
+                    <td hidden><?= $t["Urun_ID"] ?></td>
+                    <td><?= $t["UrunAdi"] ?></td>
+                    <td><?= $t["Adet"] ?></td>
+                    <td><?= $t["Tarih"] ?></td>
+                    <td class="d-flex">
+                        <button class="btn btn-sm btn-warning bi-pencil me-1 Duzenle"></button>
+                        <button class="btn btn-sm btn-danger bi-trash Sil" type="button" urunid="<?= $t["Urun_ID"] ?>"></button>
+                    </td>
+                </tr>
+            <?php } ?>
+        </tbody>
+    </table>
+    <script>
+        $('.Tablois').DataTable({
+            responsive: true,
+            order: false,
+            columnDefs: [{
+                    targets: '_all',
+                    orderable: false
+                },
+                {
+                    visible: false,
+                    targets: 0
                 }
+            ],
+            bFilter: false,
+            bInfo: false,
+            paging: false,
+        });
+        $(".Sil").click(function() {
+            SetID = <?= $id ?>;
+            UrunID = $(this).attr("urunid");
+            document.cookie = "UrunID=" + UrunID + "";
+            if (<?= $Is ?> == "Preslendi") {
+
+            } else {
+                <?php
+                $baglanti->query("DELETE FROM set_urunler_asama_akis WHERE Set_ID =" . $id . " AND Urun_ID=" . (int)$_COOKIE["UrunID"] . " AND Yapilan_is='$is'");
+                ?>
             }
-        }
-    }
+        });
+    </script>
+<?php
 }
 
 /////////////////////////////////////////////////////////////////////////////////// Fire ve Preslenenlerde stok Miktarını ayarlamak için

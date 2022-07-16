@@ -48,9 +48,16 @@ require __DIR__ . '/Yuzde.php';
 <main id="main" class="main">
     <section class="section">
         <div class="card">
-            <div class="card-header d-flex">
-                <div class="col-md-2"><a href="../Setler.php" class="bi-arrow-left btn btn-secondary"> &nbsp&nbsp Geri Dön</a></div>
-                <h5 class='card-title text-center col-md-8 fs-5'><?= $_SESSION["SetAdi"] ?></h5>
+            <div class="card-header d-flex justify-content-between">
+                <div><a href="../Setler.php" class="bi-arrow-left btn btn-secondary"> &nbsp&nbsp Geri Dön</a></div>
+                <h5 class='card-title text-center fs-5'><?= $_SESSION["SetAdi"] ?></h5>
+                <div>
+                    <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown"> Üretim Formları</button>
+                    <ul class="dropdown-menu">
+                        <li><a class="hover dropdown-item border-bottom" href="PresFormu.php?id=<?= $SetID ?>" target="_blank" rel="noreferrer noopener">Pres Formu</a></li>
+                        <!--<li><a class="hover dropdown-item" href="BoyaFormu.php" target="_blank" rel="noreferrer noopener">Boya Formu</a></li>-->
+                    </ul>
+                </div>
             </div>
             <div class="card-body row g-3">
                 <div class="col-md-12">
@@ -149,10 +156,7 @@ require __DIR__ . '/Yuzde.php';
                 <!-- Scroll Bar -->
                 <div class="col-md-6">
                     <h5> &nbsp Detaylar</h5>
-                    <div class="panel-body border-top border-start">
-                        <ul class="chat m-2">
-                            <li class="isDurum row"></li>
-                        </ul>
+                    <div class="panel-body border-top border-start isDurum">
                     </div>
                 </div>
                 <!-- Scroll Bar SON -->
@@ -230,31 +234,45 @@ require __DIR__ . '/Yuzde.php';
                             <?php } ?>
                         </tbody>
                         <tfoot>
-                            <tr class="table-primary">
-                                <th>İç Boya</th>
-                                <th>Dış Boya</th>
+                            <tr>
+                                <th>&nbsp</th>
+                                <th></th>
                                 <th></th>
                                 <th></th>
                                 <th></th>
                                 <th></th>
                             </tr>
                             <tr>
-                                <td><?php
-                                    $sor = $baglanti->query('SELECT Renk FROM set_urun_icerik INNER JOIN boya ON set_urun_icerik.icBoya = boya.Boya_ID WHERE Set_ID =' . $SetID);
-                                    foreach ($sor as $s) {
-                                        echo $s['Renk'] . "<br>";
-                                    }
-                                    ?>
-                                </td>
-                                <td><?php
-                                    $sor = $baglanti->query('SELECT Renk FROM set_urun_icerik INNER JOIN boya ON set_urun_icerik.DisBoya = boya.Boya_ID WHERE Set_ID =' . $SetID);
-                                    foreach ($sor as $s) {
-                                        echo  $s['Renk'] . "<br>";
-                                    }
-                                    ?>
-                                </td>
+                                <th></th>
+                                <th class="table-secondary">İç Boya</th>
+                                <th class="table-secondary">Dış Boya</th>
+                                <th class="table-secondary">Adet</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                            <tr>
                                 <td></td>
-                                <td></td>
+                                <td class="table-secondary"><?php
+                                                            $sor = $baglanti->query('SELECT Renk FROM set_urun_icerik INNER JOIN boya ON set_urun_icerik.icBoya = boya.Boya_ID WHERE Set_ID =' . $SetID);
+                                                            foreach ($sor as $s) {
+                                                                echo $s['Renk'] . "<br>";
+                                                            }
+                                                            ?>
+                                </td>
+                                <td class="table-secondary"><?php
+                                                            $sor = $baglanti->query('SELECT Renk FROM set_urun_icerik INNER JOIN boya ON set_urun_icerik.DisBoya = boya.Boya_ID WHERE Set_ID =' . $SetID);
+                                                            foreach ($sor as $s) {
+                                                                echo  $s['Renk'] . "<br>";
+                                                            }
+                                                            ?>
+                                </td>
+                                <td class="table-secondary"><?php
+                                                            $sor = $baglanti->query('SELECT Adet FROM set_urun_icerik WHERE Set_ID =' . $SetID);
+                                                            foreach ($sor as $s) {
+                                                                echo  "<input class='Tadet' type='hidden' value='$s[Adet]'>" . $s['Adet'] . "<br>";
+                                                            }
+                                                            ?>
+                                </td>
                                 <td></td>
                                 <td></td>
                             </tr>

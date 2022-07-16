@@ -87,7 +87,7 @@
         $("#Urunn").removeClass("active");
         $("#Urun").removeClass("active show");
     });
-    
+
     $("#ileriKutu").click(function() {
         var Kapaklar = [];
         var Tepeler = [];
@@ -97,7 +97,7 @@
         $(".UrunSecim:checked").map(function() {
             var h = $(this).val();
             UrunIDler.push(h);
-            mmler.push($(".kal" + h + "").val());
+            mmler.push($("#kal" + h + "").val());
             Kapaklar.push($("#Kapak" + h + "").val());
             Tepeler.push($("#Tepe" + h + "").val());
             Kulplar.push($("#Kulp" + h + "").val());
@@ -163,7 +163,7 @@
         $(".UrunSecim:checked").map(function() {
             var h = $(this).val();
             UrunIDler.push(h);
-            mmler.push($(".kal" + h + "").val());
+            mmler.push($("#kal" + h + "").val());
             Kapaklar.push($("#Kapak" + h + "").val());
             Tepeler.push($("#Tepe" + h + "").val());
             Kulplar.push($("#Kulp" + h + "").val());
@@ -270,5 +270,27 @@
         $("select[name=Kapak]").val("");
         $("select[name=Kulp]").val("");
         $("button[name=Urunler]").attr("disabled", false);
+    });
+
+    // Seçilenleri ürünün altında göster
+
+    $(".mm").change(function() {
+        var id=$(this).attr("urunid");
+        $("#mmy" + id + "").html($("#kal" + id + " option:selected").text());
+    });
+
+    $(".Kulp").change(function() {
+        var id=$(this).attr("urunid");
+        $("#Kulpy" + id + "").html($("#Kulp" + id + " option:selected").text());
+    });
+
+    $(".Tepe").change(function() {
+        var id=$(this).attr("urunid");
+        $("#Tepey" + id + "").html($("#Tepe" + id + " option:selected").text());
+    });
+
+    $(".Kapak").change(function() {
+        var id=$(this).attr("urunid");
+        $("#Kapaky" + id + "").html($("#Kapak" + id + " option:selected").text());
     });
 </script>

@@ -11,7 +11,14 @@ $FazlaDeger = "Swal.fire({
         title: 'Fazla Değer!',
         text: 'Toplam değerden fazla!',
         confirmButtonText: 'Tamam',
-    })";
+    });";
+
+$Gecersiz = "Swal.fire({
+        icon: 'warning',
+        title: 'Geçersiz ya da boş değer!',
+        text: 'Negatif ya da boş değer kaydedemezsiniz.',
+        confirmButtonText: 'Tamam',
+    });";
 
 $Kayitvar = "<script>Swal.fire({
         icon: 'error',

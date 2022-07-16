@@ -105,7 +105,7 @@ $kulp = $baglanti->query("SELECT Kulp_ID, KulpAdi FROM kulp GROUP BY KulpAdi")->
                                                                         <div class="btn-group">
                                                                             <button class="btn btn-outline-primary dropdown-toggle btn-sm" type="button" data-bs-toggle="dropdown">Kalınlık</button>
                                                                             <ul class="dropdown-menu card-body py-3">
-                                                                                <select class='kal<?= $ID ?> form-select form-select-sm mm' id="Kalinlik" urunid="<?= $ID ?>"><?php foreach ($baglanti->query("SELECT levha.Levha_ID AS Lid,Kalinlik FROM urun_levha_bilgi INNER JOIN levha ON urun_levha_bilgi.Levha_ID = levha.Levha_ID WHERE Urun_ID =" . $ID) as $K) {
+                                                                                <select class='form-select form-select-sm mm' id="kal<?= $ID ?>" urunid="<?= $ID ?>"><?php foreach ($baglanti->query("SELECT levha.Levha_ID AS Lid,Kalinlik FROM urun_levha_bilgi INNER JOIN levha ON urun_levha_bilgi.Levha_ID = levha.Levha_ID WHERE Urun_ID =" . $ID) as $K) {
                                                                                                                                                                                     echo "<option value='$K[Lid]'>$K[Kalinlik] mm</option>";
                                                                                                                                                                                 } ?>
                                                                                 </select>
@@ -116,7 +116,7 @@ $kulp = $baglanti->query("SELECT Kulp_ID, KulpAdi FROM kulp GROUP BY KulpAdi")->
                                                                             <button class="btn btn-outline-primary dropdown-toggle btn-sm" type="button" data-bs-toggle="dropdown">Kulp</button>
                                                                             <ul class="dropdown-menu card-body py-3">
                                                                                 <div class="input-group-sm">
-                                                                                    <select id='Kulp<?= $ID ?>' class='form-select etkin mb-2'>
+                                                                                    <select id='Kulp<?= $ID ?>' urunid="<?= $ID ?>" class='form-select etkin mb-2 Kulp'>
                                                                                         <option value="">Kulp Seç</option>
                                                                                         <?php
                                                                                         foreach ($kulp as $s) { ?>
@@ -132,7 +132,7 @@ $kulp = $baglanti->query("SELECT Kulp_ID, KulpAdi FROM kulp GROUP BY KulpAdi")->
                                                                             <button class="btn btn-outline-primary dropdown-toggle btn-sm" type="button" data-bs-toggle="dropdown">Tepe</button>
                                                                             <ul class="dropdown-menu card-body py-3">
                                                                                 <div class="input-group-sm">
-                                                                                    <select id='Tepe<?= $ID ?>' class='form-select etkin mb-2'>
+                                                                                    <select id='Tepe<?= $ID ?>' urunid="<?= $ID ?>" class='form-select etkin mb-2 Tepe'>
                                                                                         <option value="">Tepe Seç</option>
                                                                                         <?php
                                                                                         foreach ($Tepe as $s) { ?>
@@ -165,10 +165,10 @@ $kulp = $baglanti->query("SELECT Kulp_ID, KulpAdi FROM kulp GROUP BY KulpAdi")->
                                                                 <header class="card2__body-header">
                                                                     <h2 class="card2__body-header-title"><?= $sonuc2['UrunAdi'] ?></h2>
                                                                     <p class="card2__body-header-subtitle row">
-                                                                        <code id="mm<?= $ID ?>"></code>
-                                                                        <code id="Kulp<?= $ID ?>"></code>
-                                                                        <code id="Tepe<?= $ID ?>"></code>
-                                                                        <code id="Kapak<?= $ID ?>"></code>
+                                                                        <code id="mmy<?= $ID ?>"></code>
+                                                                        <code id="Kulpy<?= $ID ?>"></code>
+                                                                        <code id="Tepey<?= $ID ?>"></code>
+                                                                        <code id="Kapaky<?= $ID ?>"></code>
                                                                     </p>
                                                                 </header>
                                                             </div>
