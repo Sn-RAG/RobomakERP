@@ -19,7 +19,12 @@ $Gecersiz = "Swal.fire({
         text: 'Negatif ya da boş değer kaydedemezsiniz.',
         confirmButtonText: 'Tamam',
     });";
-
+$StokYok = "Swal.fire({
+        icon: 'error',
+        title: 'Stok yok!',
+        text: 'Yeni sipariş açın.',
+        confirmButtonText: 'Tamam',
+    });";
 $Kayitvar = "<script>Swal.fire({
         icon: 'error',
         title: 'Kayıt zaten mevcut!',

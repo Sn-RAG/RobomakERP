@@ -70,12 +70,12 @@ foreach ($sor as $s) {
 $CartPresA = [];
 $CartPresT = [];
 $i = 0;
-$Cart = $baglanti->query("SELECT SUM(Adet) AS Tadet, Tarih FROM set_urunler_asama_akis WHERE Yapilan_is='Preslendi' AND Set_ID=" . $SetID . " GROUP BY Tarih");
+$Cart = $baglanti->query("SELECT SUM(Adet) AS Tadet, Tarih FROM set_urunler_asama_akis WHERE Yapilan_is='Preslendi' AND Set_ID=" . $SetID);
 if ($Cart->rowCount()) {
     foreach ($Cart as $cc) {
-        $i++;
         $CartPresA[$i] = $cc["Tadet"];
         $CartPresT[$i] = $cc["Tarih"];
+        $i++;
     }
 }
 
@@ -85,9 +85,9 @@ $CartYikaT = [];
 $Cart = $baglanti->query("SELECT SUM(Adet) AS Tadet, Tarih FROM set_urunler_asama_akis WHERE Yapilan_is='Yıkandı' AND Set_ID=" . $SetID . " GROUP BY Tarih");
 if ($Cart->rowCount()) {
     foreach ($Cart as $cc) {
-        $i++;
         $CartYikaA[$i] = $cc["Tadet"];
         $CartYikaT[$i] = $cc["Tarih"];
+        $i++;
     }
 }
 
@@ -97,9 +97,9 @@ $CartKumlaT = [];
 $Cart = $baglanti->query("SELECT SUM(Adet) AS Tadet, Tarih FROM set_urunler_asama_akis WHERE Yapilan_is='Kumlandı' AND Set_ID=" . $SetID . " GROUP BY Tarih");
 if ($Cart->rowCount()) {
     foreach ($Cart as $cc) {
-        $i++;
         $CartKumlaA[$i] = $cc["Tadet"];
         $CartKumlaT[$i] = $cc["Tarih"];
+        $i++;
     }
 }
 
@@ -109,9 +109,9 @@ $CartTelleT = [];
 $Cart = $baglanti->query("SELECT SUM(Adet) AS Tadet, Tarih FROM set_urunler_asama_akis WHERE Yapilan_is='Tellendi' AND Set_ID=" . $SetID . " GROUP BY Tarih");
 if ($Cart->rowCount()) {
     foreach ($Cart as $cc) {
-        $i++;
         $CartTelleA[$i] = $cc["Tadet"];
         $CartTelleT[$i] = $cc["Tarih"];
+        $i++;
     }
 }
 
@@ -121,9 +121,9 @@ $CartBoyaT = [];
 $Cart = $baglanti->query("SELECT SUM(Adet) AS Tadet, Tarih FROM set_urunler_asama_akis WHERE Yapilan_is='Boyandı' AND Set_ID=" . $SetID . " GROUP BY Tarih");
 if ($Cart->rowCount()) {
     foreach ($Cart as $cc) {
-        $i++;
         $CartBoyaA[$i] = $cc["Tadet"];
         $CartBoyaT[$i] = $cc["Tarih"];
+        $i++;
     }
 }
 
@@ -133,9 +133,9 @@ $CartPaketT = [];
 $Cart = $baglanti->query("SELECT SUM(Adet) AS Tadet, Tarih FROM set_urunler_asama_akis WHERE Yapilan_is='Paketlendi' AND Set_ID=" . $SetID . " GROUP BY Tarih");
 if ($Cart->rowCount()) {
     foreach ($Cart as $cc) {
-        $i++;
         $CartPaketA[$i] = $cc["Tadet"];
         $CartPaketT[$i] = $cc["Tarih"];
+        $i++;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

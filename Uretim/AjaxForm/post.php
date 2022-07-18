@@ -20,36 +20,27 @@ if (isset($_POST['Sec'])) {
 
     for ($i = 0; $i < count($UIDler); $i++) {
         //Kapak Kulp ve Tepe idleri Kendi tablolarında olmayınca Listelenmiyor o yüzden yok adında kayıt kontrolü yapıcaz
-    if ($_POST["Kapaklar"][$i]=="") {
-        $sor=$baglanti->query("SELECT Kapak_ID FROM kapak WHERE Tip='Yok'");
-        if($sor->rowCount()){
-            $Kapak=$sor->fetch()["Kapak_ID"];
-        }else{
-            $k=$baglanti->prepare("INSERT INTO kapak SET Firma_ID=?, Tip=?, Kapak_No=?, Model_Adi=?");
-            $k->execute(array(0,'Yok',0,'Yok'));
-            $Kapak=$baglanti->lastInsertId();
+        if ($_POST["Kapaklar"][$i] == "") {
+            $Kapak = $baglanti->query("SELECT Kapak_ID FROM kapak WHERE Tip='Yok'")->fetch()["Kapak_ID"];
+        } else {
+            $k = $baglanti->prepare("INSERT INTO kapak SET Firma_ID=?, Tip=?, Kapak_No=?, Model_Adi=?");
+            $k->execute(array(0, 'Yok', 0, 'Yok'));
+            $Kapak = $baglanti->lastInsertId();
         }
-    }
-    if ($_POST["Kulplar"][$i]=="") {
-        $sor=$baglanti->query("SELECT Kulp_ID FROM kulp WHERE KulpAdi='Yok'");
-        if($sor->rowCount()){
-            $Kulp=$sor->fetch()["Kulp_ID"];
-        }else{
-            $k=$baglanti->prepare("INSERT INTO kulp SET Firma_ID=?, KulpAdi=?, KulpCesidi=?, Renk=?");
-            $k->execute(array(0,'Yok','Yok','Yok'));
-            $Kulp=$baglanti->lastInsertId();
+        if ($_POST["Kulplar"][$i] == "") {
+            $Kulp = $baglanti->query("SELECT Kulp_ID FROM kulp WHERE KulpAdi='Yok'")->fetch()["Kulp_ID"];
+        } else {
+            $k = $baglanti->prepare("INSERT INTO kulp SET Firma_ID=?, KulpAdi=?, KulpCesidi=?, Renk=?");
+            $k->execute(array(0, 'Yok', 'Yok', 'Yok'));
+            $Kulp = $baglanti->lastInsertId();
         }
-    }
-    if ($_POST["Tepeler"][$i]=="") {
-        $sor=$baglanti->query("SELECT Tepe_ID FROM tepe WHERE TepeAdi='Yok'");
-        if($sor->rowCount()){
-            $Tepe=$sor->fetch()["Tepe_ID"];
-        }else{
-            $k=$baglanti->prepare("INSERT INTO tepe SET Firma_ID=?, TepeAdi=?, TepeFoto=?");
-            $k->execute(array(0,'Yok','Yok'));
-            $Tepe=$baglanti->lastInsertId();
+        if ($_POST["Tepeler"][$i] == "") {
+            $Tepe = $baglanti->query("SELECT Tepe_ID FROM tepe WHERE TepeAdi='Yok'")->fetch()["Tepe_ID"];
+        } else {
+            $k = $baglanti->prepare("INSERT INTO tepe SET Firma_ID=?, TepeAdi=?, TepeFoto=?");
+            $k->execute(array(0, 'Yok', 'Yok'));
+            $Tepe = $baglanti->lastInsertId();
         }
-    }
         $Kaydet = $baglanti->prepare("INSERT INTO set_urun SET Set_ID= ?, Urun_ID= ?, Levha_ID= ?, Kapak_ID= ?, Kulp_ID= ?, Tepe_ID= ?");
         $Sonuc = $Kaydet->execute(array($Set_ID, $UIDler[$i], $_POST['mmler'][$i], $Kapak, $Kulp, $Tepe));
     }
@@ -100,44 +91,44 @@ elseif (isset($_POST["Listele"])) {
     foreach ($sor as $s) {
         $s2 = $baglanti->query("SELECT * FROM urun WHERE Urun_ID=" . $s["Urun_ID"])->fetch();
 ?>
-            <button class="btn col-md-2 me-2" type="button" name="Urunler" Set_Urun_Duzenle_ID="<?= $s["Set_Urun_Duzenle_ID"] ?>">
-                <div class="card2__body">
-                    <div class="card2__body-cover">
-                        <img class="card2__body-cover-image" src="../assets/img/Keksan/<?= $s2["UrunFoto"] == "yok" || $s2["UrunFoto"] == "" || $s2["UrunFoto"] == null ? "" : $s2["UrunFoto"] ?>">
-                        <span class="card2__body-cover-checkbox">
-                            <svg class="card2__body-cover-checkbox--svg" viewBox="0 0 12 10">
-                                <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
-                            </svg>
-                        </span>
-                    </div>
-                    <header class="card2__body-header">
-                        <h2 class="card2__body-header-title"><?= $s2["UrunAdi"] ?></h2>
-                        <p class="card2__body-header-subtitle small">
-                            <?php
-                            $icBoya = $baglanti->query("SELECT Boya_ID, Renk FROM set_urunler INNER JOIN boya ON set_urunler.icBoya_ID = boya.Boya_ID WHERE Boya_ID=" . $s["icBoya_ID"] . " GROUP BY Renk")->fetch();
-                                echo "İç Boya:<input type='hidden' name='icrengi$s[Set_Urun_Duzenle_ID]' value='$icBoya[Boya_ID]'>";
-                                echo $icBoya["Renk"] == "" ? "<code>Ayarlanmadı</code>" : "<code class='text-success small'>" . $icBoya["Renk"] . "</code><br>";
-                                ?>
-                            Dış Boya:<input type='hidden' name='disrengi<?= $s["Set_Urun_Duzenle_ID"] ?>' value='<?= $s["Boya_ID"] ?>'>
-                            <?= $s["DisRenk"] == "" ? "<code>Ayarlanmadı</code>" : "<code class='text-success small'>" . $s["DisRenk"] . "</code>" ?>
-                            <br>
-
-                            <input type='hidden' name='kapaki<?= $s["Set_Urun_Duzenle_ID"] ?>' value='<?= @$s["Kapak_ID"] ?>'>
-                            Kapak:<?= $s["Kapak_ID"] == "" ? "<code>Ayarlanmadı</code>" : "<code class='text-success small'>" . $s["Kapak_ID"] . "</code>" ?>
-                            <br>
-
-
-                            <input type='hidden' name='kulpu<?= $s["Set_Urun_Duzenle_ID"] ?>' value='<?= @$s["Kulp_ID"] ?>'>
-                            Kulp:<?= $s["KulpAdi"] == "" ? "<code>Ayarlanmadı</code>" : "<code class='text-success small'>" . $s["KulpAdi"] . "</code>" ?>
-                            <br>
-
-                            <input type='hidden' name='adeti<?= $s["Set_Urun_Duzenle_ID"] ?>' value='<?= $s["Adet"] ?>'>
-                            Adet:<?= $s["Adet"] ?>
-
-                        </p>
-                    </header>
+        <button class="btn col-md-2 me-2" type="button" name="Urunler" Set_Urun_Duzenle_ID="<?= $s["Set_Urun_Duzenle_ID"] ?>">
+            <div class="card2__body">
+                <div class="card2__body-cover">
+                    <img class="card2__body-cover-image" src="../assets/img/Keksan/<?= $s2["UrunFoto"] == "yok" || $s2["UrunFoto"] == "" || $s2["UrunFoto"] == null ? "" : $s2["UrunFoto"] ?>">
+                    <span class="card2__body-cover-checkbox">
+                        <svg class="card2__body-cover-checkbox--svg" viewBox="0 0 12 10">
+                            <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                        </svg>
+                    </span>
                 </div>
-            </button>
+                <header class="card2__body-header">
+                    <h2 class="card2__body-header-title"><?= $s2["UrunAdi"] ?></h2>
+                    <p class="card2__body-header-subtitle small">
+                        <?php
+                        $icBoya = $baglanti->query("SELECT Boya_ID, Renk FROM set_urunler INNER JOIN boya ON set_urunler.icBoya_ID = boya.Boya_ID WHERE Boya_ID=" . $s["icBoya_ID"] . " GROUP BY Renk")->fetch();
+                        echo "İç Boya:<input type='hidden' name='icrengi$s[Set_Urun_Duzenle_ID]' value='$icBoya[Boya_ID]'>";
+                        echo $icBoya["Renk"] == "" ? "<code>Ayarlanmadı</code>" : "<code class='text-success small'>" . $icBoya["Renk"] . "</code><br>";
+                        ?>
+                        Dış Boya:<input type='hidden' name='disrengi<?= $s["Set_Urun_Duzenle_ID"] ?>' value='<?= $s["Boya_ID"] ?>'>
+                        <?= $s["DisRenk"] == "" ? "<code>Ayarlanmadı</code>" : "<code class='text-success small'>" . $s["DisRenk"] . "</code>" ?>
+                        <br>
+
+                        <input type='hidden' name='kapaki<?= $s["Set_Urun_Duzenle_ID"] ?>' value='<?= @$s["Kapak_ID"] ?>'>
+                        Kapak:<?= $s["Kapak_ID"] == "" ? "<code>Ayarlanmadı</code>" : "<code class='text-success small'>" . $s["Kapak_ID"] . "</code>" ?>
+                        <br>
+
+
+                        <input type='hidden' name='kulpu<?= $s["Set_Urun_Duzenle_ID"] ?>' value='<?= @$s["Kulp_ID"] ?>'>
+                        Kulp:<?= $s["KulpAdi"] == "" ? "<code>Ayarlanmadı</code>" : "<code class='text-success small'>" . $s["KulpAdi"] . "</code>" ?>
+                        <br>
+
+                        <input type='hidden' name='adeti<?= $s["Set_Urun_Duzenle_ID"] ?>' value='<?= $s["Adet"] ?>'>
+                        Adet:<?= $s["Adet"] ?>
+
+                    </p>
+                </header>
+            </div>
+        </button>
 
     <?php
     }

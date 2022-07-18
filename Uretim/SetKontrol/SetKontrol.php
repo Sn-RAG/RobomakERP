@@ -184,15 +184,15 @@ require __DIR__ . '/Yuzde.php';
                         </thead>
                         <tbody>
                             <?php
-                            $Listele = $baglanti->query('SELECT Kategori_ID,Urun_ID,UrunAdi,KulpAdi,Model_Adi,TepeAdi,icBoya_ID,Levha_ID FROM view_set_urun_sec WHERE Set_ID = ' . $SetID . " GROUP BY Urun_ID ORDER BY Kategori_ID ASC")->fetchAll();
+                            $Listele = $baglanti->query('SELECT Kategori_ID,Urun_ID,UrunAdi,KulpAdi,Model_Adi,TepeAdi,icBoya_ID,Levha_ID FROM view_set_urun_sec WHERE Set_ID = ' . $SetID . " GROUP BY Urun_ID")->fetchAll();
                             foreach ($sor as $s) {
                                 $Uid = $s['Urun_ID'];
                             ?>
                                 <tr>
                                     <td><?= $s['UrunAdi'] ?></td>
-                                    <td class="text-center yazsayi<?= $Uid ?>"></td>
+                                    <td class="text-center" id="yazsayi<?= $Uid ?>"></td>
                                     <td>
-                                        <div class="input-group input-group-sm"><input type="number" id="deger<?= $Uid ?>" LevhaID="<?= $s['Levha_ID'] ?>" class="temizle form-control form-control me-1"><button class="gir btn btn-primary bi-check me-1" Urun_ID="<?= $Uid ?>" Set_ID="<?= $SetID ?>"></button><button class="fire btn btn-warning bi-dash" Urun_ID="<?= $Uid ?>" Set_ID="<?= $SetID ?>"></button></div>
+                                        <div class="input-group input-group-sm" id="hata<?= $Uid ?>"><input type="number" id="deger<?= $Uid ?>" SetID="<?= $SetID ?>" UrunID="<?= $Uid ?>" LevhaID="<?= $s['Levha_ID'] ?>" class="GDeger form-control form-control me-1"><button class="gir btn btn-primary bi-check me-1"></button><button class="fire btn btn-warning bi-dash"></button></div>
                                     </td>
                                 </tr>
                             <?php } ?>
@@ -219,9 +219,9 @@ require __DIR__ . '/Yuzde.php';
                             foreach ($Listele as $s) {
                                 $Uid = $s['Urun_ID'];
                                 $ad = $s['UrunAdi'];
-                                $i++;
                                 $Urunler[$i] = $Uid;
                                 $UrunAdi[$i] = $ad;
+                                $i++;
                             ?>
                                 <tr>
                                     <td><?= $ad ?></td>

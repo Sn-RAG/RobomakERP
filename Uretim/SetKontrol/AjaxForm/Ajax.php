@@ -22,18 +22,18 @@ $Has = ".hasClass('btn-primary')";
                     break;
                 case $("#icBoyama") <?= $Has ?>:
                     Hangisi = "icBoyama";
-                    Is = "Boyandı";
+                    Is = "İçi Boyandı";
                     break;
                 case $("#DisBoyama") <?= $Has ?>:
                     Hangisi = "DisBoyama";
-                    Is = "Boyandı";
+                    Is = "Dışı Boyandı";
                     break;
                 case $("#Paketleme") <?= $Has ?>:
                     Hangisi = "Paketleme";
                     Is = "Paketlendi";
                     break;
                 case $("#Yikama") <?= $Has ?>:
-                    Hangisi = "Yikama";
+                    Hangisi = "Yıkama";
                     Is = "Yıkandı";
                     break;
             }
@@ -64,11 +64,7 @@ $Has = ".hasClass('btn-primary')";
                     alert('Hata: ' + xhr.responseText);
                 },
                 success: function(data) {
-                    if (data != "") {
-                        $(".isDurum").html(data);
-                    } else {
-                        $(".isDurum").html("<strong class='secondary-font'> İşlem: Başlamadı </strong><small class='text-muted bi-clock'></small>");
-                    }
+                    $(".isDurum").html(data);
                 }
             });
         }
@@ -76,17 +72,17 @@ $Has = ".hasClass('btn-primary')";
     });
     //##### ########## ########## ########## ########## ########## ########## ########## ########## ########## ########## ########## #####
     $('.gir').click(function() {
-        var Uid = $(this).attr("Urun_ID");
-        var SetID = $(this).attr("Set_ID");
+        var Uid = $(".GDeger").attr("UrunID");
+        var SetID = $(".GDeger").attr("SetID");
         var deger = $("#deger" + Uid + "").val();
         var LevhaID = $("#deger" + Uid + "").attr("LevhaID");
         var Tarih = $(".Tarih").val();
-        if (Number($(".yazsayi" + Uid + "").html()) + Number(deger) > Number($(".Tadet").val())) {
+        if (Number($("#yazsayi" + Uid + "").html()) + Number(deger) > Number($(".Tadet").val())) {
             <?= $FazlaDeger ?>
-            $(".temizle").val("");
+            $(".GDeger").val("");
         } else if (Number(deger) <= 0 || Number(deger) == "") {
             <?= $Gecersiz ?>
-            $(".temizle").val("");
+            $(".GDeger").val("");
         } else {
             if (deger != "" & Number(deger) != 0) {
 
@@ -110,7 +106,7 @@ $Has = ".hasClass('btn-primary')";
                         Hangisi = "Paketleme";
                         break;
                     case $("#Yikama") <?= $Has ?>:
-                        Hangisi = "Yikama";
+                        Hangisi = "Yıkama";
                         break;
                 }
 
@@ -129,8 +125,8 @@ $Has = ".hasClass('btn-primary')";
                         alert('Hata: ' + xhr.responseText);
                     },
                     success: function(data) {
-                        $(".yazsayi" + Uid + "").html(data);
-                        $(".temizle").val("");
+                        $("#yazsayi" + Uid + "").html(data);
+                        $(".GDeger").val("");
                         $.Listele();
                     }
                 })
@@ -143,8 +139,8 @@ $Has = ".hasClass('btn-primary')";
         }
     });
     $('.fire').click(function() {
-        var Uid = $(this).attr("Urun_ID");
-        var SetID = $(this).attr("Set_ID");
+        var Uid = $(".GDeger").attr("UrunID");
+        var SetID = $(".GDeger").attr("SetID");
         var deger = $("#deger" + Uid + "").val();
         var LevhaID = $("#deger" + Uid + "").attr("LevhaID");
         var Tarih = $(".Tarih").val();
@@ -163,16 +159,19 @@ $Has = ".hasClass('btn-primary')";
                 error: function(xhr) {
                     alert('Hata: ' + xhr.responseText);
                 },
-                success: function() {
-                    $(".temizle").val("");
-                    $.Listele();
+                success: function(data) {
+                    if (data) {
+                        <?= $StokYok ?>
+                    } else {
+                        $(".GDeger").val("");
+                        $.Listele();
+                    }
                 }
             })
         } else {
             if ($("#hata" + Uid + "").children("label").length == 0) {
-                $("#hata" + Uid + "").append($('<label>').html("Değer Giriniz!").addClass("small text-danger"));
+                $("#hata" + Uid + "").prepend($('<label>').html("Geçerli değer giriniz!").addClass("small text-danger"));
             }
-
         }
     });
 
