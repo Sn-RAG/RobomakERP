@@ -3,22 +3,18 @@ $page = "Levha Hesabı";
 require __DIR__ . '/../../controller/Header.php';
 require __DIR__ . '/../../controller/Db.php';
 require __DIR__ . '/../../controller/VTHataMesaji.php';
-$id=(int)$_GET["id"];
-$Adet=(int)$_GET["adet"];//Set
-$Ad=$_GET["adi"];//Setadı
+$id = (int)$_GET["id"];
 ?>
-    <main id="main" class="main">
-        <section class="section">
-            <div class="card">
-                <div class="card-body">
-                    <div class="mb-3 py-3">
-                        <a href="Teklifler.php" class="btn btn-secondary bi-arrow-left-circle me-3 mb-1">&nbsp Geri Dön</a>
-                        <button type="button" id="yazdir" class="btn btn-primary bi-printer mb-1">&nbsp Yazdır</button>
-                    </div>
+<main id="main" class="main">
+    <section class="section">
+        <div class="card">
+            <div class="card-body">
+                <div class="mb-3 py-3">
+                    <button type="button" id="yazdir" class="btn btn-primary bi-printer mb-1">&nbsp Yazdır</button>
+                </div>
 
-                    <h5 class="card-title">Set Adı: <?=$Ad?> &nbsp Set Miktarı= <?=$Adet?></h5>
-                    <div class="yazdir">
-                        
+                <h5 class="card-title">Set Adı: <?= $_SESSION["SetAdi"] ?></h5>
+                <div class="yazdir">
                     <table class="table table-bordered">
                         <thead>
                             <tr>
@@ -52,9 +48,9 @@ $Ad=$_GET["adi"];//Setadı
                                         <td><?= $AdetKg ?></td>
                                         <td></td>
                                     </tr>
-                            <?php }else{
-                                echo "<script>".$UrunLevhaYok."</script>";
-                            }
+                            <?php } else {
+                                    echo "<script>" . $UrunLevhaYok . "</script>";
+                                }
                             } ?>
                             <tr>
                                 <td></td>
@@ -66,17 +62,27 @@ $Ad=$_GET["adi"];//Setadı
                             </tr>
                         </tbody>
                     </table>
-                    </div>
                 </div>
             </div>
-        </section>
-    </main>
-<style>@media print { body * {visibility: hidden;}.yazdir * {visibility: visible;}}</style>
+        </div>
+    </section>
+</main>
+<style>
+    @media print {
+        body * {
+            visibility: hidden;
+        }
+
+        .yazdir * {
+            visibility: visible;
+        }
+    }
+</style>
 
 <script>
-$("#yazdir").click(function(){
-    window.print();
-});
+    $("#yazdir").click(function() {
+        window.print();
+    });
 </script>
 <?php
 require __DIR__ . '/../../controller/Footer.php';

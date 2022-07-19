@@ -72,80 +72,95 @@ $Has = ".hasClass('btn-primary')";
     });
     //##### ########## ########## ########## ########## ########## ########## ########## ########## ########## ########## ########## #####
     $('.gir').click(function() {
-        var Uid = $(".GDeger").attr("UrunID");
         var SetID = $(".GDeger").attr("SetID");
-        var deger = $("#deger" + Uid + "").val();
-        var LevhaID = $("#deger" + Uid + "").attr("LevhaID");
+        var Uid = [];
+        var LevhaID = [];
+        var deger = [];
         var Tarih = $(".Tarih").val();
+
+        $(".GDeger").map(function() {
+            if ($(this).val() != "") {
+                Uid.push($(this).attr("UrunID"));
+                LevhaID.push($(this).attr("LevhaID"));
+                deger.push($(this).val());
+            }
+        });
         if (Number($("#yazsayi" + Uid + "").html()) + Number(deger) > Number($(".Tadet").val())) {
             <?= $FazlaDeger ?>
             $(".GDeger").val("");
-        } else if (Number(deger) <= 0 || Number(deger) == "") {
+        } else if (Number(deger) <= 0 || deger == "") {
             <?= $Gecersiz ?>
             $(".GDeger").val("");
         } else {
-            if (deger != "" & Number(deger) != 0) {
-
-                switch (true) {
-                    case $("#Pres") <?= $Has ?>:
-                        Hangisi = "Pres";
-                        break;
-                    case $("#Telleme") <?= $Has ?>:
-                        Hangisi = "Telleme";
-                        break;
-                    case $("#Kumlama") <?= $Has ?>:
-                        Hangisi = "Kumlama";
-                        break;
-                    case $("#icBoyama") <?= $Has ?>:
-                        Hangisi = "icBoyama";
-                        break;
-                    case $("#DisBoyama") <?= $Has ?>:
-                        Hangisi = "DisBoyama";
-                        break;
-                    case $("#Paketleme") <?= $Has ?>:
-                        Hangisi = "Paketleme";
-                        break;
-                    case $("#Yikama") <?= $Has ?>:
-                        Hangisi = "Yıkama";
-                        break;
-                }
-
-                $.ajax({
-                    type: "POST",
-                    url: "AjaxForm/post.php",
-                    data: {
-                        'SetID': SetID,
-                        'UrunID': Uid,
-                        'Deger': deger,
-                        'LevhaID': LevhaID,
-                        'Hangisi': Hangisi,
-                        'Tarih': Tarih
-                    },
-                    error: function(xhr) {
-                        alert('Hata: ' + xhr.responseText);
-                    },
-                    success: function(data) {
-                        $("#yazsayi" + Uid + "").html(data);
-                        $(".GDeger").val("");
+            switch (true) {
+                case $("#Pres") <?= $Has ?>:
+                    Hangisi = "Pres";
+                    break;
+                case $("#Telleme") <?= $Has ?>:
+                    Hangisi = "Telleme";
+                    break;
+                case $("#Kumlama") <?= $Has ?>:
+                    Hangisi = "Kumlama";
+                    break;
+                case $("#icBoyama") <?= $Has ?>:
+                    Hangisi = "icBoyama";
+                    break;
+                case $("#DisBoyama") <?= $Has ?>:
+                    Hangisi = "DisBoyama";
+                    break;
+                case $("#Paketleme") <?= $Has ?>:
+                    Hangisi = "Paketleme";
+                    break;
+                case $("#Yikama") <?= $Has ?>:
+                    Hangisi = "Yıkama";
+                    break;
+            }
+            $.ajax({
+                type: "POST",
+                url: "AjaxForm/post.php",
+                data: {
+                    'SetID': SetID,
+                    'UrunID': Uid,
+                    'Deger': deger,
+                    'LevhaID': LevhaID,
+                    'Hangisi': Hangisi,
+                    'Tarih': Tarih
+                },
+                error: function(xhr) {
+                    alert('Hata: ' + xhr.responseText);
+                },
+                success: function(data) {
+                    if (data == "StokYok") {
+                        <?= $StokYok ?>
+                    } else {
                         $.Listele();
                     }
-                })
-            } else {
-                if ($("#hata" + Uid + "").children("label").length == 0) {
-                    $("#hata" + Uid + "").append($('<label>').html("Değer Giriniz!").addClass("small text-danger"));
+                    $(".GDeger").val("");
                 }
-
-            }
+            })
         }
     });
     $('.fire').click(function() {
-        var Uid = $(".GDeger").attr("UrunID");
         var SetID = $(".GDeger").attr("SetID");
-        var deger = $("#deger" + Uid + "").val();
-        var LevhaID = $("#deger" + Uid + "").attr("LevhaID");
+        var Uid = [];
+        var LevhaID = [];
+        var deger = [];
         var Tarih = $(".Tarih").val();
-        var Hangisi = "";
-        if (deger != "" & Number(deger) != 0) {
+
+        $(".GDeger").map(function() {
+            if ($(this).val() != "") {
+                Uid.push($(this).attr("UrunID"));
+                LevhaID.push($(this).attr("LevhaID"));
+                deger.push($(this).val());
+            }
+        });
+        if (Number($("#yazsayi" + Uid + "").html()) + Number(deger) > Number($(".Tadet").val())) {
+            <?= $FazlaDeger ?>
+            $(".GDeger").val("");
+        } else if (Number(deger) <= 0 || deger == "") {
+            <?= $Gecersiz ?>
+            $(".GDeger").val("");
+        } else {
             $.ajax({
                 type: "POST",
                 url: "AjaxForm/post.php",
@@ -160,18 +175,14 @@ $Has = ".hasClass('btn-primary')";
                     alert('Hata: ' + xhr.responseText);
                 },
                 success: function(data) {
-                    if (data) {
+                    if (data == "StokYok") {
                         <?= $StokYok ?>
                     } else {
-                        $(".GDeger").val("");
                         $.Listele();
                     }
+                    $(".GDeger").val("");
                 }
             })
-        } else {
-            if ($("#hata" + Uid + "").children("label").length == 0) {
-                $("#hata" + Uid + "").prepend($('<label>').html("Geçerli değer giriniz!").addClass("small text-danger"));
-            }
         }
     });
 

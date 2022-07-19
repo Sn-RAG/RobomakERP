@@ -13,36 +13,6 @@ $tarih = new DateTime("now");
 $tarih = date("Y-m-d");
 require __DIR__ . '/Yuzde.php';
 ?>
-<style>
-    .progress-bar {
-        height: 25px;
-    }
-
-    .chat {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-    }
-
-    .panel-body {
-        overflow-y: scroll;
-        height: 400px;
-    }
-
-    ::-webkit-scrollbar-track {
-        background-color: #F5F5F5;
-    }
-
-    ::-webkit-scrollbar {
-        width: 12px;
-        background-color: #F5F5F5;
-    }
-
-    ::-webkit-scrollbar-thumb {
-        background-color: #555;
-    }
-</style>
-
 <input id="SetID" type="hidden" value="<?= $SetID ?>">
 
 <main id="main" class="main">
@@ -52,11 +22,9 @@ require __DIR__ . '/Yuzde.php';
                 <div><a href="../Setler.php" class="bi-arrow-left btn btn-secondary"> &nbsp&nbsp Geri Dön</a></div>
                 <h5 class='card-title text-center fs-5'><?= $_SESSION["SetAdi"] ?></h5>
                 <div>
-                    <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown"> Üretim Formları</button>
-                    <ul class="dropdown-menu">
-                        <li><a class="hover dropdown-item border-bottom" href="PresFormu.php?id=<?= $SetID ?>" target="_blank" rel="noreferrer noopener">Pres Formu</a></li>
-                        <!--<li><a class="hover dropdown-item" href="BoyaFormu.php" target="_blank" rel="noreferrer noopener">Boya Formu</a></li>-->
-                    </ul>
+                    <a class="btn btn-outline-dark" href="FormLevha.php?id=<?= $SetID ?>" target="_blank" rel="noreferrer noopener">Levha Formu</a>
+                    <a class="btn btn-outline-dark" href="FormPres.php?id=<?= $SetID ?>" target="_blank" rel="noreferrer noopener">Pres Formu</a>
+                    <a class="btn btn-outline-dark" href="FormBoya.php?id=<?= $SetID ?>" target="_blank" rel="noreferrer noopener">Boya Formu</a>
                 </div>
             </div>
             <div class="card-body row g-3">
@@ -153,16 +121,16 @@ require __DIR__ . '/Yuzde.php';
                     <!-- Akordiyon SON -->
                 </div>
                 <hr>
-                <!-- Scroll Bar -->
-                <div class="col-md-6">
+                <!-- Scroll Tablo -->
+                <div class="col-md-6 mb-3">
                     <h5> &nbsp Detaylar</h5>
-                    <div class="panel-body border-top border-start isDurum">
+                    <div class="border isDurum">
                     </div>
                 </div>
-                <!-- Scroll Bar SON -->
+                <!-- Scroll Tablo SON -->
 
-                <div class="col-md-6">
-                    <div class="input-group-sm">
+                <div class="col-md-6 mb-3">
+                    <div class="input-group-sm col-md-12">
                         <button class="mb-3 me-2 btn btn-primary t" id="Pres">Pres</button>
                         <button class="mb-3 me-2 btn btn-outline-dark t" id="Yikama">Yıkama</button>
                         <button class="mb-3 me-2 btn btn-outline-dark t" id="Kumlama">Kumlama</button>
@@ -171,15 +139,20 @@ require __DIR__ . '/Yuzde.php';
                         <button class="mb-3 me-2 btn btn-outline-dark t" id="DisBoyama">Dış Boya</button>
                         <button class="mb-3 me-2 btn btn-outline-dark t" id="Paketleme">Paketleme</button>
                     </div>
-
+                    <div class="col-md-12">
+                        <div class="input-group input-group-sm d-flex justify-content-end">
+                            <label class="col-form-label me-2">Tarih</label>
+                            <div class="me-1"><input type="date" class="form-control Tarih" value="<?= $tarih ?>"></div>
+                            <button UrunID="<?= $Uid ?>" class="gir btn btn-primary bi-check me-1"></button>
+                            <button UrunID="<?= $Uid ?>" class="fire btn btn-warning bi-dash"></button>
+                        </div>
+                    </div>
                     <table class="table table-sm table-bordered datatablem">
                         <thead>
                             <tr class="table-light">
                                 <th>Ürünler</th>
                                 <th>İmalat</th>
-                                <th>
-                                    <div class="form-floating"><input type="date" class="form-control Tarih" value="<?= $tarih ?>"><label>Tarih</label></div>
-                                </th>
+                                <th>&nbsp</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -192,13 +165,14 @@ require __DIR__ . '/Yuzde.php';
                                     <td><?= $s['UrunAdi'] ?></td>
                                     <td class="text-center" id="yazsayi<?= $Uid ?>"></td>
                                     <td>
-                                        <div class="input-group input-group-sm" id="hata<?= $Uid ?>"><input type="number" id="deger<?= $Uid ?>" SetID="<?= $SetID ?>" UrunID="<?= $Uid ?>" LevhaID="<?= $s['Levha_ID'] ?>" class="GDeger form-control form-control me-1"><button class="gir btn btn-primary bi-check me-1"></button><button class="fire btn btn-warning bi-dash"></button></div>
+                                        <input type="number" SetID="<?= $SetID ?>" UrunID="<?= $Uid ?>" LevhaID="<?= $s['Levha_ID'] ?>" class="GDeger form-control form-control-sm me-1" placeholder="Adet">
                                     </td>
                                 </tr>
                             <?php } ?>
                         </tbody>
                     </table>
                 </div>
+                <hr>
                 <div class="col-md-12">
                     <table class="table table-sm table-bordered datatablem">
                         <thead>
@@ -222,16 +196,21 @@ require __DIR__ . '/Yuzde.php';
                                 $Urunler[$i] = $Uid;
                                 $UrunAdi[$i] = $ad;
                                 $i++;
+                                $C = $baglanti->query("SELECT Cap FROM view_urun_levha_bilgi WHERE Levha_ID=" . $s['Levha_ID'] . " AND Urun_ID=" . $Uid);
+                                if ($C->rowCount()) {
                             ?>
-                                <tr>
-                                    <td><?= $ad ?></td>
-                                    <td><?= $s['KulpAdi'] ?></td>
-                                    <td><?= $s['Model_Adi'] ?></td>
-                                    <td><?= $s['TepeAdi'] ?></td>
-                                    <td><?= $baglanti->query("SELECT Cap FROM view_urun_levha_bilgi WHERE Levha_ID=" . $s['Levha_ID'] . " AND Urun_ID=" . $Uid)->fetch()["Cap"] ?> cm</td>
-                                    <td><?= $baglanti->query("SELECT Kalinlik FROM view_urun_levha_bilgi WHERE Levha_ID=" . $s['Levha_ID'] . " AND Urun_ID=" . $Uid)->fetch()["Kalinlik"] ?> mm</td>
-                                </tr>
-                            <?php } ?>
+                                    <tr>
+                                        <td><?= $ad ?></td>
+                                        <td><?= $s['KulpAdi'] ?></td>
+                                        <td><?= $s['Model_Adi'] ?></td>
+                                        <td><?= $s['TepeAdi'] ?></td>
+                                        <td><?= $C->fetch()["Cap"] ?> cm</td>
+                                        <td><?= $baglanti->query("SELECT Kalinlik FROM view_urun_levha_bilgi WHERE Levha_ID=" . $s['Levha_ID'] . " AND Urun_ID=" . $Uid)->fetch()["Kalinlik"] ?> mm</td>
+                                    </tr>
+                            <?php } else {
+                                    echo "<script>" . $UrunLevhaYok . "</script>";
+                                }
+                            } ?>
                         </tbody>
                         <tfoot>
                             <tr>
