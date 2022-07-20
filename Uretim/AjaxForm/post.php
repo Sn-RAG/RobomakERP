@@ -78,6 +78,7 @@ WHERE view_uretim_setler.Set_ID = " . $Set_ID . " GROUP BY set_urun_icerik.Set_U
 } elseif (isset($_POST["UrunIDler"])) {
     //Ürünleri tutuyoruz.ekle yapılırsa
     $_SESSION["UrunIDler"] = $_POST["UrunIDler"];
+    $_SESSION["mmSec"] = $_POST["mmSec"];
     $_SESSION["KulpSec"] = $_POST["KulpSec"];
     $_SESSION["KapakSec"] = $_POST["KapakSec"];
     $_SESSION["TepeSec"] = $_POST["TepeSec"];

@@ -4,12 +4,6 @@ $page = "Yeni Set";
 require __DIR__ . '/../controller/Header.php';
 require __DIR__ . '/../controller/Db.php';
 require __DIR__ . '/../controller/Kayit.php';
-if (!$_GET) {
-    unset($_SESSION["SetAdi"], $_SESSION["UrunIDler"], $_SESSION["KulpSec"], $_SESSION["KapakSec"], $_SESSION["KutuSec"], $_SESSION["TepeSec"]);
-}
-$kapak = $baglanti->query("SELECT Kapak_ID, Model_Adi FROM kapak GROUP BY Model_Adi")->fetchAll();
-$Tepe = $baglanti->query("SELECT Tepe_ID, TepeAdi FROM tepe GROUP BY TepeAdi")->fetchAll();
-$kulp = $baglanti->query("SELECT Kulp_ID, KulpAdi FROM kulp GROUP BY KulpAdi")->fetchAll();
 ?>
 <link href="../assets/css/cbox.css" rel="stylesheet">
 <main id="main" class="main">
@@ -69,6 +63,10 @@ $kulp = $baglanti->query("SELECT Kulp_ID, KulpAdi FROM kulp GROUP BY KulpAdi")->
                             </div>
                             <div class="text-center"><a href="Urun/UrunEkle.php?Setler" type="button" class="btn bg-primary-light btn-outline-dark">&nbsp Ürün Ekle</a></div>
                             <?php
+                            $kapak = $baglanti->query("SELECT Kapak_ID, Model_Adi FROM kapak GROUP BY Model_Adi")->fetchAll();
+                            $Tepe = $baglanti->query("SELECT Tepe_ID, TepeAdi FROM tepe GROUP BY TepeAdi")->fetchAll();
+                            $kulp = $baglanti->query("SELECT Kulp_ID, KulpAdi FROM kulp GROUP BY KulpAdi")->fetchAll();
+                            $i = 0;
                             $sorgu = $baglanti->query("SELECT * FROM kategori");
                             foreach ($sorgu as $sonuc) {
                             ?>
@@ -93,7 +91,7 @@ $kulp = $baglanti->query("SELECT Kulp_ID, KulpAdi FROM kulp GROUP BY KulpAdi")->
                                                             <div class="row">
                                                                 <div class="col-md-7">
                                                                     <div class="card2__body-cover">
-                                                                        <img class="card2__body-cover-image" src="../assets/img/Keksan/<?= $Foto == "yok" || $Foto == "" || $Foto == null ? "" : $Foto ?>">
+                                                                        <img class="card2__body-cover-image" src="../assets/img/Keksan/<?= $Foto == "yok" || $Foto == "" || $Foto == null ? "fotoyok.jpg" : $Foto ?>">
                                                                         <span class="card2__body-cover-checkbox"><svg class="card2__body-cover-checkbox--svg" viewBox="0 0 12 10">
                                                                                 <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
                                                                             </svg></span>
@@ -105,10 +103,14 @@ $kulp = $baglanti->query("SELECT Kulp_ID, KulpAdi FROM kulp GROUP BY KulpAdi")->
                                                                         <div class="btn-group">
                                                                             <button class="btn btn-outline-primary dropdown-toggle btn-sm" type="button" data-bs-toggle="dropdown">Kalınlık</button>
                                                                             <ul class="dropdown-menu card-body py-3">
-                                                                                <select class='form-select form-select-sm mm' id="kal<?= $ID ?>" urunid="<?= $ID ?>"><?php foreach ($baglanti->query("SELECT levha.Levha_ID AS Lid,Kalinlik FROM urun_levha_bilgi INNER JOIN levha ON urun_levha_bilgi.Levha_ID = levha.Levha_ID WHERE Urun_ID =" . $ID) as $K) {
-                                                                                                                                                                                    echo "<option value='$K[Lid]'>$K[Kalinlik] mm</option>";
-                                                                                                                                                                                } ?>
+                                                                                <select class='form-select mb-2 mm' id="kal<?= $ID ?>" urunid="<?= $ID ?>">
+                                                                                    <option value="">Kalınlık Seç</option>
+                                                                                    <?php
+                                                                                    foreach ($baglanti->query("SELECT Levha_ID,Kalinlik FROM view_urun_levha_bilgi WHERE Urun_ID =" . $ID) as $K) { ?>
+                                                                                        <option <?= isset($_SESSION["mmSec"]) ? ($_SESSION["mmSec"][$i] == $K["Levha_ID"] ? "selected" : "") : "" ?> value='<?= $K["Levha_ID"] ?>'><?= $K["Kalinlik"] ?> mm</option>
+                                                                                    <?php } ?>
                                                                                 </select>
+                                                                                <a href="../SatinAlma/Siparis/LevhaSiparis.php?Setler" type="button" class="input-group-text bg-primary-light text-center">Ekle</a>
                                                                             </ul>
                                                                         </div>
 
@@ -120,7 +122,7 @@ $kulp = $baglanti->query("SELECT Kulp_ID, KulpAdi FROM kulp GROUP BY KulpAdi")->
                                                                                         <option value="">Kulp Seç</option>
                                                                                         <?php
                                                                                         foreach ($kulp as $s) { ?>
-                                                                                            <option <?= isset($_SESSION["KulpSec"]) ? ($_SESSION["KulpSec"] == $s["Kulp_ID"] ? "selected" : "") : "" ?> value="<?= $s["Kulp_ID"] ?>"><?= $s["KulpAdi"] ?></option>
+                                                                                            <option <?= isset($_SESSION["KulpSec"]) ? ($_SESSION["KulpSec"][$i] == $s["Kulp_ID"] ? "selected" : "") : "" ?> value="<?= $s["Kulp_ID"] ?>"><?= $s["KulpAdi"] ?></option>
                                                                                         <?php } ?>
                                                                                     </select>
                                                                                     <a href="../SatinAlma/Siparis/KulpSiparis.php?Setler" type="button" class="input-group-text bg-primary-light text-center">Ekle</a>
@@ -136,7 +138,7 @@ $kulp = $baglanti->query("SELECT Kulp_ID, KulpAdi FROM kulp GROUP BY KulpAdi")->
                                                                                         <option value="">Tepe Seç</option>
                                                                                         <?php
                                                                                         foreach ($Tepe as $s) { ?>
-                                                                                            <option <?= isset($_SESSION["TepeSec"]) ? ($_SESSION["TepeSec"] == $s["Tepe_ID"] ? "selected" : "") : "" ?> value="<?= $s["Tepe_ID"] ?>"><?= $s["TepeAdi"] ?></option>
+                                                                                            <option <?= isset($_SESSION["TepeSec"]) ? ($_SESSION["TepeSec"][$i] == $s["Tepe_ID"] ? "selected" : "") : "" ?> value="<?= $s["Tepe_ID"] ?>"><?= $s["TepeAdi"] ?></option>
                                                                                         <?php } ?>
                                                                                     </select>
                                                                                     <a href="../SatinAlma/Siparis/TepeSiparis.php?Setler" type="button" class="input-group-text bg-primary-light text-center">Ekle</a>
@@ -152,7 +154,7 @@ $kulp = $baglanti->query("SELECT Kulp_ID, KulpAdi FROM kulp GROUP BY KulpAdi")->
                                                                                         <option value="">Kapak Seç</option>
                                                                                         <?php
                                                                                         foreach ($kapak as $s) { ?>
-                                                                                            <option <?= isset($_SESSION["KapakSec"]) ? ($_SESSION["KapakSec"] == $s["Kapak_ID"] ? "selected" : "") : "" ?> value="<?= $s["Kapak_ID"] ?>"><?= $s["Model_Adi"] ?></option>
+                                                                                            <option <?= isset($_SESSION["KapakSec"]) ? ($_SESSION["KapakSec"][$i] == $s["Kapak_ID"] ? "selected" : "") : "" ?> value="<?= $s["Kapak_ID"] ?>"><?= $s["Model_Adi"] ?></option>
                                                                                         <?php } ?>
                                                                                     </select>
                                                                                     <a href="../SatinAlma/Siparis/KapakSiparis.php?Setler" type="button" class="input-group-text bg-primary-light text-center">Ekle</a>
@@ -175,7 +177,11 @@ $kulp = $baglanti->query("SELECT Kulp_ID, KulpAdi FROM kulp GROUP BY KulpAdi")->
 
                                                         </div>
                                                     </label>
-                                                <?php } ?>
+
+                                                <?php
+                                                    $i++;
+                                                } ?>
+
                                             </div>
                                         </div>
                                     </div>
@@ -188,26 +194,17 @@ $kulp = $baglanti->query("SELECT Kulp_ID, KulpAdi FROM kulp GROUP BY KulpAdi")->
                         <div class="row border-top">
                             <div class="d-flex justify-content-between py-3">
                                 <button id="GeriUrun" type="button" class="btn btn-secondary bi-arrow-left"> &nbsp Geri</button>
-                                <label class="text-danger text-center col-md-10 SecimlerHata"></label>
+                                <label class="text-danger text-center col-md-10 KutuHata"></label>
                                 <button id="ileriRenkler" type="button" class="btn btn-primary bi-arrow-right"> &nbsp İleri </button>
                             </div>
                             <div class="d-flex justify-content-center py-2">
                                 <div class="col-md-4 me-3">
                                     <div class="input-group">
                                         <select id='Kutu' class='form-select etkin'>
-                                            <?php
-                                            @$Kutu = $_SESSION["KutuSec"];
-                                            if (isset($Kutu)) { ?>
-                                                <option value='<?= $Kutu ?>'><?= $Kutu ?></option>
-                                                <option value='Sarı kutu'>Sarı kutu</option>
-                                                <option value='Ofset kutu'>Ofset kutu</option>
-                                            <?php } else { ?>
-                                                <option value=''>* Kutu Seç</option>
-                                                <option value='Sarı kutu'>Sarı kutu</option>
-                                                <option value='Ofset kutu'>Ofset kutu</option>
-                                            <?php } ?>
+                                            <option value=''>* Kutu Seç</option>
+                                            <option value='Sarı kutu'>Sarı kutu</option>
+                                            <option value='Ofset kutu'>Ofset kutu</option>
                                         </select>
-                                        <a href="../SatinAlma/Siparis/KutuSiparis.php?Setler" type="button" class="input-group-text bi-chevron-left bg-primary-light btn-outline-dark">&nbsp Ekle</a>
                                     </div>
                                 </div>
                             </div>
@@ -304,7 +301,7 @@ $kulp = $baglanti->query("SELECT Kulp_ID, KulpAdi FROM kulp GROUP BY KulpAdi")->
                                         <div class="col-md-12 d-flex justify-content-end">
                                             <button id="icerikSec" type="button" class="btn btn-success me-3 etkin" hidden disabled>Ürün Düzenle</button>
                                             <a href="Setler.php" class="btn col-md-2 btn-primary me-3">Kaydet</a>
-                                            <a href="Yazdir.php?Levha" class="btn col-md-2 btn-primary me-3">Levha Hesapla</a>
+                                            <a href="SetKontrol/FormLevha.php?id=<?= isset($_SESSION["Set_ID"]) ? $_SESSION["Set_ID"] : "" ?>" class="btn col-md-2 btn-primary me-3" target="_blank" rel="noreferrer noopener">Levha Hesapla</a>
                                             <div class="col-md-3 row me-3">
                                                 <label class="col-sm-4 col-form-label">Adet</label>
                                                 <div class="col-sm-8">

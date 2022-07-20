@@ -77,6 +77,10 @@ $Has = ".hasClass('btn-primary')";
         var LevhaID = [];
         var deger = [];
         var Tarih = $(".Tarih").val();
+        var sum = 0;
+        $(".Tadet").map(function() {
+            sum += Number($(this).val());
+        });
 
         $(".GDeger").map(function() {
             if ($(this).val() != "") {
@@ -85,7 +89,7 @@ $Has = ".hasClass('btn-primary')";
                 deger.push($(this).val());
             }
         });
-        if (Number($("#yazsayi" + Uid + "").html()) + Number(deger) > Number($(".Tadet").val())) {
+        if (Number($("#yazsayi" + Uid + "").html()) + Number(deger) > sum) {
             <?= $FazlaDeger ?>
             $(".GDeger").val("");
         } else if (Number(deger) <= 0 || deger == "") {
@@ -146,7 +150,10 @@ $Has = ".hasClass('btn-primary')";
         var LevhaID = [];
         var deger = [];
         var Tarih = $(".Tarih").val();
-
+        var sum = 0;
+        $(".Tadet").map(function() {
+            sum += Number($(this).val());
+        });
         $(".GDeger").map(function() {
             if ($(this).val() != "") {
                 Uid.push($(this).attr("UrunID"));
@@ -154,7 +161,7 @@ $Has = ".hasClass('btn-primary')";
                 deger.push($(this).val());
             }
         });
-        if (Number($("#yazsayi" + Uid + "").html()) + Number(deger) > Number($(".Tadet").val())) {
+        if (Number($("#yazsayi" + Uid + "").html()) + Number(deger) > sum) {
             <?= $FazlaDeger ?>
             $(".GDeger").val("");
         } else if (Number(deger) <= 0 || deger == "") {

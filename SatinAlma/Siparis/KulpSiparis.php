@@ -15,7 +15,7 @@ require __DIR__ . '/../../controller/VTHataMesaji.php';
                         <h5 class="card-title"><?= $page ?></h5>
                         <hr>
                         <div class="d-flex justify-content-between">
-                            <a href="<?=isset($_GET["Setler"])?"../../Uretim/SetlerKayit.php?Kulp":"../../Navigasyon/SiparisEt.php"?>" class="btn btn-secondary  bi-arrow-left-circle"> Geri Dön</a>
+                            <a href="<?=isset($_GET["Setler"])?"../../Uretim/SetlerKayit.php?SetKayit":"../../Navigasyon/SiparisEt.php"?>" class="btn btn-secondary  bi-arrow-left-circle"> Geri Dön</a>
                             <button type="button" class="btn btn-primary bi-save" data-bs-toggle="modal" data-bs-target="#YeniBoya"> Yeni Kulp</button>
                         </div>
                         <hr>

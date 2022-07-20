@@ -7,7 +7,7 @@ if (isset($_SESSION["Set_ID"])) {
     unset($_SESSION["Set_ID"]);
 }
 if (isset($_SESSION["SetAdi"])) {
-    unset($_SESSION["SetAdi"]);
+    unset($_SESSION["SetAdi"], $_SESSION["UrunIDler"], $_SESSION["KulpSec"], $_SESSION["mmSec"], $_SESSION["KapakSec"], $_SESSION["KutuSec"], $_SESSION["TepeSec"]);
 }
 ?>
 <main id="main" class="main">

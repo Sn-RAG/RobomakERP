@@ -7,7 +7,7 @@
             </div>
             <div class="modal-body">
             <h5> Levha Hesabı</h5>
-            <a href="HesapLevha.php?id=<?=$Sid?>&adet=<?=$Adet?>&adi=<?=$Sadi?>" class='btn btn-success mb-3'><?=$Sadi?></a>
+            <a href="HesapLevha.php?id=<?=$Sid?>&adet=<?=$Adet?>&adi=<?=$Sadi?>" class='btn btn-success mb-3'><?=$Sadi?> Levha Hesabı</a>
                 <div class="row">
                     <?php
                     $Ad1 = $baglanti->query("SELECT Urun_ID FROM set_urun WHERE  Set_ID=" . $Sid);

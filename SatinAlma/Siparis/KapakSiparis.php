@@ -11,7 +11,7 @@ require __DIR__ . '/../../controller/Kayit.php';
                     <form class="needs-validation" method="post" novalidate>
                         <div class="modal-header mb-3">
                             <h5 class="modal-title"><?= $page ?></h5>
-                            <a href="<?=isset($_GET["Setler"])?"../../Uretim/SetlerKayit.php?Kapak":"../../Navigasyon/SiparisEt.php"?>" class="btn btn-secondary bi-arrow-left">&nbsp Geri Dön</a>
+                            <a href="<?=isset($_GET["Setler"])?"../../Uretim/SetlerKayit.php?SetKayit":"../../Navigasyon/SiparisEt.php"?>" class="btn btn-secondary bi-arrow-left">&nbsp Geri Dön</a>
                         </div>
                         <div class="card-body row g-3">
 

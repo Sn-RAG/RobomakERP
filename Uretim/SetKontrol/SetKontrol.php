@@ -3,8 +3,10 @@ $page = "Set Kontrol";
 require __DIR__ . '/../../controller/Header.php';
 require __DIR__ . '/../../controller/Db.php';
 require __DIR__ . '/../../controller/VTHataMesaji.php';
-$_SESSION["SetAdi"] = $_GET['SetAdi'];
-$SetID = $_GET['Set_ID'];
+if (!(isset($_SESSION["SetAdi"]))) {
+    @$_SESSION["SetAdi"] = $_GET['SetAdi'];
+}
+$SetID = isset($_GET['Set_ID']) ? $_GET['Set_ID'] : 0;
 if ($baglanti->query("SELECT  Set_ID FROM set_urunler_asama WHERE Set_ID = " . $SetID)->rowCount() <= 0) {
     $baglanti->query("INSERT INTO set_urunler_asama ( Set_ID, Urun_ID ) SELECT Set_ID,Urun_ID FROM view_uretim_setler WHERE Set_ID =  " . $SetID);
 }
@@ -20,7 +22,7 @@ require __DIR__ . '/Yuzde.php';
         <div class="card">
             <div class="card-header d-flex justify-content-between">
                 <div><a href="../Setler.php" class="bi-arrow-left btn btn-secondary"> &nbsp&nbsp Geri Dön</a></div>
-                <h5 class='card-title text-center fs-5'><?= $_SESSION["SetAdi"] ?></h5>
+                <h5 class='card-title text-center fs-5'><?= isset($_SESSION["SetAdi"]) ? $_SESSION["SetAdi"] : "" ?></h5>
                 <div>
                     <a class="btn btn-outline-dark" href="FormLevha.php?id=<?= $SetID ?>" target="_blank" rel="noreferrer noopener">Levha Formu</a>
                     <a class="btn btn-outline-dark" href="FormPres.php?id=<?= $SetID ?>" target="_blank" rel="noreferrer noopener">Pres Formu</a>
@@ -143,8 +145,8 @@ require __DIR__ . '/Yuzde.php';
                         <div class="input-group input-group-sm d-flex justify-content-end">
                             <label class="col-form-label me-2">Tarih</label>
                             <div class="me-1"><input type="date" class="form-control Tarih" value="<?= $tarih ?>"></div>
-                            <button UrunID="<?= $Uid ?>" class="gir btn btn-primary bi-check me-1"></button>
-                            <button UrunID="<?= $Uid ?>" class="fire btn btn-warning bi-dash"></button>
+                            <button class="gir btn btn-primary bi-check me-1"></button>
+                            <button class="fire btn btn-warning bi-dash"></button>
                         </div>
                     </div>
                     <table class="table table-sm table-bordered datatablem">
@@ -157,7 +159,7 @@ require __DIR__ . '/Yuzde.php';
                         </thead>
                         <tbody>
                             <?php
-                            $Listele = $baglanti->query('SELECT Kategori_ID,Urun_ID,UrunAdi,KulpAdi,Model_Adi,TepeAdi,icBoya_ID,Levha_ID FROM view_set_urun_sec WHERE Set_ID = ' . $SetID . " GROUP BY Urun_ID")->fetchAll();
+                            $Listele = $baglanti->query('SELECT Kategori_ID,Urun_ID,UrunAdi,KulpAdi,Model_Adi,TepeAdi,icBoya_ID,DisRenk,Adet,Levha_ID FROM view_set_urun_sec WHERE Set_ID = ' . $SetID . " GROUP BY Urun_ID")->fetchAll();
                             foreach ($sor as $s) {
                                 $Uid = $s['Urun_ID'];
                             ?>
@@ -172,10 +174,10 @@ require __DIR__ . '/Yuzde.php';
                         </tbody>
                     </table>
                 </div>
-                <hr>
                 <div class="col-md-12">
-                    <table class="table table-sm table-bordered datatablem">
-                        <thead>
+                    <h5 class="card-title text-center">SET DETAY</h5>
+                    <table class="table table-sm small table-bordered table-responsive">
+                        <tbody>
                             <tr class="table-light">
                                 <th>Ürünler</th>
                                 <th>Kulp</th>
@@ -184,8 +186,6 @@ require __DIR__ . '/Yuzde.php';
                                 <th>Çap</th>
                                 <th>Kalınlık</th>
                             </tr>
-                        </thead>
-                        <tbody>
                             <?php
                             $Urunler = [];
                             $UrunAdi = [];
@@ -210,52 +210,47 @@ require __DIR__ . '/Yuzde.php';
                             <?php } else {
                                     echo "<script>" . $UrunLevhaYok . "</script>";
                                 }
-                            } ?>
+                            }
+                            $SetBilgi = $baglanti->query('SELECT icBoya_ID,DisRenk,Adet FROM view_set_urun_sec WHERE Set_ID = ' . $SetID . " GROUP BY Adet")->fetchAll();
+                            $UrunBilgi = $baglanti->query('SELECT UrunAdi,icBoya_ID,DisRenk,Adet FROM view_set_urun_sec WHERE Set_ID = ' . $SetID. " ORDER BY UrunAdi")->fetchAll();
+                            ?>
+                            <tr class="table-light text-center">
+                                <th colspan="6">SET BOYA BİLGİ</th>
+                            </tr>
+                            <tr>
+                                <th rowspan="<?= count($SetBilgi) + 1 ?>"></th>
+                                <th>İç Boya</th>
+                                <th>Dış Boya</th>
+                                <th>Adet</th>
+                                <th colspan="2" rowspan="<?= count($SetBilgi) + 1 ?>"></th>
+                            </tr>
+                            <?php
+                            foreach ($SetBilgi as $s) { ?>
+                                <tr>
+                                    <td><?= $baglanti->query('SELECT Renk FROM boya WHERE Boya_ID =' . $s["icBoya_ID"])->fetch()["Renk"] ?></td>
+                                    <td><?= $s["DisRenk"] ?></td>
+                                    <td><input class='Tadet' type='hidden' value='<?= $s['Adet'] ?>'><?= $s['Adet'] ?></td>
+                                </tr>
+                            <?php } ?>
+                            <tr class="table-light text-center">
+                                <th colspan="6">ÜRÜN BOYA BİLGİ</th>
+                            </tr>
+                            <tr>
+                                <th>Ürünler</th>
+                                <th>İç Boya</th>
+                                <th>Dış Boya</th>
+                                <th>Adet</th>
+                                <th colspan="2" rowspan="<?= count($UrunBilgi) + 1 ?>"></th>
+                            </tr>
+                            <?php foreach ($UrunBilgi as $b) { ?>
+                                <tr>
+                                    <td><?= $b["UrunAdi"] ?></td>
+                                    <td><?= $b["DisRenk"] ?></td>
+                                    <td><?= $baglanti->query('SELECT Renk FROM boya WHERE Boya_ID =' . $b["icBoya_ID"])->fetch()["Renk"] ?></td>
+                                    <td><?= $b["Adet"] ?></td>
+                                </tr>
+                            <?php } ?>
                         </tbody>
-                        <tfoot>
-                            <tr>
-                                <th>&nbsp</th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                            </tr>
-                            <tr>
-                                <th></th>
-                                <th class="table-secondary">İç Boya</th>
-                                <th class="table-secondary">Dış Boya</th>
-                                <th class="table-secondary">Adet</th>
-                                <th></th>
-                                <th></th>
-                            </tr>
-                            <tr>
-                                <td></td>
-                                <td class="table-secondary"><?php
-                                                            $sor = $baglanti->query('SELECT Renk FROM set_urun_icerik INNER JOIN boya ON set_urun_icerik.icBoya = boya.Boya_ID WHERE Set_ID =' . $SetID);
-                                                            foreach ($sor as $s) {
-                                                                echo $s['Renk'] . "<br>";
-                                                            }
-                                                            ?>
-                                </td>
-                                <td class="table-secondary"><?php
-                                                            $sor = $baglanti->query('SELECT Renk FROM set_urun_icerik INNER JOIN boya ON set_urun_icerik.DisBoya = boya.Boya_ID WHERE Set_ID =' . $SetID);
-                                                            foreach ($sor as $s) {
-                                                                echo  $s['Renk'] . "<br>";
-                                                            }
-                                                            ?>
-                                </td>
-                                <td class="table-secondary"><?php
-                                                            $sor = $baglanti->query('SELECT Adet FROM set_urun_icerik WHERE Set_ID =' . $SetID);
-                                                            foreach ($sor as $s) {
-                                                                echo  "<input class='Tadet' type='hidden' value='$s[Adet]'>" . $s['Adet'] . "<br>";
-                                                            }
-                                                            ?>
-                                </td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                        </tfoot>
                     </table>
                 </div>
             </div>

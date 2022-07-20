@@ -1,5 +1,27 @@
 <script>
     $(function() {
+        $.Secilenler = function() {
+            var str = "";
+            $(".mm option:selected").each(function() {
+                var txt = $(this).text();
+                if (txt != "Kalınlık Seç") {
+                    str += txt + " ";
+                }
+            });
+
+            var id = [];
+            $(".UrunSecim:checked").map(function() {
+                var h = $(this).val();
+                id.push(h);
+            });
+            for (let i = 0; i < id.length; i++) {
+                $("#mmy" + id[i] + "").html($("#kal" + id[i] + " option:selected").text());
+                $("#Kulpy" + id[i] + "").html($("#Kulp" + id[i] + " option:selected").text());
+                $("#Tepey" + id[i] + "").html($("#Tepe" + id[i] + " option:selected").text());
+                $("#Kapaky" + id[i] + "").html($("#Kapak" + id[i] + " option:selected").text());
+            }
+        }
+        $.Secilenler();
         $.Listele = function() {
             $.ajax({
                 type: "POST",
@@ -15,9 +37,25 @@
                 }
             })
         }
-        <?= isset($_SESSION["Set_ID"]) ? "$.Listele();" : "" ?>
 
-        //##################################################### form input ekle
+        /* Kalınlık Kulp Tepe ve Kapak eklemede Setkayıt. 
+        Set oluşturulmuş ve sayfa yenileniyorsa Set_ID ile kaldığı yerden devam etme kontrolü.*/
+
+        <?php if (isset($_GET["SetKayit"])) { ?>
+            $("#Setadii").removeClass("active");
+            $("#ad").removeClass("active show");
+            $("#Urunn").addClass("active");
+            $("#Urun").addClass("active show");
+        <?php } elseif (isset($_SESSION["Set_ID"])) { ?>
+            $("#Setadii").removeClass("active");
+            $("#ad").removeClass("active show");
+            $("#Listee").addClass("active");
+            $("#Liste").addClass("active show");
+            $.Listele();
+        <?php } ?>
+
+        //####################################### Form input ekle
+
         $(document).on('click', '.input-ekle', function(e) {
             var DisBoyalar = [];
             $("select.DisBoyalar").each(function(i, sel) {
@@ -54,7 +92,6 @@
     });
 
     $("#ileriUrun").click(function() {
-
         var SetAdi = $("#SetAdi").val();
         if (SetAdi == "") {
             $("#SetAdiKontrol").html("Set Adı Boş Bırakılamaz!");
@@ -106,8 +143,12 @@
         if (UrunIDler == "") {
             $("#UrunBos").html("Ürün Seçmediniz!");
         } else {
+            for (let i = 0; i < mmler.length; i++) {
+                if (mmler[i] == "") {
+                    return $("#UrunBos").html("Ürün kalınlığı boş bırakılamaz!");
+                }
+            }
             $("#UrunBos").html("");
-
             $("#Urunn").removeClass("active");
             $("#Urun").removeClass("active show");
             $("#Kutuu").addClass("active");
@@ -118,6 +159,7 @@
                 url: "AjaxForm/post.php",
                 data: {
                     'UrunIDler': UrunIDler,
+                    'mmSec': mmler,
                     'KulpSec': Kulplar,
                     'KapakSec': Kapaklar,
                     'TepeSec': Tepeler,
@@ -134,10 +176,15 @@
     });
 
     $("#ileriRenkler").click(function() {
-        $("#Kutuu").removeClass("active");
-        $("#Kutuuu").removeClass("active show");
-        $("#Renkk").addClass("active");
-        $("#Renk").addClass("active show");
+        if ($("#Kutu").val() == "") {
+            $(".KutuHata").text("Kutu seçimi yapmadınız");
+        } else {
+            $("#Kutuu").removeClass("active");
+            $("#Kutuuu").removeClass("active show");
+            $("#Renkk").addClass("active");
+            $("#Renk").addClass("active show");
+            $(".KutuHata").text("");
+        }
     });
 
     $("#GeriKutu").click(function() {
@@ -211,7 +258,7 @@
                                 alert('Hata: ' + xhr.responseText);
                             },
                             success: function() {
-                                $.Listele();
+                                window.location.reload();
                             }
                         })
 
@@ -273,24 +320,31 @@
     });
 
     // Seçilenleri ürünün altında göster
-
+    $.drkapat = function() {
+        $(".dropdown-toggle").removeClass("show");
+        $(".dropdown-menu").removeClass("show");
+    };
     $(".mm").change(function() {
-        var id=$(this).attr("urunid");
+        var id = $(this).attr("urunid");
         $("#mmy" + id + "").html($("#kal" + id + " option:selected").text());
+        $.drkapat();
     });
 
     $(".Kulp").change(function() {
-        var id=$(this).attr("urunid");
+        var id = $(this).attr("urunid");
         $("#Kulpy" + id + "").html($("#Kulp" + id + " option:selected").text());
+        $.drkapat();
     });
 
     $(".Tepe").change(function() {
-        var id=$(this).attr("urunid");
+        var id = $(this).attr("urunid");
         $("#Tepey" + id + "").html($("#Tepe" + id + " option:selected").text());
+        $.drkapat();
     });
 
     $(".Kapak").change(function() {
-        var id=$(this).attr("urunid");
+        var id = $(this).attr("urunid");
         $("#Kapaky" + id + "").html($("#Kapak" + id + " option:selected").text());
+        $.drkapat();
     });
 </script>
