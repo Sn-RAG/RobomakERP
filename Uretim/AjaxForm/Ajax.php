@@ -11,7 +11,7 @@
 
             var id = [];
             $(".UrunSecim:checked").map(function() {
-                var h = $(this).val();
+                var h = Number($(this).attr("id"));
                 id.push(h);
             });
             for (let i = 0; i < id.length; i++) {
@@ -52,6 +52,11 @@
             $("#Listee").addClass("active");
             $("#Liste").addClass("active show");
             $.Listele();
+        <?php } elseif (isset($_GET["Boya"])) { ?>
+            $("#Setadii").removeClass("active");
+            $("#ad").removeClass("active show");
+            $("#Renkk").addClass("active");
+            $("#Renk").addClass("active show");
         <?php } ?>
 
         //####################################### Form input ekle
@@ -132,7 +137,7 @@
         var mmler = [];
         var UrunIDler = [];
         $(".UrunSecim:checked").map(function() {
-            var h = $(this).val();
+            var h = Number($(this).attr("id"));
             UrunIDler.push(h);
             mmler.push($("#kal" + h + "").val());
             Kapaklar.push($("#Kapak" + h + "").val());
@@ -208,7 +213,7 @@
         var icBoyalar = [];
         var DisBoyalar = [];
         $(".UrunSecim:checked").map(function() {
-            var h = $(this).val();
+            var h = Number($(this).attr("id"));
             UrunIDler.push(h);
             mmler.push($("#kal" + h + "").val());
             Kapaklar.push($("#Kapak" + h + "").val());

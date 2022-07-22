@@ -16,8 +16,8 @@ unset($_SESSION["Miktar"], $_SESSION["Boyalar"]);
                         <h5 class="card-title"><?= $page ?></h5>
                         <hr>
                         <div class="d-flex justify-content-between">
-                            <a href="<?= isset($_GET["Setler"]) ? "../../Uretim/SetlerKayit.php?Seticerigi" : "../../Navigasyon/SiparisEt.php" ?>" class="btn btn-secondary  bi-arrow-left-circle"> Geri Dön</a>
-                            <button type="button" class="btn btn-primary bi-save" data-bs-toggle="modal" data-bs-target="#YeniBoya"> Yeni Boya</button>
+                            <a href="<?= isset($_GET["Setler"]) ? "../../Uretim/SetlerKayit.php?Boya" : "../../Navigasyon/SiparisEt.php" ?>" class="btn btn-secondary  bi-arrow-left-circle"> Geri Dön</a>
+                            <button type="button" class="btn btn-primary bi-save" data-bs-toggle="modal" data-bs-target="#Yeni"> Yeni Boya</button>
                         </div>
                         <hr>
                         <table class="table datatablem">
@@ -50,7 +50,6 @@ unset($_SESSION["Miktar"], $_SESSION["Boyalar"]);
                                         <td><?= $Seri ?></td>
                                         <td><?= $Kod ?></td>
                                         <td>
-                                            <!--<button type="button" class="btn btn-outline-primary bi-cart4 Siparis" id="<?= $id ?>" data-bs-toggle="modal" data-bs-target="#Siparis<?= $id ?>">&nbsp Sipariş</button>-->
                                             <button type="button" class="btn btn-outline-warning bi-pencil-fill Duzenle" id="<?= $id ?>" data-bs-toggle="modal" data-bs-target="#Siparis<?= $id ?>">&nbsp Düzenle</button>
                                         </td>
                                     </tr>
@@ -58,7 +57,7 @@ unset($_SESSION["Miktar"], $_SESSION["Boyalar"]);
                                         <div class="modal-dialog modal-dialog-centered">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title">Yeni Sipariş</h5>
+                                                    <h5 class="modal-title">Düzenle</h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
                                                 <div class="modal-body row g-3">
@@ -157,11 +156,11 @@ unset($_SESSION["Miktar"], $_SESSION["Boyalar"]);
     });
 </script>
 
-<div class="modal fade" id="YeniBoya" tabindex="-1" aria-hidden="true" style="display: none;">
+<div class="modal fade" id="Yeni" tabindex="-1" aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Yeni Boya Ekle</h5>
+                <h5 class="modal-title">Ekle</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body row g-3">

@@ -21,25 +21,40 @@ if (isset($_POST['Sec'])) {
     for ($i = 0; $i < count($UIDler); $i++) {
         //Kapak Kulp ve Tepe idleri Kendi tablolarında olmayınca Listelenmiyor o yüzden yok adında kayıt kontrolü yapıcaz
         if ($_POST["Kapaklar"][$i] == "") {
-            $Kapak = $baglanti->query("SELECT Kapak_ID FROM kapak WHERE Tip='Yok'")->fetch()["Kapak_ID"];
+            $K = $baglanti->query("SELECT Kapak_ID FROM kapak WHERE Model_Adi='Yok'");
+            if ($K->rowCount() <= 0) {
+                $k = $baglanti->prepare("INSERT INTO kapak SET Firma_ID=?, Model_Adi=?");
+                $k->execute(array(0, 'Yok'));
+                $Kapak = $baglanti->lastInsertId();
+            } else {
+                $Kapak = $K->fetch()["Kapak_ID"];
+            }
         } else {
-            $k = $baglanti->prepare("INSERT INTO kapak SET Firma_ID=?, Tip=?, Kapak_No=?, Model_Adi=?");
-            $k->execute(array(0, 'Yok', 0, 'Yok'));
-            $Kapak = $baglanti->lastInsertId();
+            $Kapak = $_POST["Kapaklar"][$i];
         }
         if ($_POST["Kulplar"][$i] == "") {
-            $Kulp = $baglanti->query("SELECT Kulp_ID FROM kulp WHERE KulpAdi='Yok'")->fetch()["Kulp_ID"];
+            $K = $baglanti->query("SELECT Kulp_ID FROM kulp WHERE KulpAdi='Yok'");
+            if ($K->rowCount() <= 0) {
+                $k = $baglanti->prepare("INSERT INTO kulp SET Firma_ID=?, KulpAdi=?, KulpCesidi=?, Renk=?");
+                $k->execute(array(0, 'Yok', 'Yok', 'Yok'));
+                $Kulp = $baglanti->lastInsertId();
+            } else {
+                $Kulp = $K->fetch()["Kulp_ID"];
+            }
         } else {
-            $k = $baglanti->prepare("INSERT INTO kulp SET Firma_ID=?, KulpAdi=?, KulpCesidi=?, Renk=?");
-            $k->execute(array(0, 'Yok', 'Yok', 'Yok'));
-            $Kulp = $baglanti->lastInsertId();
+            $Kulp = $_POST["Kulplar"][$i];
         }
         if ($_POST["Tepeler"][$i] == "") {
-            $Tepe = $baglanti->query("SELECT Tepe_ID FROM tepe WHERE TepeAdi='Yok'")->fetch()["Tepe_ID"];
+            $T = $baglanti->query("SELECT Tepe_ID FROM tepe WHERE TepeAdi='Yok'");
+            if ($T->rowCount() <= 0) {
+                $k = $baglanti->prepare("INSERT INTO tepe SET Firma_ID=?, TepeAdi=?");
+                $k->execute(array(0, 'Yok'));
+                $Tepe = $baglanti->lastInsertId();
+            } else {
+                $Tepe = $T->fetch()["Tepe_ID"];
+            }
         } else {
-            $k = $baglanti->prepare("INSERT INTO tepe SET Firma_ID=?, TepeAdi=?, TepeFoto=?");
-            $k->execute(array(0, 'Yok', 'Yok'));
-            $Tepe = $baglanti->lastInsertId();
+            $Tepe = $_POST["Tepeler"][$i];
         }
         $Kaydet = $baglanti->prepare("INSERT INTO set_urun SET Set_ID= ?, Urun_ID= ?, Levha_ID= ?, Kapak_ID= ?, Kulp_ID= ?, Tepe_ID= ?");
         $Sonuc = $Kaydet->execute(array($Set_ID, $UIDler[$i], $_POST['mmler'][$i], $Kapak, $Kulp, $Tepe));

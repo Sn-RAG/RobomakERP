@@ -1,12 +1,12 @@
 <SCRIPT>
-    $('.modal').on('shown.bs.modal', function () {
+    $('.modal').on('shown.bs.modal', function() {
         $(".temizle").val("");
         $('.Hata').html("");
         $('.focus').focus();
         $(".TumuGeldi").prop('checked', false);
         $(".TumunuKullan").prop('checked', false);
     });
-    $(".TumuGeldi").on("click", function () {
+    $(".TumuGeldi").on("click", function() {
         var n = $(".TumuGeldi:checked").length;
         var ID = $(this).attr("id");
         var SipAgirlik = $('.SipAgirlik' + ID + '').val();
@@ -21,16 +21,15 @@
     });
 
     //Hesap İşlemi
-    $(".GirAgirlik").keyup(function () {
+    $(".GirAgirlik").keyup(function() {
         var ID = $(this).attr("levhastokid");
         var a = $('.Cap' + ID + '').val();
         var b = $('.Kalinlik' + ID + '').val();
-        var c = a * a * b * (0.22);
         var GirAgirlik = $('#GirAgirlik' + ID + '').val();
-        var Kg = GirAgirlik / (c / 1000);
-        $('.GirAdet' + ID + '').val(Math.ceil(Kg));
+        var Kg = Math.ceil(GirAgirlik / ((a * a * b * (0.22)) / 1000));
+        $('.GirAdet' + ID + '').val(Kg);
     });
-    $('.Gelen').click(function () {
+    $('.Gelen').click(function() {
         var ID = $(this).attr("levhastokid");
         var SipAgirlik = $('.SipAgirlik' + ID + '').val();
         var SipAdet = $('.SipAdet' + ID + '').val();
@@ -42,7 +41,7 @@
         if (GirAgirlik == "") {
             $('.Hata').html("Ağırlık boş bırakılamaz!");
         } else if (Number(SipAgirlik) == 0) {
-            <?=$SiparisTamam?>
+            <?= $SiparisTamam ?>
         } else {
             $.ajax({
                 type: "POST",
@@ -58,21 +57,21 @@
                     'GirAdet': GirAdet,
                     'StokEkle': true,
                 },
-                error: function (xhr) {
+                error: function(xhr) {
                     alert('Hata: ' + xhr.responseText);
                 },
-                success: function () {
+                success: function() {
                     window.location.assign("LevhaStok.php")
                 }
             })
         }
     });
 
-//####################################################################################################################
+    //####################################################################################################################
 
 
     //        Kullan Kayıt
-    $(".TumunuKullan").on("click", function () {
+    $(".TumunuKullan").on("click", function() {
         var ID = $(this).attr("id");
         var StokAgirlik = $('.StokAgirlik' + ID + '').val();
         var StokAdet = $('.StokAdet' + ID + '').val();
@@ -86,7 +85,7 @@
     });
 
     //Hesap işlemi
-    $(".GirAgirlikk").keyup(function () {
+    $(".GirAgirlikk").keyup(function() {
         var ID = $(this).attr("levhastokid");
         var a = $('.Cap' + ID + '').val();
         var b = $('.Kalinlik' + ID + '').val();
@@ -107,7 +106,7 @@
     });
 
 
-    $('.Kullan').click(function () {
+    $('.Kullan').click(function() {
         var ID = $(this).attr("levhastokid");
         var KTarihi = $('.KTarihi' + ID + '').val();
         var StokAgirlik = $('.StokAgirlik' + ID + '').val();
@@ -120,7 +119,7 @@
         if (GirAgirlik == "") {
             $('.Hata').html("Ağırlık boş bırakılamaz!");
         } else if (Number(StokAgirlik) == 0) {
-            <?=$SiparisTamam?>
+            <?= $SiparisTamam ?>
         } else {
             $.ajax({
                 type: "POST",
@@ -136,15 +135,13 @@
                     'KGirAdet': GirAdet,
                     'Kullan': true,
                 },
-                error: function (xhr) {
+                error: function(xhr) {
                     alert('Hata: ' + xhr.responseText);
                 },
-                success: function () {
+                success: function() {
                     window.location.assign("LevhaKullanilan.php");
                 }
             })
         }
     });
-
-
 </SCRIPT>

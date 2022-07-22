@@ -101,45 +101,55 @@ $tarih = date("Y-m-d");
     </section>
 </main>
 <script>
-    <?php
-    if (isset($_GET["YazdirBoya"])) {
-        echo "$('.BoyaTablo').DataTable({
-            dom: 'Bfrtip',
-            buttons: ['excel', 'pdf', 'print'],
-            bFilter:false,
-            responsive: true
-        });";
-    } else {
-        echo "$('.BoyaTablo').DataTable({
+    <?php if (isset($_SESSION["Boyalar"])) {
+        if (isset($_GET["YazdirBoya"])) { ?>
+            $('.BoyaTablo').DataTable({
+                dom: 'Bfrtip',
+                buttons: ['excel', 'pdf', 'print'],
+                bFilter: false,
+                responsive: true
+            });
+        <?php } else { ?>
+            $('.BoyaTablo').DataTable({
+                responsive: true,
+                columnDefs: [{
+                        'visible': false,
+                        'targets': 0
+                    },
+                    {
+                        targets: '_all',
+                        orderable: false
+                    },
+                    {
+                        'width': '20%',
+                        'targets': 5
+                    }
+                ],
+                paging: false,
+                bFilter: false,
+            });
+        <?php }
+    } elseif (isset($_SESSION["Levhalar"])) { ?>
+        $('.LevhaTablo').DataTable({
             responsive: true,
-            columnDefs: [
-                {'visible': false, 'targets': 0},
-                {targets: '_all', orderable: false},
-                {'width': '20%', 'targets': 5}
+            order: false,
+            columnDefs: [{
+                    'visible': false,
+                    'targets': 0
+                },
+                {
+                    targets: '_all',
+                    orderable: false
+                },
+                {
+                    'width': '25%',
+                    'targets': 4
+                }
             ],
-            paging:false,
-            bFilter:false,
-        });";
-    }
-    ?>
-    $('.LevhaTablo').DataTable({
-        responsive: true,
-        columnDefs: [{
-                'visible': false,
-                'targets': 0
-            },
-            {
-                targets: '_all',
-                orderable: false
-            },
-            {
-                'width': '25%',
-                'targets': 4
-            }
-        ],
-        paging: false,
-        bFilter: false,
-    });
+            paging: false,
+            bFilter: false,
+        });
+    <?php } ?>
 </script>
 <?php
 require __DIR__ . '/AjaxForm/Ajax.php';

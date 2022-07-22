@@ -1,6 +1,6 @@
 <?php
 ob_start();
-$page = "Kulp Sipariş";
+$page = "Tepe Sipariş";
 require __DIR__ . '/../../controller/Header.php';
 require __DIR__ . '/../../controller/Kayit.php';
 require __DIR__ . '/../../controller/VTHataMesaji.php';
@@ -16,7 +16,7 @@ require __DIR__ . '/../../controller/VTHataMesaji.php';
                         <hr>
                         <div class="d-flex justify-content-between">
                             <a href="<?= isset($_GET["Setler"]) ? "../../Uretim/SetlerKayit.php?SetKayit" : "../../Navigasyon/SiparisEt.php" ?>" class="btn btn-secondary  bi-arrow-left-circle"> Geri Dön</a>
-                            <button type="button" class="btn btn-primary bi-save" data-bs-toggle="modal" data-bs-target="#Yeni"> Yeni Kulp</button>
+                            <button type="button" class="btn btn-primary bi-save" data-bs-toggle="modal" data-bs-target="#Yeni"> Yeni Kapak</button>
                         </div>
                         <hr>
                         <table class="table datatablem">
@@ -25,28 +25,22 @@ require __DIR__ . '/../../controller/VTHataMesaji.php';
                                     <th>#</th>
                                     <th><button type="button" class="btn btn-success bi-check-lg form-control Sec">&nbsp Seç</button></th>
                                     <th>Adı</th>
-                                    <th>Çeşidi</th>
-                                    <th>Renk</th>
                                     <th>&nbsp</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
-                                $sorgu = $baglanti->query('SELECT * FROM kulp');
+                                $sorgu = $baglanti->query('SELECT * FROM tepe');
                                 foreach ($sorgu as $sonuc) {
-                                    $id = $sonuc['Kulp_ID'];
-                                    $KulpAdi = $sonuc['KulpAdi'];
-                                    $KulpCesidi = $sonuc['KulpCesidi'];
-                                    $Renk = $sonuc['Renk'];
+                                    $id = $sonuc['Tepe_ID'];
+                                    $TA = $sonuc['TepeAdi'];
                                 ?>
                                     <tr>
                                         <td><?= $id ?></td>
                                         <td>
                                             <div class="form-check"><input class="form-check-input" type="checkbox" id="Check<?= $id ?>" value="<?= $id ?>"><label class="form-check-label" for="Check<?= $id ?>">Seç</label></div>
                                         </td>
-                                        <td><?= $KulpAdi ?></td>
-                                        <td><?= $KulpCesidi ?></td>
-                                        <td><?= $Renk ?></td>
+                                        <td><?= $TA ?></td>
                                         <td>
                                             <button type="button" class="btn btn-outline-warning bi-pencil-fill" data-bs-toggle="modal" data-bs-target="#Duzenle<?= $id ?>">&nbsp Düzenle</button>
                                         </td>
@@ -58,7 +52,7 @@ require __DIR__ . '/../../controller/VTHataMesaji.php';
                                                     <h5 class="modal-title">Düzenle</h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
-                                                <form KulpID="<?= $id ?>" class="KulpDuzenle">
+                                                <form TepeID="<?= $id ?>" class="TepeDuzenle">
                                                     <div class="modal-body row g-3">
                                                         <div class="col-md-12">
                                                             <div class="form-floating">
@@ -76,24 +70,11 @@ require __DIR__ . '/../../controller/VTHataMesaji.php';
 
                                                         <div class="col-md-12">
                                                             <div class="form-floating">
-                                                                <input type='text' id='Adi<?= $id ?>' value="<?= $KulpAdi ?>" class='form-control'>
+                                                                <input type='text' id='Adi<?= $id ?>' value="<?= $TA ?>" class='form-control'>
                                                                 <label>* Adı</label>
                                                             </div>
                                                         </div>
 
-                                                        <div class="col-md-12">
-                                                            <div class="form-floating">
-                                                                <input type='text' id='Cesit<?= $id ?>' value="<?= $KulpCesidi ?>" class='form-control'>
-                                                                <label>* Çeşidi</label>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="col-md-12">
-                                                            <div class="form-floating">
-                                                                <input type="text" id="Renk<?= $id ?>" value="<?= $Renk ?>" class="form-control">
-                                                                <label>* Rengi</label>
-                                                            </div>
-                                                        </div>
                                                         <button type="submit" class="btn btn-warning form-control">Düzenle</button>
                                                     </div>
                                                 </form>
@@ -121,7 +102,7 @@ require __DIR__ . '/../../controller/VTHataMesaji.php';
             },
             {
                 "width": "20%",
-                "targets": 5
+                "targets": 3
             }
         ],
         pageLength: 100,
@@ -139,7 +120,7 @@ require __DIR__ . '/../../controller/VTHataMesaji.php';
                 <h5 class="modal-title">Ekle</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form id="YeniKulp" class="modal-body needs-validation row g-3" novalidate>
+            <form id="YeniTepe" class="modal-body needs-validation row g-3" novalidate>
                 <div class="col-md-12">
                     <div class="form-floating">
                         <select id="Firma" class="form-select">
@@ -162,19 +143,6 @@ require __DIR__ . '/../../controller/VTHataMesaji.php';
                     </div>
                 </div>
 
-                <div class="col-md-12">
-                    <div class="form-floating">
-                        <input type='text' id='Cesit' class='form-control' required>
-                        <label>* Çeşidi</label>
-                    </div>
-                </div>
-
-                <div class="col-md-12">
-                    <div class="form-floating">
-                        <input type="text" id="Renk" class="form-control" required>
-                        <label>* Rengi</label>
-                    </div>
-                </div>
                 <button type="submit" class="btn btn-primary form-control">Ekle</button>
             </form>
         </div>

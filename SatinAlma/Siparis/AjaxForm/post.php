@@ -47,17 +47,19 @@ if (isset($_POST['BoyaEkle'])) {
     //##########      ####################      ###################               LEVHA              ####################      ####################      ####################      ##########
     //##########      ####################      ####################      ####################      ####################      ####################      ####################      ##########
 
-} elseif (isset($_POST['LevhaEkle'])) {
+} elseif (isset($_POST['LevhaEklee'])) {
     $T = $_POST['Tip'];
     $C = $_POST['Cap'];
     $K = $_POST['Kalinlik'];
-    if ($baglanti->query("SELECT * FROM levha WHERE Tip=" . $T . " AND Cap=" . $C . " AND Kalinlik=" . $K)->rowCount() <= 0) {
+    $F = $_POST['LevhaFirma'];
+    if ($baglanti->query("SELECT * FROM levha WHERE Tip='$T' AND Cap='$C' AND Kalinlik='$K'")->rowCount() <= 0) {
         $query = $baglanti->prepare('INSERT INTO levha SET Firma_ID=?, Tip=?, Cap=?, Kalinlik=?');
-        $query->execute(array($_POST['LevhaFirma'] == "" ? null : $_POST['LevhaFirma'], $T, $C, $K));
+        $query->execute(array($F == "" ? null : $F, $T, $C, $K));
     }
 } elseif (isset($_POST["LevhaDuzenle"])) {
+    $F = $_POST['LevhaFirma'];
     $query = $baglanti->prepare('UPDATE levha SET Firma_ID=?, Tip=?, Cap=?, Kalinlik=? WHERE Levha_ID= ?');
-    $query->execute(array($_POST['LevhaFirma'] == "" ? null : $_POST['LevhaFirma'], $_POST['Tip'], $_POST['Cap'],  $_POST['Kalinlik'], $_POST['ID']));
+    $query->execute(array($F == "" ? null : $F, $_POST['Tip'], $_POST['Cap'],  $_POST['Kalinlik'], $_POST['ID']));
 } elseif (isset($_POST['LevhaSiparis'])) {
     $Adet = $_POST['Adet'];
     $kg = $_POST['Agirlik'];
@@ -76,4 +78,54 @@ if (isset($_POST['BoyaEkle'])) {
         $siparisKaydet = $baglanti->prepare("INSERT INTO levha_siparis SET Levha_Stok_ID= ?, Siparis_ID= ?, Levha_ID= ?");
         $siparisKaydet->execute(array($StokID, $Siparis_ID, $L[$i]));
     }
+
+    //##########      ####################      ####################      ####################      ####################      ####################      ####################      ##########
+    //##########      ####################      ###################               KULP              ####################      ####################      ####################      ##########
+    //##########      ####################      ####################      ####################      ####################      ####################      ####################      ##########
+
+} elseif (isset($_POST["KulpEkle"])) {
+    $F = $_POST['Firma'];
+    $A = $_POST['Adi'];
+    $C = $_POST['Cesit'];
+    $R = $_POST['Renk'];
+    if ($baglanti->query("SELECT * FROM kulp WHERE KulpAdi=" . $A . " AND KulpCesidi=" . $C . " AND Renk=" . $R)->rowCount() <= 0) {
+        $query = $baglanti->prepare('INSERT INTO kulp SET Firma_ID=?, KulpAdi=?, KulpCesidi=?, Renk=?');
+        $query->execute(array($F == "" ? null : $F, $A, $C, $R));
+    }
+} elseif (isset($_POST["KulpDuzenle"])) {
+    $F = $_POST['Firma'];
+    $query = $baglanti->prepare('UPDATE kulp SET Firma_ID=?, KulpAdi=?, KulpCesidi=?, Renk=? WHERE Kulp_ID= ?');
+    $query->execute(array($F == "" ? null : $F, $_POST['Adi'], $_POST['Cesit'],  $_POST['Renk'], $_POST['ID']));
+
+    //##########      ####################      ####################      ####################      ####################      ####################      ####################      ##########
+    //##########      ####################      ###################               KAPAK              ####################      ####################      ####################      ##########
+    //##########      ####################      ####################      ####################      ####################      ####################      ####################      ##########
+
+} elseif (isset($_POST["KapakEkle"])) {
+    $A = $_POST['Adi'];
+    $F = $_POST['Firma'];
+    if ($baglanti->query("SELECT * FROM kapak WHERE Model_Adi=" . $A)->rowCount() <= 0) {
+        $query = $baglanti->prepare('INSERT INTO kapak SET Firma_ID=?, Model_Adi=?');
+        $query->execute(array($F == "" ? null : $F, $A));
+    }
+} elseif (isset($_POST["KapakDuzenle"])) {
+    $F = $_POST['Firma'];
+    $query = $baglanti->prepare('UPDATE kapak SET Firma_ID=?, Model_Adi=? WHERE Kapak_ID= ?');
+    $query->execute(array($F == "" ? null : $F, $_POST['Adi'], $_POST['ID']));
+
+    //##########      ####################      ####################      ####################      ####################      ####################      ####################      ##########
+    //##########      ####################      ###################               TEPE              ####################      ####################      ####################      ##########
+    //##########      ####################      ####################      ####################      ####################      ####################      ####################      ##########
+
+} elseif (isset($_POST["TepeEkle"])) {
+    $A = $_POST['Adi'];
+    $F = $_POST['Firma'];
+    if ($baglanti->query("SELECT * FROM tepe WHERE TepeAdi=" . $A)->rowCount() <= 0) {
+        $query = $baglanti->prepare('INSERT INTO tepe SET Firma_ID=?, TepeAdi=?');
+        $query->execute(array($F == "" ? null : $F, $A));
+    }
+} elseif (isset($_POST["TepeDuzenle"])) {
+    $F = $_POST['Firma'];
+    $query = $baglanti->prepare('UPDATE tepe SET Firma_ID=?, TepeAdi=? WHERE Tepe_ID= ?');
+    $query->execute(array($F == "" ? null : $F, $_POST['Adi'], $_POST['ID']));
 }

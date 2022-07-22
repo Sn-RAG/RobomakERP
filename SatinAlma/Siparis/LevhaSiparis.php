@@ -13,7 +13,7 @@ require __DIR__ . '/../../controller/Kayit.php';
                 <div class="d-flex justify-content-between">
                     <a href="<?= isset($_GET["Setler"]) ? "../../Uretim/SetlerKayit.php?SetKayit" : "../../Navigasyon/SiparisEt.php" ?>" class="btn btn-secondary  bi-arrow-left-circle"> Geri Dön</a>
                     <label class="text-danger fw-bold">Aynı kalınlıktaki ürünleri seçin!</label>
-                    <button type="button" class="btn btn-primary bi-save" data-bs-toggle="modal" data-bs-target="#YeniLevha">&nbsp Yeni Levha</button>
+                    <button type="button" class="btn btn-primary bi-save" data-bs-toggle="modal" data-bs-target="#Yeni">&nbsp Yeni Levha</button>
                 </div>
                 <hr>
                 <table class="table datatablem">
@@ -59,52 +59,51 @@ require __DIR__ . '/../../controller/Kayit.php';
                                             <h5 class="modal-title">Düzenle</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
-                                        <div class="modal-body row g-3">
-                                            <div class="col-md-12">
-                                                <div class="form-floating">
-                                                    <select id="Firma<?= $id ?>" class="form-select">
-                                                        <option value=""></option>
-                                                        <?php
-                                                        $query = $baglanti->query("SELECT Firma_ID, Firma FROM firmalar");
-                                                        foreach ($query as $s) { ?>
-                                                            <option <?= $s["Firma_ID"] == $sonuc['Firma_ID'] ? "selected" : "" ?> value='<?= $s["Firma_ID"] ?>'><?= $s["Firma"] ?></option>
-                                                        <?php } ?>
-                                                    </select>
-                                                    <label>Çalışılan Firma</label>
-                                                </div>
-                                            </div>
-                                            <div class="input-group">
-                                                <div class="col-md-4">
+                                        <form action="LevhaSiparis.php" LevhaID="<?= $id ?>" class="LevhaDuzenle">
+                                            <div class="modal-body row g-3">
+                                                <div class="col-md-12">
                                                     <div class="form-floating">
-                                                        <select class="form-select" id="Tip<?= $id ?>">
-                                                            <option selected value="<?= $Tip ?>"><?= $Tip ?></option>
-                                                            <option value="Daire">Daire</option>
-                                                            <option value="Kare">Kare</option>
-                                                            <option value="Dikdörtgen">Dikdörtgen</option>
+                                                        <select id="Firma<?= $id ?>" class="form-select">
+                                                            <option value=""></option>
+                                                            <?php
+                                                            $query = $baglanti->query("SELECT Firma_ID, Firma FROM firmalar");
+                                                            foreach ($query as $s) { ?>
+                                                                <option <?= $s["Firma_ID"] == $sonuc['Firma_ID'] ? "selected" : "" ?> value='<?= $s["Firma_ID"] ?>'><?= $s["Firma"] ?></option>
+                                                            <?php } ?>
                                                         </select>
-                                                        <label>Tip</label>
+                                                        <label>Çalışılan Firma</label>
                                                     </div>
                                                 </div>
+                                                <div class="input-group">
+                                                    <div class="col-md-4">
+                                                        <div class="form-floating">
+                                                            <select class="form-select" id="Tip<?= $id ?>">
+                                                                <option selected value="<?= $Tip ?>"><?= $Tip ?></option>
+                                                                <option value="Daire">Daire</option>
+                                                                <option value="Kare">Kare</option>
+                                                                <option value="Dikdörtgen">Dikdörtgen</option>
+                                                            </select>
+                                                            <label>Tip</label>
+                                                        </div>
+                                                    </div>
 
-                                                <div class="col-md-4">
-                                                    <div class="form-floating">
-                                                        <input type="number" step="0.1" value="<?= $Cap ?>" class="form-control" id="Cap<?= $id ?>">
-                                                        <label>* Çap</label>
+                                                    <div class="col-md-4">
+                                                        <div class="form-floating">
+                                                            <input type="number" step="0.1" value="<?= $Cap ?>" class="form-control" id="Cap<?= $id ?>">
+                                                            <label>* Çap</label>
+                                                        </div>
                                                     </div>
-                                                </div>
 
-                                                <div class="col-md-4">
-                                                    <div class="form-floating">
-                                                        <input type="number" step="0.01" value="<?= $Kalinlik ?>" class="form-control" id="Kalinlik<?= $id ?>">
-                                                        <label>* Kalınlık</label>
+                                                    <div class="col-md-4">
+                                                        <div class="form-floating">
+                                                            <input type="number" step="0.01" value="<?= $Kalinlik ?>" class="form-control" id="Kalinlik<?= $id ?>">
+                                                            <label>* Kalınlık</label>
+                                                        </div>
                                                     </div>
                                                 </div>
+                                                <button type="submit" class="btn btn-primary form-control">Düzenle</button>
                                             </div>
-                                            <div class="text-danger Hata"></div>
-                                        </div>
-                                        <div class="card-footer">
-                                            <button type="button" class="btn btn-primary form-control LevhaDuzenle" LevhaID="<?= $id ?>">Düzenle</button>
-                                        </div>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
@@ -125,7 +124,7 @@ require __DIR__ . '/../../controller/Kayit.php';
                 "targets": 0
             },
             {
-                targets: [1, 5],
+                targets: "_all",
                 orderable: false
             },
             {
@@ -160,14 +159,14 @@ require __DIR__ . '/../../controller/Kayit.php';
     });
 </script>
 
-<div class="modal fade" id="YeniLevha" tabindex="-1" aria-hidden="true" style="display: none;">
+<div class="modal fade" id="Yeni" tabindex="-1" aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Yeni Levha Ekle</h5>
+                <h5 class="modal-title">Ekle</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body row g-3">
+            <form id="YeniLevha" action="LevhaSiparis.php" class="modal-body needs-validation row g-3" novalidate>
 
                 <div class="col-md-12">
                     <div class="form-floating">
@@ -197,26 +196,19 @@ require __DIR__ . '/../../controller/Kayit.php';
 
                 <div class="col-md-12">
                     <div class="form-floating">
-                        <input type="number" id="Cap" step="0.01" class="form-control">
+                        <input type="number" id="Cap" step="0.01" class="form-control" required>
                         <label>* Çap</label>
                     </div>
                 </div>
 
                 <div class="col-md-12">
                     <div class="form-floating">
-                        <input type="number" id="Kalinlik" step="0.1" class="form-control">
+                        <input type="number" id="Kalinlik" step="0.1" class="form-control" required>
                         <label>* Kalınlık</label>
                     </div>
                 </div>
-
-
-                <div class="text-danger Hata"></div>
-            </div>
-            <div class="card-footer">
-                <button type="button" id="LevhaEkle" class="btn btn-primary form-control">
-                    Ekle
-                </button>
-            </div>
+                <button type="submit" class="btn btn-primary form-control">Ekle</button>
+            </form>
         </div>
     </div>
 </div>

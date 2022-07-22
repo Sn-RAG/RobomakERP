@@ -28,7 +28,7 @@ require __DIR__ . '/../../controller/Db.php';
                             </thead>
                             <tbody>
                                 <?php
-                                $sorgu = $baglanti->query("SELECT kategori.*,urun.* FROM urun INNER JOIN kategori ON urun.Kategori_ID = kategori.Kategori_ID ORDER BY Kategori_Adi ASC");
+                                $sorgu = $baglanti->query("SELECT * FROM urun INNER JOIN kategori ON urun.Kategori_ID = kategori.Kategori_ID");
                                 foreach ($sorgu as $sonuc) {
                                     $Urun_ID = $sonuc['Urun_ID'];
                                     $Kategori_ID = $sonuc['Kategori_ID'];
@@ -42,11 +42,12 @@ require __DIR__ . '/../../controller/Db.php';
                                         <th><?= $Kategori_Adi ?></th>
                                         <td><?= $UrunAdi ?></td>
                                         <td><?php
-                                        $sorgu=$baglanti->query("SELECT Kalinlik FROM urun_levha_bilgi INNER JOIN levha ON urun_levha_bilgi.Levha_ID = levha.Levha_ID WHERE Urun_ID =".$Urun_ID);
-                                        if($sorgu->rowCount()){
-                                        foreach ($sorgu as $s) {
-echo$s["Kalinlik"]." mm &nbsp ";
-                                        }} ?></td>
+                                            $sorgu = $baglanti->query("SELECT Kalinlik FROM urun_levha_bilgi INNER JOIN levha ON urun_levha_bilgi.Levha_ID = levha.Levha_ID WHERE Urun_ID =" . $Urun_ID);
+                                            if ($sorgu->rowCount()) {
+                                                foreach ($sorgu as $s) {
+                                                    echo $s["Kalinlik"] . " mm &nbsp ";
+                                                }
+                                            } ?></td>
                                         <td>
                                             <a href="../UrunLevha/UrunLevhaBilgi.php?Urun_ID=<?= $Urun_ID ?>">
                                                 <button type="button" class="btn btn-info"><i class="bi bi-disc"></i> Levha Bilgisi
@@ -75,6 +76,7 @@ echo$s["Kalinlik"]." mm &nbsp ";
 </main>
 <script>
     $('.datatablem').DataTable({
+        order: 2,
         rowGroup: {
             dataSrc: [2]
         },
