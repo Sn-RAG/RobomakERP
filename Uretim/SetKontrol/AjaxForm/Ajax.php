@@ -5,7 +5,7 @@ $Has = ".hasClass('btn-primary')";
     $(function() {
         $.Listele = function() {
             var SetID = $("#SetID").val();
-            var Urunler = <?php echo json_encode($Urunler); ?>;
+            var Urunler = <?= json_encode($Urunler) ?>;
 
             switch (true) {
                 case $("#Pres") <?= $Has ?>:
@@ -89,10 +89,11 @@ $Has = ".hasClass('btn-primary')";
                 deger.push($(this).val());
             }
         });
-        if (Number($("#yazsayi" + Uid + "").html()) + Number(deger) > sum) {
+        /*if (Number($("#yazsayi" + Uid + "").html()) + Number(deger) > sum) {
             <?= $FazlaDeger ?>
             $(".GDeger").val("");
-        } else if (Number(deger) <= 0 || deger == "") {
+        } else*/
+        if (Number(deger) <= 0 || deger == "") {
             <?= $Gecersiz ?>
             $(".GDeger").val("");
         } else {
@@ -161,10 +162,11 @@ $Has = ".hasClass('btn-primary')";
                 deger.push($(this).val());
             }
         });
-        if (Number($("#yazsayi" + Uid + "").html()) + Number(deger) > sum) {
+        /*if (Number($("#yazsayi" + Uid + "").html()) + Number(deger) > sum) {
             <?= $FazlaDeger ?>
             $(".GDeger").val("");
-        } else if (Number(deger) <= 0 || deger == "") {
+        } else*/
+        if (Number(deger) <= 0 || deger == "") {
             <?= $Gecersiz ?>
             $(".GDeger").val("");
         } else {

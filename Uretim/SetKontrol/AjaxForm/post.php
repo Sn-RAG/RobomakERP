@@ -52,26 +52,26 @@ if (isset($_POST['Listele'])) {
         if ($HB == "Pres") { ?>
             var Pres = <?php echo json_encode($Pres); ?>;
 
-            for (let i = 0; i <= <?= $Urn ?>; i++) {
+            for (let i = 0; i < <?= $Urn ?>; i++) {
                 $("#yazsayi" + Urunler[i] + "").html(Pres[i]);
             }
 
         <?php } elseif ($HB == "Telleme") { ?>
             var Telleme = <?php echo json_encode($Telleme); ?>;
 
-            for (let i = 0; i <= <?= $Urn ?>; i++) {
+            for (let i = 0; i < <?= $Urn ?>; i++) {
                 $("#yazsayi" + Urunler[i] + "").html(Telleme[i]);
             }
         <?php } elseif ($HB == "Kumlama") { ?>
             var Kumlama = <?php echo json_encode($Kumlama); ?>;
 
-            for (let i = 0; i <= <?= $Urn ?>; i++) {
+            for (let i = 0; i < <?= $Urn ?>; i++) {
                 $("#yazsayi" + Urunler[i] + "").html(Kumlama[i]);
             }
         <?php } elseif ($HB == "icBoyama") { ?>
             var icBoyama = <?php echo json_encode($icBoyama); ?>;
 
-            for (let i = 0; i <= <?= $Urn ?>; i++) {
+            for (let i = 0; i < <?= $Urn ?>; i++) {
                 $("#yazsayi" + Urunler[i] + "").html(icBoyama[i]);
             }
         <?php } elseif ($HB == "DisBoyama") { ?>
@@ -83,13 +83,13 @@ if (isset($_POST['Listele'])) {
         <?php } elseif ($HB == "Yıkama") { ?>
             var Yikama = <?php echo json_encode($Yikama); ?>;
 
-            for (let i = 0; i <= <?= $Urn ?>; i++) {
+            for (let i = 0; i < <?= $Urn ?>; i++) {
                 $("#yazsayi" + Urunler[i] + "").html(Yikama[i]);
             }
         <?php } else { ?>
             var Paketle = <?php echo json_encode($Paketle); ?>;
 
-            for (let i = 0; i <= <?= $Urn ?>; i++) {
+            for (let i = 0; i < <?= $Urn ?>; i++) {
                 $("#yazsayi" + Urunler[i] + "").html(Paketle[i]);
             }
         <?php } ?>
@@ -173,7 +173,6 @@ if (isset($_POST['Listele'])) {
     <table class="table table-sm table-responsive Tablois">
         <thead>
             <tr class="table-light">
-                <th>#</th>
                 <th>Ürünler</th>
                 <th>Adet</th>
                 <th>İş</th>
@@ -183,16 +182,18 @@ if (isset($_POST['Listele'])) {
         </thead>
         <tbody><?php
                 $isne = $is == "Preslendi" ? " OR Yapilan_is='Fire' AND set_urunler_asama_akis.Set_ID =" . $id . "" : "";
-                $sorgu = $baglanti->query("SELECT ID, urun.Urun_ID, Levha_ID, UrunAdi, Yapilan_is, Adet, Tarih FROM set_urunler_asama_akis INNER JOIN urun ON set_urunler_asama_akis.Urun_ID = urun.Urun_ID WHERE Set_ID =" . $id . " AND Yapilan_is='$is'" . $isne);
-                foreach ($sorgu as $t) { ?>
+                $sorgu = $baglanti->query("SELECT ID, urun.Urun_ID, Levha_ID, UrunAdi, Yapilan_is, Adet, Tarih FROM set_urunler_asama_akis INNER JOIN urun ON set_urunler_asama_akis.Urun_ID = urun.Urun_ID WHERE Set_ID =" . $id . " AND Yapilan_is='$is'" . $isne . " ORDER BY Tarih");
+                foreach ($sorgu as $t) {
+                    $adt = $t["Adet"];
+                    $Trh = $t["Tarih"];
+                ?>
                 <tr>
-                    <td><?= $t["ID"] ?></td>
                     <td><?= $t["UrunAdi"] ?></td>
-                    <td><?= $t["Adet"] ?></td>
+                    <td><?= $adt ?></td>
                     <td><?= $t["Yapilan_is"] ?></td>
-                    <td><?= $t["Tarih"] ?></td>
+                    <td><?= $Trh ?></td>
                     <td>
-                        <button class="btn btn-sm btn-danger bi-trash Sil" type="button" id="<?= $t["ID"] ?>" UrunID="<?= $t["Urun_ID"] ?>" Adet="<?= $t["Adet"] ?>" LevhaID="<?= $t["Levha_ID"] ?>" is="<?= $t["Yapilan_is"] ?>"></button>
+                        <button class="btn btn-sm btn-danger bi-trash Sil" type="button" id="<?= $t["ID"] ?>" UrunID="<?= $t["Urun_ID"] ?>" Adet="<?= $adt ?>" LevhaID="<?= $t["Levha_ID"] ?>" is="<?= $t["Yapilan_is"] ?>" Tarih="<?= $Trh ?>"></button>
                     </td>
                 </tr>
             <?php } ?>
@@ -200,20 +201,20 @@ if (isset($_POST['Listele'])) {
     </table>
     <script>
         $('.Tablois').DataTable({
+            order: 3,
+            rowGroup: {
+                dataSrc: [3]
+            },
             responsive: true,
-            order: false,
             columnDefs: [{
                     targets: '_all',
                     orderable: false
                 },
                 {
                     visible: false,
-                    targets: [0, 4]
+                    targets: [3]
                 }
             ],
-            rowGroup: {
-                dataSrc: [4]
-            },
             scrollY: 400,
             paging: false,
             bFilter: false,
@@ -225,6 +226,7 @@ if (isset($_POST['Listele'])) {
             LevhaID = $(this).attr("LevhaID");
             is = $(this).attr("is");
             Adet = $(this).attr("Adet");
+            Tarih = $(this).attr("Tarih");
             $.ajax({
                 type: "POST",
                 url: "AjaxForm/post.php",
@@ -235,6 +237,7 @@ if (isset($_POST['Listele'])) {
                     'UrunID': UrunID,
                     'LevhaID': LevhaID,
                     'is': is,
+                    'Tarih': Tarih,
                     'Adet': Adet
                 },
                 error: function(xhr) {
@@ -268,8 +271,9 @@ if (isset($_POST["GirSil"])) {
         $Stok = $baglanti->prepare("UPDATE levha_gelen SET Stok_Adet=Stok_Adet+ ?, Stok_Agirlik=Stok_Agirlik+ ? WHERE Levha_Stok_ID= ?");
         $Stok->execute(array($Adet, $Kg, $Lsid));
 
-        $Giden = $baglanti->prepare("UPDATE levha_giden SET Kullanilan_Adet=Kullanilan_Adet- ?, Kullanilan_Agirlik=Kullanilan_Agirlik- ? WHERE Levha_Stok_ID= ? AND SetID= ? AND UrunID= ?");
-        $Giden->execute(array($Adet, $Kg, $Lsid, $Sid, $Uid));
+        $Giden = $baglanti->prepare("UPDATE levha_giden SET Kullanilan_Adet=Kullanilan_Adet- ?, Kullanilan_Agirlik=Kullanilan_Agirlik- ? WHERE Levha_Stok_ID= ? AND SetID= ? AND UrunID= ? AND Gidis_Tarihi= ?");
+        $Giden->execute(array($Adet, $Kg, $Lsid, $Sid, $Uid, "$_POST[Tarih]"));
+        $baglanti->query("DELETE FROM levha_giden WHERE Kullanilan_Adet<=0 OR Kullanilan_Agirlik<=0");
     } elseif ($is == "Tellendi") {
         $Ne = "Tellenen";
     } elseif ($is == "Kumlandı") {
@@ -298,7 +302,7 @@ function StokDus($Deger, $K_Tarihi, $Kullanici, $UrunID, $SetID, $Lid)
 {
     global $baglanti;
     if ($baglanti->query("SELECT Levha_Stok_ID FROM view_siparis_levha WHERE Levha_ID=" . $Lid)->rowCount()) {
-        $V = $baglanti->query("SELECT Levha_Stok_ID, Cap, Kalinlik FROM view_siparis_levha WHERE Levha_ID=" . $Lid)->fetch();
+        $V = $baglanti->query("SELECT Levha_Stok_ID, Cap, Kalinlik FROM view_siparis_levha WHERE Levha_ID=" . $Lid . " GROUP BY Levha_ID")->fetch();
         $Stokid = $V["Levha_Stok_ID"];
         $Cap = $V["Cap"];
         $Kalinlik = $V["Kalinlik"];
@@ -307,15 +311,9 @@ function StokDus($Deger, $K_Tarihi, $Kullanici, $UrunID, $SetID, $Lid)
         $c = $baglanti->query("SELECT SUM(Stok_Adet) AS Adet,SUM(Stok_Agirlik) AS Agirlik FROM levha_gelen WHERE Levha_Stok_ID=" . $Stokid)->fetch();
         $St_Adet = $c["Adet"];
         $St_Agirlik = $c["Agirlik"];
-        $k = $baglanti->query("SELECT SUM(Kullanilan_Adet) AS Adet,SUM(Kullanilan_Agirlik) AS Agirlik FROM levha_giden WHERE Levha_Stok_ID=" . $V["Levha_Stok_ID"])->fetch();
-        //Kullanılan
-        $KAdet = $k["Adet"] > 0 ? $k["Adet"] : 0;
-        $KAgirlik = $k["Agirlik"] > 0 ? $k["Agirlik"] : 0;
+
         //Hesap
         $GAgirlik = ceil((($Cap * $Cap * $Kalinlik * (0.22)) * $Deger) / 1000);
-
-        $TplMevcutAdet = $Deger + $KAdet;
-        $TplMevcutAgirlik = $GAgirlik + $KAgirlik;
 
         $Say = $baglanti->query("SELECT COUNT(Levha_Stok_ID) AS a FROM levha_gelen WHERE Levha_Stok_ID=" . $Stokid)->fetch()["a"];
         if ($Say > 1) {
@@ -329,11 +327,11 @@ function StokDus($Deger, $K_Tarihi, $Kullanici, $UrunID, $SetID, $Lid)
         $StokKaydet->execute(array($TplAdet, $TplAgirlik, $Stokid));
 
         if ($baglanti->query("SELECT Levha_Stok_ID FROM levha_giden WHERE Gidis_Tarihi='$K_Tarihi' AND Levha_Stok_ID=" . $Stokid . " AND SetID=" . $SetID . " AND UrunID=" . $UrunID . " AND LevhaID=" . $Lid)->rowCount()) {
-            $Kaydet = $baglanti->prepare("UPDATE levha_giden SET Kullanilan_Adet=Kullanilan_Adet+?, Kullanilan_Agirlik=Kullanilan_Agirlik+?, Gidis_Tarihi= ?, Kullanici_ID= ? WHERE Levha_Stok_ID= ? AND Gidis_Tarihi= ?");
-            $Kaydet->execute(array($Deger, $GAgirlik, $K_Tarihi, $Kullanici, $Stokid, "$K_Tarihi"));
+            $Kaydet = $baglanti->prepare("UPDATE levha_giden SET Kullanilan_Adet=Kullanilan_Adet+?, Kullanilan_Agirlik=Kullanilan_Agirlik+?, Gidis_Tarihi= ?, Kullanici_ID= ? WHERE Levha_Stok_ID= ? AND Gidis_Tarihi= ? AND SetID= ? AND UrunID= ? AND LevhaID=?");
+            $Kaydet->execute(array($Deger, $GAgirlik, $K_Tarihi, $Kullanici, $Stokid, "$K_Tarihi", $SetID, $UrunID, $Lid));
         } else {
             $Kaydet = $baglanti->prepare("INSERT INTO levha_giden SET Levha_Stok_ID= ?, Kullanilan_Adet= ?, Kullanilan_Agirlik= ?, Gidis_Tarihi= ?, Kullanici_ID= ?, UrunID= ?, SetID= ?, LevhaID=?");
-            $Kaydet->execute(array($Stokid, $TplMevcutAdet, $TplMevcutAgirlik, $K_Tarihi, $Kullanici, $UrunID, $SetID, $Lid));
+            $Kaydet->execute(array($Stokid, $Deger, $GAgirlik, $K_Tarihi, $Kullanici, $UrunID, $SetID, $Lid));
         }
     } else {
         return 0;

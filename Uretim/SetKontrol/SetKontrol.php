@@ -8,7 +8,7 @@ if (!(isset($_SESSION["SetAdi"]))) {
 }
 $SetID = isset($_GET['Set_ID']) ? $_GET['Set_ID'] : 0;
 if ($baglanti->query("SELECT  Set_ID FROM set_urunler_asama WHERE Set_ID = " . $SetID)->rowCount() <= 0) {
-    $baglanti->query("INSERT INTO set_urunler_asama ( Set_ID, Urun_ID ) SELECT Set_ID,Urun_ID FROM view_uretim_setler WHERE Set_ID =  " . $SetID);
+    $baglanti->query("INSERT INTO set_urunler_asama ( Set_ID, Urun_ID ) SELECT Set_ID,Urun_ID FROM view_uretim_setler WHERE Set_ID = $SetID ORDER BY Urun_ID");
 }
 date_default_timezone_set('Europe/Istanbul');
 $tarih = new DateTime("now");
@@ -159,12 +159,19 @@ require __DIR__ . '/Yuzde.php';
                         </thead>
                         <tbody>
                             <?php
+                            $Urunler = [];
+                            $UrunAdi = [];
+                            $i = 0;
                             $Listele = $baglanti->query('SELECT Kategori_ID,Urun_ID,UrunAdi,KulpAdi,Model_Adi,TepeAdi,icBoya_ID,DisRenk,Adet,Levha_ID FROM view_set_urun_sec WHERE Set_ID = ' . $SetID . " GROUP BY Urun_ID")->fetchAll();
                             foreach ($sor as $s) {
                                 $Uid = $s['Urun_ID'];
+                                $ad = $s['UrunAdi'];
+                                $Urunler[$i] = $Uid;
+                                $UrunAdi[$i] = $ad;
+                                $i++;
                             ?>
                                 <tr>
-                                    <td><?= $s['UrunAdi'] ?></td>
+                                    <td><?= $ad ?></td>
                                     <td class="text-center" id="yazsayi<?= $Uid ?>"></td>
                                     <td>
                                         <input type="number" SetID="<?= $SetID ?>" UrunID="<?= $Uid ?>" LevhaID="<?= $s['Levha_ID'] ?>" class="GDeger form-control form-control-sm me-1" placeholder="Adet">
@@ -187,15 +194,9 @@ require __DIR__ . '/Yuzde.php';
                                 <th>Kalınlık</th>
                             </tr>
                             <?php
-                            $Urunler = [];
-                            $UrunAdi = [];
-                            $i = 0;
                             foreach ($Listele as $s) {
                                 $Uid = $s['Urun_ID'];
                                 $ad = $s['UrunAdi'];
-                                $Urunler[$i] = $Uid;
-                                $UrunAdi[$i] = $ad;
-                                $i++;
                                 $C = $baglanti->query("SELECT Cap FROM view_urun_levha_bilgi WHERE Levha_ID=" . $s['Levha_ID'] . " AND Urun_ID=" . $Uid);
                                 if ($C->rowCount()) {
                             ?>

@@ -104,6 +104,8 @@ if (isset($_SESSION["SetAdi"])) {
                 return $(this).val();
             }
         }).get();
+        console.log(Setsec);
+        console.log(Adet);
         $.ajax({
             type: "POST",
             url: "Setler.php",

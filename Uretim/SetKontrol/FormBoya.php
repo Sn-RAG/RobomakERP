@@ -4,6 +4,7 @@ require __DIR__ . '/../../controller/Db.php';
 require __DIR__ . '/../../controller/Header.php';
 $SetID = (int)$_GET["id"];
 $Boyalar = $baglanti->query('SELECT DisBoya_ID, Renk AS icRenk FROM set_urunler INNER JOIN boya ON set_urunler.icBoya_ID = boya.Boya_ID WHERE Set_ID = ' . $SetID . " GROUP BY icBoya_ID, DisBoya_ID")->fetchAll();
+$Say=count($Boyalar);
 ?>
 <main id="main" class="main">
     <section class="section">
@@ -22,7 +23,7 @@ $Boyalar = $baglanti->query('SELECT DisBoya_ID, Renk AS icRenk FROM set_urunler 
                                 <th rowspan="2" colspan="2"></th>
                                 <th rowspan="2" style="vertical-align: middle; text-align:center;">TOPLAM</th>
                                 <?php
-                                for ($i = 0; $i < count($Boyalar); $i++) {
+                                for ($i = 0; $i < $Say; $i++) {
                                     echo "<th>İç Renk<th>Dış Renk</th></th>";
                                 }
                                 ?>
@@ -44,7 +45,7 @@ $Boyalar = $baglanti->query('SELECT DisBoya_ID, Renk AS icRenk FROM set_urunler 
                                 <th>ÜRÜN ADI</th>
                                 <th>ADET</th>
                                 <?php
-                                for ($i = 0; $i < count($Boyalar); $i++) {
+                                for ($i = 0; $i < $Say; $i++) {
                                     echo "<th colspan='2'>ADET</th>";
                                 }
                                 ?>
@@ -52,16 +53,16 @@ $Boyalar = $baglanti->query('SELECT DisBoya_ID, Renk AS icRenk FROM set_urunler 
                         </thead>
                         <tbody>
                             <?php
-                            $i = 1;
+                            $ii = 1;
                             $Listele = $baglanti->query('SELECT urun.Urun_ID,UrunAdi, SUM(Adet) AS Adet FROM set_urunler INNER JOIN urun ON set_urunler.Urun_ID = urun.Urun_ID WHERE Set_ID = ' . $SetID . " GROUP BY set_urunler.Urun_ID");
                             foreach ($Listele as $s) {
                                 $Uid = $s["Urun_ID"] ?>
                                 <tr>
-                                    <th><?= $i++ ?></th>
+                                    <th><?= $ii++ ?></th>
                                     <td><?= $s["UrunAdi"] ?></td>
                                     <td><?= $s["Adet"] ?></td>
                                     <?php
-                                    for ($i = 0; $i < count($Boyalar); $i++) {
+                                    for ($i = 0; $i < $Say; $i++) {
                                         echo "<td colspan='2'></td>";
                                     }
                                     ?>
