@@ -59,7 +59,7 @@ foreach ($sor as $s) {
     //Telleme
     $h += $baglanti->query("SELECT SUM(Adet) AS Toplam FROM set_urunler_asama_akis WHERE Yapilan_is='Tellendi' AND Set_ID=" . $SetID . " AND Urun_ID=" . $UrunID)->fetch()["Toplam"];
     //Boyama
-    $j += $baglanti->query("SELECT SUM(Adet) AS Toplam FROM set_urunler_asama_akis WHERE Yapilan_is='Boyandı' AND Set_ID=" . $SetID . " AND Urun_ID=" . $UrunID)->fetch()["Toplam"];
+    $j += $baglanti->query("SELECT SUM(Adet) AS Toplam FROM set_urunler_asama_akis WHERE Yapilan_is='İçi Boyandı' AND Set_ID=" . $SetID . " AND Urun_ID=" . $UrunID . " OR Yapilan_is='Dışı Boyandı' AND Set_ID=" . $SetID . " AND Urun_ID=" . $UrunID)->fetch()["Toplam"];
     //Paketleme
     $p += $baglanti->query("SELECT SUM(Adet) AS Toplam FROM set_urunler_asama_akis WHERE Yapilan_is='Paketlendi' AND Set_ID=" . $SetID . " AND Urun_ID=" . $UrunID)->fetch()["Toplam"];
 }
@@ -118,7 +118,7 @@ if ($Cart->rowCount()) {
 //Boyama
 $CartBoyaA = [];
 $CartBoyaT = [];
-$Cart = $baglanti->query("SELECT SUM(Adet) AS Tadet, Tarih FROM set_urunler_asama_akis WHERE Yapilan_is='Boyandı' AND Set_ID=" . $SetID . " GROUP BY Tarih");
+$Cart = $baglanti->query("SELECT SUM(Adet) AS Tadet, Tarih FROM set_urunler_asama_akis WHERE Yapilan_is='İçi Boyandı' AND Set_ID=" . $SetID . " AND Urun_ID=" . $UrunID . " OR Yapilan_is='Dışı Boyandı' AND Set_ID=" . $SetID . " AND Urun_ID=" . $UrunID . " GROUP BY Tarih");
 if ($Cart->rowCount()) {
     foreach ($Cart as $cc) {
         $CartBoyaA[$i] = $cc["Tadet"];
@@ -159,7 +159,7 @@ if ($g <> null) { //Kumlama
     $Kumla = $Kumla > 100 ? 100 : $Kumla;
 }
 if ($h <> null) { //Teleme
-    $Telle = floor($h / ($Toplam / 100));
+    $Telle = floor(($h / 2) / ($Toplam / 100));
     $Telle = $Telle > 100 ? 100 : $Telle;
 }
 if ($j <> null) { //Boyama
@@ -171,4 +171,3 @@ if ($p <> null) { //Paketleme
     $Paket = $Paket > 100 ? 100 : $Paket;
 }
 $SetYuzde = floor(($Hesap + $Prs + $Yika + $Kumla + $Telle + $Boya + $Paket) / 7);
-                /*Yüzde Son*/
