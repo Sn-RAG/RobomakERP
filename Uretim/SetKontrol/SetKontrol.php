@@ -15,8 +15,6 @@ $tarih = new DateTime("now");
 $tarih = date("Y-m-d");
 require __DIR__ . '/Yuzde.php';
 ?>
-<input id="SetID" type="hidden" value="<?= $SetID ?>">
-
 <main id="main" class="main">
     <section class="section">
         <div class="card">
@@ -24,9 +22,10 @@ require __DIR__ . '/Yuzde.php';
                 <div><a href="../Setler.php" class="bi-arrow-left btn btn-secondary"> &nbsp&nbsp Geri Dön</a></div>
                 <h5 class='card-title text-center fs-5'><?= isset($_SESSION["SetAdi"]) ? $_SESSION["SetAdi"] : "" ?></h5>
                 <div>
-                    <a class="btn btn-outline-dark" href="FormLevha.php?id=<?= $SetID ?>" target="_blank" rel="noreferrer noopener">Levha Formu</a>
-                    <a class="btn btn-outline-dark" href="FormPres.php?id=<?= $SetID ?>" target="_blank" rel="noreferrer noopener">Pres Formu</a>
-                    <a class="btn btn-outline-dark" href="FormBoya.php?id=<?= $SetID ?>" target="_blank" rel="noreferrer noopener">Boya Formu</a>
+                    <a class="btn btn-outline-dark" href="FormHesapBoya.php?id=<?= $SetID ?>" target="_blank" rel="noreferrer noopener">Boya Hesapla</a>
+                    <a class="btn btn-outline-dark" href="FormHesapLevha.php?id=<?= $SetID ?>" target="_blank" rel="noreferrer noopener">Levha Hesapla</a>
+                    <a class="btn btn-outline-dark" href="FormPres.php?id=<?= $SetID ?>" target="_blank" rel="noreferrer noopener">Preshane Formu</a>
+                    <a class="btn btn-outline-dark" href="FormBoya.php?id=<?= $SetID ?>" target="_blank" rel="noreferrer noopener">Boyahane Formu</a>
                 </div>
             </div>
             <div class="card-body row g-3">
@@ -212,7 +211,7 @@ require __DIR__ . '/Yuzde.php';
                                     echo "<script>" . $UrunLevhaYok . "</script>";
                                 }
                             }
-                            $SetBilgi = $baglanti->query('SELECT icBoya_ID,DisRenk,Adet FROM view_set_urun_sec WHERE Set_ID = ' . $SetID . " GROUP BY Adet")->fetchAll();
+                            $SetBilgi = $baglanti->query('SELECT Adet, icBoya, DisBoya FROM set_urun_icerik WHERE Set_ID = ' . $SetID)->fetchAll();
                             $UrunBilgi = $baglanti->query('SELECT UrunAdi,icBoya_ID,DisRenk,Adet FROM view_set_urun_sec WHERE Set_ID = ' . $SetID. " ORDER BY UrunAdi")->fetchAll();
                             ?>
                             <tr class="table-light text-center">
@@ -228,8 +227,8 @@ require __DIR__ . '/Yuzde.php';
                             <?php
                             foreach ($SetBilgi as $s) { ?>
                                 <tr>
-                                    <td><?= $baglanti->query('SELECT Renk FROM boya WHERE Boya_ID =' . $s["icBoya_ID"])->fetch()["Renk"] ?></td>
-                                    <td><?= $s["DisRenk"] ?></td>
+                                    <td><?= $baglanti->query('SELECT Renk FROM boya WHERE Boya_ID =' . $s["icBoya"])->fetch()["Renk"] ?></td>
+                                    <td><?= $baglanti->query('SELECT Renk FROM boya WHERE Boya_ID =' . $s["DisBoya"])->fetch()["Renk"] ?></td>
                                     <td><input class='Tadet' type='hidden' value='<?= $s['Adet'] ?>'><?= $s['Adet'] ?></td>
                                 </tr>
                             <?php } ?>

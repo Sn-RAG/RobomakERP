@@ -4,7 +4,7 @@ $Has = ".hasClass('btn-primary')";
 <script>
     $(function() {
         $.Listele = function() {
-            var SetID = $("#SetID").val();
+            var SetID = <?= $SetID ?>;
             var Urunler = <?= json_encode($Urunler) ?>;
 
             switch (true) {

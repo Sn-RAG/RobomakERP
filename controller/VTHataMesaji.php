@@ -25,6 +25,12 @@ $StokYok = "Swal.fire({
         text: 'Yeni sipariş açın.',
         confirmButtonText: 'Tamam',
     });";
+$BoyaBilgisiYok = "Swal.fire({
+        icon: 'error',
+        title: 'Boya Bilgisi yok!',
+        text: 'Ürün boya bilgilerini kontrol edin.',
+        confirmButtonText: 'Tamam',
+    });";
 $UrunLevhaYok = "Swal.fire({
         icon: 'error',
         title: 'Bazı Ürünlerin levha bilgisi yok!',
