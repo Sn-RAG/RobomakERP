@@ -3,11 +3,9 @@ $page = "Set Kontrol";
 require __DIR__ . '/../../controller/Header.php';
 require __DIR__ . '/../../controller/Db.php';
 require __DIR__ . '/../../controller/VTHataMesaji.php';
-if (!(isset($_SESSION["SetAdi"]))) {
-    @$_SESSION["SetAdi"] = $_GET['SetAdi'];
-}
-$SetID = isset($_GET['Set_ID']) ? $_GET['Set_ID'] : 0;
-if ($baglanti->query("SELECT  Set_ID FROM set_urunler_asama WHERE Set_ID = " . $SetID)->rowCount() <= 0) {
+@$SetAdi = $_GET['SetAdi'];
+@$SetID = (int)$_GET['Set_ID'];
+if ($baglanti->query("SELECT  Set_ID FROM set_urunler_asama WHERE Set_ID = " . $SetID)->rowCount() < 1) {
     $baglanti->query("INSERT INTO set_urunler_asama ( Set_ID, Urun_ID ) SELECT Set_ID,Urun_ID FROM view_uretim_setler WHERE Set_ID = $SetID ORDER BY Urun_ID");
 }
 date_default_timezone_set('Europe/Istanbul');
@@ -20,12 +18,14 @@ require __DIR__ . '/Yuzde.php';
         <div class="card">
             <div class="card-header d-flex justify-content-between">
                 <div><a href="../Setler.php" class="bi-arrow-left btn btn-secondary"> &nbsp&nbsp Geri Dön</a></div>
-                <h5 class='card-title text-center fs-5'><?= isset($_SESSION["SetAdi"]) ? $_SESSION["SetAdi"] : "" ?></h5>
+                <h5 class='card-title text-center fs-5'><?= $SetAdi ?></h5>
                 <div>
-                    <a class="btn btn-outline-dark" href="FormHesapBoya.php?id=<?= $SetID ?>" target="_blank" rel="noreferrer noopener">Boya Hesapla</a>
-                    <a class="btn btn-outline-dark" href="FormHesapLevha.php?id=<?= $SetID ?>" target="_blank" rel="noreferrer noopener">Levha Hesapla</a>
-                    <a class="btn btn-outline-dark" href="FormPres.php?id=<?= $SetID ?>" target="_blank" rel="noreferrer noopener">Preshane Formu</a>
-                    <a class="btn btn-outline-dark" href="FormBoya.php?id=<?= $SetID ?>" target="_blank" rel="noreferrer noopener">Boyahane Formu</a>
+                    <div class="btn-group btn-group-sm">
+                        <a class="btn btn-outline-dark" href="FormHesapBoya.php?id=<?= $SetID ?>&adi=<?= $SetAdi ?>" target="_blank" rel="noreferrer noopener">Boya Hesapla</a>
+                        <a class="btn btn-outline-dark" href="FormHesapLevha.php?id=<?= $SetID ?>&adi=<?= $SetAdi ?>" target="_blank" rel="noreferrer noopener">Levha Hesapla</a>
+                        <a class="btn btn-outline-dark" href="FormPres.php?id=<?= $SetID ?>&adi=<?= $SetAdi ?>" target="_blank" rel="noreferrer noopener">Preshane Formu</a>
+                        <a class="btn btn-outline-dark" href="FormBoya.php?id=<?= $SetID ?>&adi=<?= $SetAdi ?>" target="_blank" rel="noreferrer noopener">Boyahane Formu</a>
+                    </div>
                 </div>
             </div>
             <div class="card-body row g-3">
@@ -212,7 +212,7 @@ require __DIR__ . '/Yuzde.php';
                                 }
                             }
                             $SetBilgi = $baglanti->query('SELECT Adet, icBoya, DisBoya FROM set_urun_icerik WHERE Set_ID = ' . $SetID)->fetchAll();
-                            $UrunBilgi = $baglanti->query('SELECT UrunAdi,icBoya_ID,DisRenk,Adet FROM view_set_urun_sec WHERE Set_ID = ' . $SetID. " ORDER BY UrunAdi")->fetchAll();
+                            $UrunBilgi = $baglanti->query('SELECT UrunAdi,icBoya_ID,DisRenk,Adet FROM view_set_urun_sec WHERE Set_ID = ' . $SetID . " ORDER BY UrunAdi")->fetchAll();
                             ?>
                             <tr class="table-light text-center">
                                 <th colspan="6">SET BOYA BİLGİ</th>

@@ -4,10 +4,7 @@ require __DIR__ . '/../controller/Header.php';
 require __DIR__ . '/../controller/Db.php';
 require __DIR__ . '/../controller/Sil.php';
 if (isset($_SESSION["Set_ID"])) {
-    unset($_SESSION["Set_ID"]);
-}
-if (isset($_SESSION["SetAdi"])) {
-    unset($_SESSION["SetAdi"], $_SESSION["UrunIDler"], $_SESSION["KulpSec"], $_SESSION["mmSec"], $_SESSION["KapakSec"], $_SESSION["KutuSec"], $_SESSION["TepeSec"]);
+    unset($_SESSION["Set_ID"], $_SESSION["SetAdi"], $_SESSION["UrunIDler"], $_SESSION["KulpSec"], $_SESSION["mmSec"], $_SESSION["KapakSec"], $_SESSION["KutuSec"], $_SESSION["TepeSec"]);
 }
 ?>
 <main id="main" class="main">

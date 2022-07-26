@@ -13,7 +13,7 @@ $id = (int)$_GET["id"];
                     <button type="button" id="yazdir" class="btn btn-primary bi-printer mb-1">&nbsp Yazdır</button>
                 </div>
 
-                <h5 class="card-title">Set Adı: <?= $_SESSION["SetAdi"] ?> <code class="fs-5">+ %5 Fire</code></h5>
+                <h5 class="card-title">Set Adı: <?= $_GET["adi"] ?> <code class="fs-5">+ %5 Fire</code></h5>
                 <div class="yazdir">
                     <table class="table table-bordered">
                         <thead>
@@ -46,7 +46,7 @@ $id = (int)$_GET["id"];
                                     // KÖŞELİ HESAPLAMA
                                     $cl = $baglanti->query("SELECT * FROM urun WHERE Urun_ID=" . $s["Urun_ID"] . " AND UrunAdi LIKE '%Köşeli%'")->rowCount();
                                     if ($cl) {
-
+                                        $etk = true;
                                         $mm = $baglanti->query("SELECT Cap, Kalinlik FROM view_urun_levha_bilgi WHERE Kalinlik=" . $k . " AND Urun_ID=" . $s["Urun_ID"]);
                                         foreach ($mm as $m) {
                                             $Caplar[$say] = $m["Cap"];
@@ -62,18 +62,20 @@ $id = (int)$_GET["id"];
                                             $adt += $Fire;
                                         }
                                     } elseif ($sor) {
+                                        $etk = true;
                                         //KÖŞELİ HESAPLAMA SON
                                         $adt = $s["Adet"];
                                         $Fire = ceil(($s["Adet"] * 5) / 100);
                                         $adt += $Fire;
                                     } else {
+                                        $etk = false;
                                         $AdetKg = ceil((($c * $c * $k * (0.22)) / 1000) * $s["Adet"]);
 
                                         $Fire = ceil((ceil((($c * $c * $k * (0.22)) / 1000) * $s["Adet"]) * 5) / 100);
                                         $AdetKg += $Fire;
                                     }
 
-                                    @$yaz = $adt == null ? $AdetKg : $adt . " Adet";
+                                    @$yaz = $etk == false ? $AdetKg : $adt . " Adet";
                                     @$sp = $AdetKg == null ? 0 : $AdetKg;
                                     @$Topla += $AdetKg;
                             ?>

@@ -34,21 +34,20 @@ unset($_SESSION["SeticerikID"], $_SESSION["Setler"], $_SESSION["FirmaID"], $_SES
                         $sorgu2 = $baglanti->query('SELECT * FROM view_teklifler');
                         foreach ($sorgu2 as $sonuc) {
                             $id = $sonuc['Teklif_ID'];
-                            $Teslim_Tarihi = $sonuc['Teslim_Tarihi'];
+                            $TT = $sonuc['Teslim_Tarihi'];
                             $Firma = $sonuc['Firma'];
-                            $Urun_ID = $sonuc['Urun_ID'];
-                            $S_No = $sonuc['S_No'];
+                            $SNo = $sonuc['S_No'];
                         ?>
                             <tr>
                                 <td><?= $Firma ?></td>
                                 <td>
                                     <ol class='list-group list-group-numbered'>
                                         <?php
-                                        $Ad = $baglanti->query("SELECT * FROM view_teklifler_set_listele WHERE S_No=" . $S_No);
-                                        foreach ($Ad as $Adi) {
-                                            $Sid = $Adi["Set_ID"];
-                                            $Sadi = $Adi["SetAdi"];
-                                            $Adet = $Adi['Adet'];
+                                        $Adi = $baglanti->query("SELECT Set_ID, SetAdi, Adet FROM teklif_setler INNER JOIN set_icerik ON teklif_setler.Set_icerik_ID = set_icerik.Set_icerik_ID INNER JOIN view_uretim_setler ON set_icerik.Set_Urun_ID = view_uretim_setler.Set_Urun_ID WHERE S_No=" . $SNo);
+                                        foreach ($Adi as $Ad) {
+                                            $Sid = $Ad["Set_ID"];
+                                            $Sadi = $Ad["SetAdi"];
+                                            $Adet = $Ad['Adet'];
                                         ?>
                                             <li class='list-group-item d-flex justify-content-between align-items-start'>
                                                 <div class='ms-2 me-auto small'>
@@ -69,16 +68,12 @@ unset($_SESSION["SeticerikID"], $_SESSION["Setler"], $_SESSION["FirmaID"], $_SES
                                                             <a href="HesapLevha.php?id=<?= $Sid ?>&adet=<?= $Adet ?>&adi=<?= $Sadi ?>" class='btn btn-success mb-3'><?= $Sadi ?> Levha Hesabı</a>
                                                             <div class="row">
                                                                 <?php
-                                                                $Aa = $baglanti->query("SELECT UrunAdi, Aciklama FROM set_urun INNER JOIN urun ON set_urun.Urun_ID = urun.Urun_ID WHERE set_urun.Set_ID=" . $Sid);
+                                                                $Aa = $baglanti->query("SELECT UrunAdi FROM set_urun INNER JOIN urun ON set_urun.Urun_ID = urun.Urun_ID WHERE set_urun.Set_ID=" . $Sid);
                                                                 foreach ($Aa as $A) { ?>
                                                                     <div class='col-md-6'>
                                                                         <div class='fw-bold'><?= $A["UrunAdi"] ?></div>
-                                                                        <?= $A["Aciklama"] ?>
                                                                     </div>
                                                                 <?php } ?>
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -87,71 +82,14 @@ unset($_SESSION["SeticerikID"], $_SESSION["Setler"], $_SESSION["FirmaID"], $_SES
                                         <?php } ?>
                                     </ol>
                                 </td>
-                                <td><?= $Teslim_Tarihi ?></td>
+                                <td><?= $TT ?></td>
                                 <td>
                                     <button type="button" class="btn btn-info bi-info-circle" data-bs-toggle="modal" data-bs-target="#Bilgi<?= $id ?>">
                                     </button>
-                                    <a href="Teklifler.php?TeklifSil=<?= $id ?>&S_No=<?= $S_No ?>" class="btn btn-danger bi-x-square">
+                                    <a href="Teklifler.php?TeklifSil=<?= $id ?>&S_No=<?= $SNo ?>" class="btn btn-danger bi-x-square">
                                     </a>
                                 </td>
                             </tr>
-
-                            <div class="modal fade" id="Bilgi<?= $id ?>" tabindex="-1" aria-hidden="true" style="display: none;">
-                                <div class="modal-dialog modal-dialog-centered">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title">Bilgi</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <div class="row mb-3">
-                                                <label for="inputText" class="col-sm-3 col-form-label">Firma Adı</label>
-                                                <div class="col-sm-9">
-                                                    <input value="<?= $Firma ?>" class="form-control" disabled>
-                                                </div>
-                                            </div>
-
-                                            <div class="row mb-3">
-                                                <label class="col-sm-3 col-form-label">Teslim Tarihi</label>
-                                                <div class="col-sm-9">
-                                                    <input value="<?= $Teslim_Tarihi ?>" class="form-control" disabled>
-                                                </div>
-                                            </div>
-
-                                            <div class="row mb-3">
-                                                <label class="col-sm-3 col-form-label">Yetkili Adı</label>
-                                                <div class="col-sm-9">
-                                                    <input value="<?= $sonuc['YetkiliAdi'] ?>" class="form-control" disabled>
-                                                </div>
-                                            </div>
-
-                                            <div class="row mb-3">
-                                                <label class="col-sm-3 col-form-label">Yetkili Telefon</label>
-                                                <div class="col-sm-9">
-                                                    <input value="<?= $sonuc['YetkiliAdi'] ?>" class="form-control" disabled>
-                                                </div>
-                                            </div>
-
-                                            <div class="row mb-3">
-                                                <label class="col-sm-3 col-form-label">Sipariş Açan Kullanıcı</label>
-                                                <div class="col-sm-9">
-                                                    <input value="<?= $sonuc['AdSoyad'] ?>" class="form-control" disabled>
-                                                </div>
-                                            </div>
-
-                                            <div class="row mb-3">
-                                                <label class="col-sm-3 col-form-label">Düzenleme Tarihi</label>
-                                                <div class="col-sm-9">
-                                                    <input value="<?= $sonuc['Duzenleme_Tarihi'] ?>" class="form-control" disabled>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                         <?php } ?>
                     </tbody>
                 </table>

@@ -66,17 +66,16 @@ if (isset($_POST['UrunLevhaBilgiEkle'])) {
     $C = $_POST['Cap'];
     $K = $_POST['Kalinlik'];
 
-//-----------------------------------------------------Levha Varmı Yok mu Sorgu /// Yoksa ekle
+    //-----------------------------------------------------Levha Varmı Yok mu Sorgu /// Yoksa ekle
     $Varmi = $baglanti->prepare("SELECT Levha_ID FROM levha WHERE Tip= ? AND Cap= ? AND Kalinlik= ?");
     $Varmi->execute(array($T, $C, $K));
-//--------------------------------------------------LEVHA VARMI SOR
+    //--------------------------------------------------LEVHA VARMI SOR
     if ($Varmi->rowCount()) {
         $Kaydet = $baglanti->prepare("INSERT INTO urun_levha_bilgi SET Urun_ID= ?, Levha_ID= ?, Kullanici_ID= ?");
         $SonucSor = $Kaydet->execute(array($ID, $Varmi->fetch()['Levha_ID'], $Kullanici));
         header("location:UrunLevhaBilgi.php?Urun_ID=$ID");
-
     } else {
-//--------------------------------------------------LEVHA BİLGİSİ YOKSA EKLE
+        //--------------------------------------------------LEVHA BİLGİSİ YOKSA EKLE
         $Kaydet = $baglanti->prepare("INSERT INTO levha SET Tip= ?, Cap= ?, Kalinlik= ?");
         $Kaydet->execute(array($T, $C, $K));
         $Yeniid = $baglanti->lastInsertId();
@@ -119,9 +118,9 @@ if (isset($_POST['FirmaEkle'])) {
             $Sonuc = $FirmaKaydet->execute(array($Firma, $VD, $Vergi_No, $Adres_ID, $Tel_ID, $E_Posta, $Web_Sitesi, $Aciklama, $YetkiliAdi, $YetkiliTel, $Kullanici));
         }
     }
-    if ($_GET["Sec"]=="true"){
+    if ($_GET["Sec"] == "true") {
         header("location:Firmalar.php?Sec=true");
-    }else{
+    } else {
         header("location:Firmalar.php");
     }
 }
@@ -129,26 +128,30 @@ if (isset($_POST['FirmaEkle'])) {
 //#######################################################################        SİPARİŞ İŞLEMLERİ      ##########################################################################################
 //---------------------------------------Sipariş GİDEN Ekle
 if (isset($_POST['Teklifver'])) {
-    $Say = $baglanti->query("SELECT COUNT(*) AS S_No FROM view_teklifler");
-    $SNo = $Say->fetch()['S_No'];
-    $SNo++;
-    for ($i = 0; $i < count($_SESSION["Setler"]); $i++) {
-        $Kaydet = $baglanti->prepare("INSERT INTO teklif_setler SET S_No= ?, Firma_ID= ?, Set_icerik_ID= ?, Adet= ?");
-        $Sonuc = $Kaydet->execute(array($SNo, $_SESSION["FirmaID"], $_SESSION["Setler"][$i], $_SESSION["Adetler"][$i]));
+    if (isset($_SESSION["Setler"]) || isset($_SESSION["Adetler"]) || isset($_SESSION["FirmaID"])) {
+        $Say = $baglanti->query("SELECT COUNT(*) AS S_No FROM view_teklifler");
+        $SNo = $Say->fetch()['S_No'];
+        $SNo++;
+        for ($i = 0; $i < count($_SESSION["Setler"]); $i++) {
+            $Kaydet = $baglanti->prepare("INSERT INTO teklif_setler SET S_No= ?, Firma_ID= ?, Set_icerik_ID= ?, Adet= ?");
+            $Sonuc = $Kaydet->execute(array($SNo, $_SESSION["FirmaID"], $_SESSION["Setler"][$i], $_SESSION["Adetler"][$i]));
+        }
+
+        $id = $baglanti->lastInsertId();
+
+        $Kaydet = $baglanti->prepare("INSERT INTO teklifler SET Teklif_Set_ID= ?, Teslim_Tarihi= ?, Kullanici_ID= ?");
+        $Sonuc = $Kaydet->execute(array($id, $_POST['Teslim_Tarihi'], $Kullanici));
+        unset($_SESSION["Setler"], $_SESSION["Adetler"], $_SESSION["FirmaID"]);
+        header("location:Teklifler.php");
+    } else {
+        echo $DbHata;
     }
-
-    $id = $baglanti->lastInsertId();
-
-    $Kaydet = $baglanti->prepare("INSERT INTO teklifler SET Teklif_Set_ID= ?, Teslim_Tarihi= ?, Kullanici_ID= ?");
-    $Sonuc = $Kaydet->execute(array($id, $_POST['Teslim_Tarihi'], $Kullanici));
-    unset($_SESSION["Setler"],$_SESSION["Adetler"],$_SESSION["FirmaID"]);
-    header("location:Teklifler.php");
 }
 
 ########################################   Kulp Sipariş Ekle
 
 if (isset($_POST['KulpSiparis'])) {
-    $TFirma = 1;//$_POST['TFirma'];
+    $TFirma = 1; //$_POST['TFirma'];
     $KulpAdi = $_POST['KulpAdi'];
     $Cesit = $_POST['Cesit'];
     $KulpRenk = $_POST['KulpRenk'];
@@ -172,7 +175,7 @@ if (isset($_POST['KulpSiparis'])) {
     $Siparis->execute(array("Kulp", $Adet, 0, $S_Tarihi, $Kullanici));
     $Siparis_ID = $baglanti->lastInsertId();
 
-//--------------------------STOĞA EKLE
+    //--------------------------STOĞA EKLE
     $StokKaydet = $baglanti->prepare("INSERT INTO kulp_stok SET Siparis_Adet= ?");
     $StokKaydet->execute(array($Adet));
     $StokID = $baglanti->lastInsertId();
@@ -181,7 +184,6 @@ if (isset($_POST['KulpSiparis'])) {
     $siparisKaydet->execute(array((int)$Siparis_ID, (int)$StokID, (int)$Kulp_ID));
 
     header("location:Siparis.php");
-
 }
 
 
@@ -201,7 +203,7 @@ if (isset($_POST['YeniSetKayit'])) {
     $T_DisUtKat = $_POST['T_DisUtKat'];
 
 
-//                                                            Levha Sipariş Kontrolü
+    //                                                            Levha Sipariş Kontrolü
 
 
     $Urun = $baglanti->query("SELECT Urun_ID, Adet, Kalinlik, Cap FROM yeniset_gram");
@@ -224,7 +226,7 @@ if (isset($_POST['YeniSetKayit'])) {
                 $StokKg = $SrU['ToplamKg'];
                 $StokAdet = $SrU['ToplamAdet'];
 
-// Ürünün Levhası Stokta Yeteri Kadar Var
+                // Ürünün Levhası Stokta Yeteri Kadar Var
 
                 if ($UrunKg <= $StokKg & $UrunAdet <= $StokAdet) {
                     $sumKG = $StokKg - $UrunKg;
@@ -233,7 +235,7 @@ if (isset($_POST['YeniSetKayit'])) {
                     $Kaydet = $baglanti->prepare("INSERT INTO yeniset_levha SET Urun_ID= ?, Kg= ?, Adet= ?");
                     $Kaydet->execute(array($UrunID, $sumKG, $sumAdet));
 
-// Ürünün Levhası Stokta Az Miktarda Var
+                    // Ürünün Levhası Stokta Az Miktarda Var
 
                 } else {
                     $sumKG_Eksik = $StokKg - $UrunKg;
@@ -244,7 +246,7 @@ if (isset($_POST['YeniSetKayit'])) {
                 }
             }
 
-// Ürünün Levhası Stokta Hiç Yok
+            // Ürünün Levhası Stokta Hiç Yok
 
         } else {
             $sum = $Cap * $Cap * $Kalinlik * 0.22;

@@ -19,7 +19,7 @@ $SetID = (int)$_GET["id"];
                     </div>
                     <div class="d-flex border border-dark m-1 mb-5 text-black">
                         <h5 class="p-2 card-text border-end m-0 text-center"> &nbsp FİRMA &nbsp </h5>
-                        <h5 class="p-2 flex-fill card-text text-center"> &nbsp <?= $_SESSION["SetAdi"] ?> &nbsp </h5>
+                        <h5 class="p-2 flex-fill card-text text-center"> &nbsp <?= $_GET["adi"] ?> &nbsp </h5>
                     </div>
                     <table class="table table-sm table-bordered">
                         <thead>
@@ -50,7 +50,7 @@ $SetID = (int)$_GET["id"];
                                         <td><?= $s["UrunAdi"] ?></td>
                                         <td><?= $C->fetch()["Cap"] ?> cm</td>
                                         <td><?= $baglanti->query("SELECT Kalinlik FROM view_urun_levha_bilgi WHERE Levha_ID=" . $s['Levha_ID'] . " AND Urun_ID=" . $Uid)->fetch()["Kalinlik"] ?> mm</td>
-                                        <td><?= $baglanti->query('SELECT Adet FROM set_urun_icerik WHERE Set_ID =' . $SetID)->fetch()["Adet"] ?></td>
+                                        <td><?= $baglanti->query('SELECT SUM(Adet) AS Adet FROM set_urun_icerik WHERE Set_ID =' . $SetID)->fetch()["Adet"] ?></td>
                                         <td></td>
                                         <td></td>
                                         <td></td>

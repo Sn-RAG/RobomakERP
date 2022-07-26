@@ -1,10 +1,12 @@
 <?php
-$DbHata = "<script>Swal.fire({
+$DbHata = "<script>
+        Swal.fire({
         icon: 'error',
         title: 'Hata!',
-        text: 'Üzgünüm beklenmedik bir hatayla karşılaştın! Lütfen girişlerini kontrol et!',
+        text: 'Lütfen girişleri kontrol et!',
         confirmButtonText: 'Tamam',
-    })</script>";
+        })
+        </script>";
 
 $FazlaDeger = "Swal.fire({
         icon: 'warning',

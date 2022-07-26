@@ -15,7 +15,7 @@ $Say=count($Boyalar);
                     <div class="d-flex border border-dark m-1 mb-5 text-black">
                         <h5 class="p-2 flex-fill col-md-4 card-text border-end m-0 text-center"> &nbsp BOYAHANE ÜRETİM FORMU &nbsp </h5>
                         <h5 class="p-2 flex-fill col-md-2 card-text border-end m-0 text-center"> &nbsp FİRMA &nbsp </h5>
-                        <h5 class="p-2 flex-fill col-md-6 card-text text-center"> &nbsp <?= $_SESSION["SetAdi"] ?> &nbsp </h5>
+                        <h5 class="p-2 flex-fill col-md-6 card-text text-center"> &nbsp <?= $_GET["adi"] ?> &nbsp </h5>
                     </div>
                     <table class="table table-sm table-bordered text-center">
                         <thead>

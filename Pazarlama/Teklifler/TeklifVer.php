@@ -28,7 +28,7 @@ if (isset($_SESSION["Setler"])){
                             <h5 class="modal-title"><?= $page ?></h5>
                             <a href="Teklifler.php" class="btn btn-secondary bi-arrow-left">&nbsp Geri</a>
                         </div>
-                        <form class="row g-3" method="post">
+                        <form class="row g-3 needs-validation was-validated" novalidate="" method="post">
                             <h5></h5>
                             <?= isset($_SESSION["FirmaID"]) ? "<div class='input-group'><input type='button' class='form-control btn' value='$_SESSION[FirmaAdi]'>$Fdegis</div>" : $Fdegis ?>
 
@@ -36,7 +36,7 @@ if (isset($_SESSION["Setler"])){
 
                             <div class="col-md-12">
                                 <label>Teslim Tarihi</label>
-                                <input type="date" class="form-control" name="Teslim_Tarihi">
+                                <input type="date" class="form-control" name="Teslim_Tarihi" required="">
                             </div>
                             <div class="text-center">
                                 <button name="Teklifver" type="submit" class="btn btn-primary bi-save"> Kaydet
