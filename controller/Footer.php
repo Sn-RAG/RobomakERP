@@ -1,6 +1,7 @@
 <?php
 require __DIR__ . "/Link.php";
 ?>
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center bi-arrow-up-short"></a>
 <!-- Vendor JS Files -->
 <script src="<?= $Link ?>assets/vendor/apexcharts/apexcharts.min.js"></script>
 <script src="<?= $Link ?>assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

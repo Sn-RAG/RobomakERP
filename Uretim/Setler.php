@@ -56,10 +56,10 @@ if (isset($_SESSION["Set_ID"])) {
                                     <td><a href="SetKontrol/SetKontrol.php?SetAdi=<?= $SetAdi ?>&Set_ID=<?= $SetID ?>" class="btn btn-light form-control mt-1 fw-bold"><?= $SetAdi ?></a></td>
                                     <td>
                                         <div class="progress mt-2" style="height: 25px;">
-                                            <div class="progress-bar" role="progressbar" style="width: <?= $SorYuzde ?>%"><?= $SorYuzde ?>%</div>
+                                            <div class="progress-bar" role="progressbar" style="width: <?= $SorYuzde <= 5 ? 5 : $SorYuzde ?>%"><?= $SorYuzde ?>%</div>
                                         </div>
                                     </td>
-                                    <td><a href='Setler.php?UretimSetlerSil=<?= $id ?>&Set_ID=<?= $SetID ?>' class='bi-trash btn btn-danger'></a></td>
+                                    <td class="text-center"><a href='Setler.php?UretimSetlerSil=<?= $id ?>&Set_ID=<?= $SetID ?>' class='bi-trash btn btn-danger'></a></td>
                             <?php }
                                 echo "</tr>";
                             }
@@ -80,6 +80,14 @@ if (isset($_SESSION["Set_ID"])) {
             {
                 targets: 4,
                 orderable: false
+            },
+            {
+                "width": "50%",
+                "targets": 2
+            },
+            {
+                "width": "10%",
+                "targets": 4
             }
         ],
         pageLength: 100,

@@ -33,15 +33,9 @@ if (isset($_POST['UrunDuzenle'])) {
 }
 //----------------------------------------------- Urun BOYA Bilgisi Düzenle
 if (isset($_POST['UrunBoyaBilgiDuzenle'])) {
-    $id = $_POST['Urun_Boya_Bilgi_ID'];
     $Urun_ID = $_POST['Urun_ID'];
-    $BoyaTipi = $_POST['BoyaTipi'];
-    $İcAstar = $_POST['icAstar'];
-    $icUstkat = $_POST['icUstkat'];
-    $DisAstar = $_POST['DisAstar'];
-    $DisUstkat = $_POST['DisUstkat'];
-    $SetKaydet = $baglanti->prepare("UPDATE Urun_Boya_Bilgi SET Urun_ID= ?, BoyaTipi= ?, icAstar= ?, icUstkat= ?, DisAstar= ?, DisUstkat= ?, Kullanici_ID= ? WHERE Urun_Boya_Bilgi_ID= ?");
-    $SonucSor = $SetKaydet->execute(array($Urun_ID, $BoyaTipi, $İcAstar, $icUstkat, $DisAstar, $DisUstkat, $Kullanici, $id));
+    $SetKaydet = $baglanti->prepare("UPDATE urun_boya_bilgi SET Urun_ID= ?, Marka= ?, Renk= ?, icAstar= ?, icUstkat= ?, DisAstar= ?, DisUstkat= ?, Kullanici_ID= ? WHERE Urun_Boya_Bilgi_ID= ?");
+    $SonucSor = $SetKaydet->execute(array($Urun_ID, $_POST['Marka'], $_POST['Renk'], $_POST['icAstar'], $_POST['icUstkat'], $_POST['DisAstar'], $_POST['DisUstkat'], $Kullanici, $_POST['Urun_Boya_Bilgi_ID']));
     header("location:UrunBoyaBilgi.php?Urun_ID=$Urun_ID");
 }
 //---------------------////////-------------------------- Urun LEVHA Bilgisi Düzenle
@@ -53,9 +47,9 @@ if (isset($_POST['UrunLevhaBilgiDuzenle'])) {
 
     $Sor = $baglanti->prepare("SELECT Levha_ID FROM levha WHERE Tip= ? AND Cap= ? AND Kalinlik= ?");
     $Sor->execute(array($Tip, $Cap, $Kalinlik));
-    if($Sor->rowCount()){
+    if ($Sor->rowCount()) {
         $Levha_ID = $Sor->fetch()['Levha_ID'];
-    }else{
+    } else {
         $Kaydet = $baglanti->prepare("INSERT INTO levha SET Tip= ?, Cap= ?, Kalinlik= ?");
         $Kaydet->execute(array($Tip, $Cap, $Kalinlik));
         $Levha_ID = $baglanti->lastInsertId();

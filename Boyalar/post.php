@@ -9,17 +9,9 @@ $Kullanici = $bakKul['Kullanici_ID'];
 
 if (isset($_POST['Gelen'])) {
     $Boya_Stok_ID = (int)$_POST['BoyaStokID'];
-    $T_Tarihi = $_POST['T_Tarihi'];
-
-//Boya Stok
-
+    $TT = $_POST['T_Tarihi'];
     $StokMiktar = (int)$_POST['StokMiktar'];
-
-//Sipariş Edilen
-
     $SipMiktar = (int)$_POST['SipMiktar'];
-
-//Gelen Miktar
     $GirMiktar = (int)$_POST['GirMiktar'];
 
     $TplMevcutMiktar = $GirMiktar + $StokMiktar;
@@ -32,21 +24,21 @@ if (isset($_POST['Gelen'])) {
     $Varmi = $baglanti->query("SELECT Boya_Stok_ID FROM boya_gelen WHERE Boya_Stok_ID=" . $Boya_Stok_ID);
     if ($Varmi->rowCount()) {
         $VarmiT = $baglanti->prepare("SELECT Teslim_Tarihi FROM boya_gelen WHERE Teslim_Tarihi= ?");
-        $VarmiT->execute(array($T_Tarihi));
-//--------------------------STOĞA EKLE
+        $VarmiT->execute(array($TT));
+        //--------------------------STOĞA EKLE
         if ($VarmiT->rowCount()) {
             $GelenLKaydet = $baglanti->prepare("UPDATE boya_gelen SET Boya_Stok_ID= ?, Stok_Miktar= Stok_Miktar+?,  Teslim_Tarihi= ?, Kullanici_ID= ? WHERE Boya_Stok_ID= ? AND Teslim_Tarihi= ?");
-            $GelenLKaydet->execute(array($Boya_Stok_ID, $GirMiktar, $T_Tarihi, $Kullanici, $Boya_Stok_ID, "$T_Tarihi"));
+            $GelenLKaydet->execute(array($Boya_Stok_ID, $GirMiktar, $TT, $Kullanici, $Boya_Stok_ID, "$TT"));
         } else {
             $GelenLKaydet = $baglanti->prepare("INSERT INTO boya_gelen SET Boya_Stok_ID= ?, Stok_Miktar= ?, Teslim_Tarihi= ?, Kullanici_ID= ?");
-            $GelenLKaydet->execute(array($Boya_Stok_ID, $GirMiktar, $T_Tarihi, $Kullanici));
+            $GelenLKaydet->execute(array($Boya_Stok_ID, $GirMiktar, $TT, $Kullanici));
         }
     } else {
         $GelenLKaydet = $baglanti->prepare("INSERT INTO boya_gelen SET Boya_Stok_ID= ?,  Stok_Miktar= ?, Teslim_Tarihi= ?, Kullanici_ID= ?");
-        $GelenLKaydet->execute(array($Boya_Stok_ID, $TplMevcutMiktar, $T_Tarihi, $Kullanici));
+        $GelenLKaydet->execute(array($Boya_Stok_ID, $TplMevcutMiktar, $TT, $Kullanici));
     }
 
-////////   //////////// // Üretim Tarihini Ekle
+    ////////   //////////// // Üretim Tarihini Ekle
 
     $UrT = $baglanti->prepare("SELECT Boya_Tarih_ID FROM boya_tarih WHERE Uretim_T= ?");
     $UrT->execute(array($_POST['Uretim_T']));
@@ -68,15 +60,15 @@ if (isset($_POST['Gelen'])) {
     $Boya_Stok_ID = (int)$_POST['KBoyaStokID'];
     $K_Tarihi = $_POST['Kullanma_T'];
 
-//Boya Stok
+    //Boya Stok
 
     $StokMiktar = (int)$_POST['KStokMiktar'];
 
-//Kullanılmış
+    //Kullanılmış
 
     $K_Miktar = (int)$_POST['K_Miktar'];
 
-//Gelen Miktar
+    //Gelen Miktar
     $GirMiktar = (int)$_POST['KGirMiktar'];
 
     $TplMevcutMiktar = $GirMiktar + $K_Miktar;
@@ -93,7 +85,6 @@ if (isset($_POST['Gelen'])) {
         if ($VarmiT->rowCount()) {
             $Kaydet = $baglanti->prepare("UPDATE boya_giden SET Boya_Stok_ID= ?, Kullanilan_Miktar= Kullanilan_Miktar+?, Gidis_Tarihi= ?, Kullanici_ID= ? WHERE Boya_Stok_ID= ? AND Gidis_Tarihi=?");
             $Kaydet->execute(array($Boya_Stok_ID, $GirMiktar, $K_Tarihi, $Kullanici, $Boya_Stok_ID, "$K_Tarihi"));
-
         } else {
             $Kaydet = $baglanti->prepare("INSERT INTO boya_giden SET Boya_Stok_ID= ?, Kullanilan_Miktar= ?, Gidis_Tarihi= ?, Kullanici_ID= ?");
             $Kaydet->execute(array($Boya_Stok_ID, $GirMiktar, $K_Tarihi, $Kullanici));
@@ -102,17 +93,15 @@ if (isset($_POST['Gelen'])) {
         $Kaydet = $baglanti->prepare("INSERT INTO boya_giden SET Boya_Stok_ID= ?, Kullanilan_Miktar= ?, Gidis_Tarihi= ?, Kullanici_ID= ?");
         $Kaydet->execute(array($Boya_Stok_ID, $TplMevcutMiktar, $K_Tarihi, $Kullanici));
     }
-}elseif (isset($_POST["StkID"])){
-    $S=$_POST["StkID"];
-    $M=$_POST["iMiktar"];
-    $k=$baglanti->prepare("UPDATE boya_stok SET Siparis_Miktar=Siparis_Miktar-?,iade_Miktar= ? WHERE Boya_Stok_ID= ?");
-    $k->execute(array($M,$M,$S));
-
-}elseif (isset($_POST["EStkID"])){
-    $S=$_POST["EStkID"];
-    $M=$_POST["EMiktar"];
+} elseif (isset($_POST["StkID"])) {
+    $S = $_POST["StkID"];
+    $M = $_POST["iMiktar"];
+    $k = $baglanti->prepare("UPDATE boya_stok SET Siparis_Miktar=Siparis_Miktar-?,iade_Miktar= ? WHERE Boya_Stok_ID= ?");
+    $k->execute(array($M, $M, $S));
+} elseif (isset($_POST["EStkID"])) {
+    $S = $_POST["EStkID"];
+    $M = $_POST["EMiktar"];
 
     $k = $baglanti->prepare("UPDATE boya_stok SET Siparis_Miktar=Siparis_Miktar-?,Emanet_Miktar= ? WHERE Boya_Stok_ID= ?");
     $k->execute(array($M, $M, $S));
-
 }

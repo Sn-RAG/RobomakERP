@@ -36,8 +36,8 @@ $id = (int)$_GET["id"];
                                 $icRenk = $baglanti->query('SELECT Renk FROM boya WHERE Boya_ID =' . $b["icBoya_ID"])->fetch()["Renk"];
                                 $disRenk = $b["DisRenk"];
 
-                                $icBoya = $baglanti->query("SELECT icAstar,icUstkat FROM view_urun_boya_bilgi WHERE Urun_ID = " . $Uid . " AND BoyaTipi='$icRenk'");
-                                $disBoya = $baglanti->query("SELECT DisAstar,DisUstkat FROM view_urun_boya_bilgi WHERE Urun_ID = " . $Uid . " AND BoyaTipi='$disRenk'");
+                                $icBoya = $baglanti->query("SELECT icAstar,icUstkat FROM view_urun_boya_bilgi WHERE Urun_ID = " . $Uid . " AND Renk='$icRenk'");
+                                $disBoya = $baglanti->query("SELECT DisAstar,DisUstkat FROM view_urun_boya_bilgi WHERE Urun_ID = " . $Uid . " AND Renk='$disRenk'");
 
                                 if ($icBoya->rowCount() && $disBoya->rowCount()) {
                                     //toplam ic boya

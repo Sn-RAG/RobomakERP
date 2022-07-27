@@ -169,4 +169,4 @@ if ($p <> null) { //Paketleme
     $Paket = floor($p / ($Toplam / 100));
     $Paket = $Paket > 100 ? 100 : $Paket;
 }
-$SetYuzde = floor(($Hesap + $Prs + $Yika + $Kumla + $Telle + $Boya + $Paket) / 7);
+$SetYuzde = floor(($Prs + $Yika + $Kumla + $Telle + $Boya + $Paket) / 6);
