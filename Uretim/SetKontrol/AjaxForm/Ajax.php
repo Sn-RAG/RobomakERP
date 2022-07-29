@@ -3,6 +3,8 @@ $Has = ".hasClass('btn-primary')";
 ?>
 <script>
     $(function() {
+        $('.icRenk').prop("hidden", true);
+        $('.DisRenk').prop("hidden", true);
         $.Listele = function() {
             var SetID = <?= $SetID ?>;
             var Urunler = <?= json_encode($Urunler) ?>;
@@ -75,6 +77,10 @@ $Has = ".hasClass('btn-primary')";
         var SetID = $(".GDeger").attr("SetID");
         var Uid = [];
         var LevhaID = [];
+
+        var iBoya = $(".icRenk").val();
+        var dBoya = $(".DisRenk").val();
+
         var deger = [];
         var Tarih = $(".Tarih").val();
         var sum = 0;
@@ -128,6 +134,8 @@ $Has = ".hasClass('btn-primary')";
                     'UrunID': Uid,
                     'Deger': deger,
                     'LevhaID': LevhaID,
+                    'dBoya': dBoya,
+                    'iBoya': iBoya,
                     'Hangisi': Hangisi,
                     'Tarih': Tarih
                 },
@@ -209,6 +217,8 @@ $Has = ".hasClass('btn-primary')";
         $(this).addClass("btn-primary");
         $.Listele();
         $('.fire').prop("hidden", true);
+        $('.icRenk').prop("hidden", true);
+        $('.DisRenk').prop("hidden", true);
 
     });
     $("#Kumlama").click(function() {
@@ -218,6 +228,8 @@ $Has = ".hasClass('btn-primary')";
         $(this).addClass("btn-primary");
         $.Listele();
         $('.fire').prop("hidden", true);
+        $('.icRenk').prop("hidden", true);
+        $('.DisRenk').prop("hidden", true);
     });
     $("#icBoyama").click(function() {
         $.tmz();
@@ -226,6 +238,8 @@ $Has = ".hasClass('btn-primary')";
         $(this).addClass("btn-primary");
         $.Listele();
         $('.fire').prop("hidden", true);
+        $('.icRenk').prop("hidden", false);
+        $('.DisRenk').prop("hidden", true);
     });
     $("#DisBoyama").click(function() {
         $.tmz();
@@ -234,6 +248,8 @@ $Has = ".hasClass('btn-primary')";
         $(this).addClass("btn-primary");
         $.Listele();
         $('.fire').prop("hidden", true);
+        $('.icRenk').prop("hidden", true);
+        $('.DisRenk').prop("hidden", false);
     });
     $("#Paketleme").click(function() {
         $.tmz();
@@ -242,6 +258,8 @@ $Has = ".hasClass('btn-primary')";
         $(this).addClass("btn-primary");
         $.Listele();
         $('.fire').prop("hidden", true);
+        $('.icRenk').prop("hidden", true);
+        $('.DisRenk').prop("hidden", true);
     });
     $("#Pres").click(function() {
         $.tmz();
@@ -250,6 +268,8 @@ $Has = ".hasClass('btn-primary')";
         $(this).addClass("btn-primary");
         $.Listele();
         $('.fire').prop("hidden", false);
+        $('.icRenk').prop("hidden", true);
+        $('.DisRenk').prop("hidden", true);
     });
     $("#Yikama").click(function() {
         $.tmz();
@@ -258,6 +278,8 @@ $Has = ".hasClass('btn-primary')";
         $(this).addClass("btn-primary");
         $.Listele();
         $('.fire').prop("hidden", true);
+        $('.icRenk').prop("hidden", true);
+        $('.DisRenk').prop("hidden", true);
     });
     //#################      ########################################      ########################################      #######################
 

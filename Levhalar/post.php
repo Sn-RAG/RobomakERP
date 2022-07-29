@@ -8,29 +8,23 @@ $Kullanici = $bakKul['Kullanici_ID'];
 
 if (isset($_POST['StokEkle'])) {
     $id = $_POST['Levha_Stok_ID'];
+    $LevhaID = $_POST['LevhaID'];
     $TT = $_POST['T_Tarihi'];
 
-    $Stok_Adet = $_POST['Stok_Adet'];
-    $Stok_Agirlik = $_POST['Stok_Agirlik'];
-
-    $Adet = $_POST['SipAdet'];
-    $Agirlik = $_POST['SipAgirlik'];
+    $Tamam = $_POST['Tamam'];
 
     $GAdet = $_POST['GirAdet'];
     $GAgirlik = $_POST['GirAgirlik'];
 
-    $TplAdet = $Adet - $GAdet;
-    $TplAgirlik = $Agirlik - $GAgirlik;
+    $StokKaydet = $baglanti->prepare("UPDATE levha_stok SET Siparis_Adet=Siparis_Adet-?, Siparis_Agirlik=Siparis_Agirlik-?, Durum=? WHERE LevhaID= ?");
+    $StokKaydet->execute(array($GAdet, $GAgirlik, $Tamam, $LevhaID));
 
-    $StokKaydet = $baglanti->prepare("UPDATE levha_stok SET Siparis_Adet= ?, Siparis_Agirlik= ? WHERE Levha_Stok_ID= ?");
-    $StokKaydet->execute(array($TplAdet, $TplAgirlik, $id));
-
-    if ($baglanti->query("SELECT Levha_Stok_ID FROM levha_gelen WHERE  Teslim_Tarihi='$TT' AND Levha_Stok_ID=" . $id)->rowCount()) {
-        $GelenLKaydet = $baglanti->prepare("UPDATE levha_gelen SET Levha_Stok_ID= ?, Stok_Adet=Stok_Adet+?, Stok_Agirlik=Stok_Agirlik+?, Teslim_Tarihi= ?, Kullanici_ID= ? WHERE Levha_Stok_ID= ? AND Teslim_Tarihi= ?");
-        $GelenLKaydet->execute(array($id, $GAdet, $GAgirlik, $TT, $Kullanici, $id, "$TT"));
+    if ($baglanti->query("SELECT Levha_Stok_ID FROM levha_gelen WHERE  Teslim_Tarihi='$TT' AND LevhaID=" . $LevhaID)->rowCount()) {
+        $GelenLKaydet = $baglanti->prepare("UPDATE levha_gelen SET Levha_Stok_ID= ?, Stok_Adet=Stok_Adet+?, Stok_Agirlik=Stok_Agirlik+?, Teslim_Tarihi= ?, Kullanici_ID= ? WHERE LevhaID= ? AND Teslim_Tarihi= ?");
+        $GelenLKaydet->execute(array($id, $GAdet, $GAgirlik, $TT, $Kullanici, $LevhaID, "$TT"));
     } else {
-        $GelenLKaydet = $baglanti->prepare("INSERT INTO levha_gelen SET Levha_Stok_ID= ?,  Stok_Adet= ?, Stok_Agirlik= ?, Teslim_Tarihi= ?, Kullanici_ID= ?");
-        $GelenLKaydet->execute(array($id, $GAdet, $GAgirlik, $TT, $Kullanici));
+        $GelenLKaydet = $baglanti->prepare("INSERT INTO levha_gelen SET Levha_Stok_ID= ?, LevhaID=?, Stok_Adet= ?, Stok_Agirlik= ?, Teslim_Tarihi= ?, Kullanici_ID= ?");
+        $GelenLKaydet->execute(array($id, $LevhaID, $GAdet, $GAgirlik, $TT, $Kullanici));
     }
 }
 if (isset($_POST['Kullan'])) {
@@ -40,10 +34,6 @@ if (isset($_POST['Kullan'])) {
     //Stok
     $Stok_Adet = $_POST['KStokAdet'];
     $Stok_Agirlik = $_POST['KStokAgirlik'];
-
-    //Kullanılan
-    $KAdet = $_POST['KAdet'];
-    $KAgirlik = $_POST['KAgirlik'];
 
     //Girilen
     $GAdet = $_POST['KGirAdet'];

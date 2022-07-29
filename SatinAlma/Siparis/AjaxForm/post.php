@@ -67,8 +67,8 @@ if (isset($_POST['BoyaEkle'])) {
     //--------------------------STOĞA EKLE
     $L = $_SESSION["Levhalar"];
     for ($i = 0; $i < count($L); $i++) {
-        $StokKaydet = $baglanti->prepare("INSERT INTO levha_stok SET Siparis_Adet= ?, Siparis_Agirlik= ?");
-        $StokKaydet->execute(array($Adet[$i], $kg[$i]));
+        $StokKaydet = $baglanti->prepare("INSERT INTO levha_stok SET Siparis_Adet= ?, Siparis_Agirlik= ?, Durum=?, LevhaID= ?");
+        $StokKaydet->execute(array($Adet[$i], $kg[$i], 0, $L[$i]));
         $StokID = $baglanti->lastInsertId();
         //--------------------------Sipariş EKLE
         $Siparis = $baglanti->prepare("INSERT INTO siparis SET Siparis= ?, Adet= ?, Agirlik= ?, S_Tarihi= ?, Kullanici_ID= ?");

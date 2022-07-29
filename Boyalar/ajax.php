@@ -36,7 +36,7 @@
             var ID = $(this).attr("BoyaStokID");
 
             var Sipid = $('.Sipid' + ID + '').val();
-            var StokMiktar = $('.StokMiktar' + ID + '').val();
+            var BoyaID = $('.BoyaID' + ID + '').val();
             var GirMiktar = $('.GirMiktar' + ID + '').val();
             var T_Tarihi = $('.T_Tarihi' + ID + '').val();
 
@@ -61,7 +61,7 @@
                         'Uretim_T': Uretim_T,
                         'SipMiktar': SipMiktar,
                         'GirMiktar': GirMiktar,
-                        'StokMiktar': StokMiktar,
+                        'BoyaID': BoyaID,
                         'T_Tarihi': T_Tarihi,
                         'Gelen': true,
                     },

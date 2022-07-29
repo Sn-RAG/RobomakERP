@@ -99,8 +99,12 @@ if (isset($_POST['Listele'])) {
     $SetID = $_POST['SetID'];
     $UrunID = $_POST['UrunID'];
     $H = $_POST['Hangisi'];
-    $K_Tarihi = $_POST['Tarih'];
+    $KT = $_POST['Tarih'];
+
     $Levha = $_POST['LevhaID'];
+
+    $iBoya = $_POST['iBoya'];
+    $dBoya = $_POST['dBoya'];
 
     $Deger = $_POST['Deger'];
 
@@ -130,22 +134,30 @@ if (isset($_POST['Listele'])) {
         $tpl = $baglanti->query("SELECT " . $Ekle . " FROM set_urunler_asama WHERE Urun_ID = " . $UrunID[$i] . " AND Set_ID=" . $SetID)->fetch()[$Ekle];
         $sum = $Deger[$i] + $tpl;
         if ($Is == "Preslendi") {
-            if (StokDus($Deger[$i], $K_Tarihi, $Kullanici, $UrunID[$i], $SetID, $Levha[$i]) === 0) {
+            if (LStokDus($Deger[$i], $KT, $Kullanici, $UrunID[$i], $SetID, $Levha[$i]) === 0) {
                 echo "StokYok";
-            } else {
-                $guncelle = $baglanti->prepare("UPDATE set_urunler_asama SET " . $Ekle . "= ? WHERE Urun_ID=? AND Set_ID=?");
-                $guncelle->execute(array($sum, $UrunID[$i], $SetID));
-                echo $sum; //Anlık Post Ajax.
-                $kaydet = $baglanti->prepare("INSERT INTO set_urunler_asama_akis SET Set_ID= ?,Urun_ID= ?,Levha_ID= ?,Yapilan_is= ?,Adet= ?, Tarih= ?");
-                $kaydet->execute(array($SetID, $UrunID[$i], $Levha[$i], $Is, $Deger[$i], $K_Tarihi));
+                return;
             }
-        } else {
-            $guncelle = $baglanti->prepare("UPDATE set_urunler_asama SET " . $Ekle . "= ? WHERE Urun_ID=? AND Set_ID=?");
-            $guncelle->execute(array($sum, $UrunID[$i], $SetID));
-            echo $sum; //Anlık Post Ajax.
-            $kaydet = $baglanti->prepare("INSERT INTO set_urunler_asama_akis SET Set_ID= ?,Urun_ID= ?,Levha_ID= ?,Yapilan_is= ?,Adet= ?, Tarih= ?");
-            $kaydet->execute(array($SetID, $UrunID[$i], $Levha[$i], $Is, $Deger[$i], $K_Tarihi));
+        } elseif ($Is == "İçi Boyandı") {
+            if (BStokDus($Deger[$i], $KT, $Kullanici, $UrunID[$i], $SetID, $iBoya) === 0) {
+                echo "StokYok";
+                return;
+            } else {
+                $Boya = $iBoya;
+            }
+        } elseif ($Is == "Dışı Boyandı") {
+            if (BStokDus($Deger[$i], $KT, $Kullanici, $UrunID[$i], $SetID, $dBoya) === 0) {
+                echo "StokYok";
+                return;
+            } else {
+                $Boya = $dBoya;
+            }
         }
+        $guncelle = $baglanti->prepare("UPDATE set_urunler_asama SET " . $Ekle . "= ? WHERE Urun_ID=? AND Set_ID=?");
+        $guncelle->execute(array($sum, $UrunID[$i], $SetID));
+        $kaydet = $baglanti->prepare("INSERT INTO set_urunler_asama_akis SET Set_ID= ?,Urun_ID= ?,Levha_ID= ?,Boya_ID= ?,Yapilan_is= ?,Adet= ?, Tarih= ?");
+        $kaydet->execute(array($SetID, $UrunID[$i], $Levha[$i], $Boya, $Is, $Deger[$i], $KT));
+        echo $sum; //Anlık Post Ajax.
     }
     ##########    ##########    ##########    ##########    ##########    ##########    ##########    ##########    ##########    ##########    ##########
 
@@ -158,7 +170,7 @@ if (isset($_POST['Listele'])) {
     $tarih = new DateTime("now");
     $tarih = date("Y-m-d");
     for ($i = 0; $i < count($UrunID); $i++) {
-        if (StokDus($Deger[$i], $tarih, $Kullanici, $UrunID[$i], $SetID, $Lid[$i]) === 0) {
+        if (LStokDus($Deger[$i], $tarih, $Kullanici, $UrunID[$i], $SetID, $Lid[$i]) === 0) {
             echo "StokYok";
         } else {
             $kaydet = $baglanti->prepare("INSERT INTO set_urunler_asama_akis SET Set_ID= ?,Urun_ID= ?,Levha_ID=?,Yapilan_is= ?,Adet= ?, Tarih= ?");
@@ -182,7 +194,7 @@ if (isset($_POST['Listele'])) {
         </thead>
         <tbody><?php
                 $isne = $is == "Preslendi" ? " OR Yapilan_is='Fire' AND set_urunler_asama_akis.Set_ID =" . $id . "" : "";
-                $sorgu = $baglanti->query("SELECT ID, urun.Urun_ID, Levha_ID, UrunAdi, Yapilan_is, Adet, Tarih FROM set_urunler_asama_akis INNER JOIN urun ON set_urunler_asama_akis.Urun_ID = urun.Urun_ID WHERE Set_ID =" . $id . " AND Yapilan_is='$is'" . $isne . " ORDER BY Tarih");
+                $sorgu = $baglanti->query("SELECT ID, urun.Urun_ID, Levha_ID, Boya_ID, UrunAdi, Yapilan_is, Adet, Tarih FROM set_urunler_asama_akis INNER JOIN urun ON set_urunler_asama_akis.Urun_ID = urun.Urun_ID WHERE Set_ID =" . $id . " AND Yapilan_is='$is'" . $isne . " ORDER BY Tarih");
                 foreach ($sorgu as $t) {
                     $adt = $t["Adet"];
                     $Trh = $t["Tarih"];
@@ -193,7 +205,7 @@ if (isset($_POST['Listele'])) {
                     <td><?= $t["Yapilan_is"] ?></td>
                     <td><?= $Trh ?></td>
                     <td>
-                        <button class="btn btn-sm btn-danger bi-trash Sil" type="button" id="<?= $t["ID"] ?>" UrunID="<?= $t["Urun_ID"] ?>" Adet="<?= $adt ?>" LevhaID="<?= $t["Levha_ID"] ?>" is="<?= $t["Yapilan_is"] ?>" Tarih="<?= $Trh ?>"></button>
+                        <button class="btn btn-sm btn-danger bi-trash Sil" type="button" id="<?= $t["ID"] ?>" UrunID="<?= $t["Urun_ID"] ?>" Adet="<?= $adt ?>" LevhaID="<?= $t["Levha_ID"] ?>" BoyaID="<?= $t["Boya_ID"] ?>" is="<?= $t["Yapilan_is"] ?>" Tarih="<?= $Trh ?>"></button>
                     </td>
                 </tr>
             <?php } ?>
@@ -224,6 +236,7 @@ if (isset($_POST['Listele'])) {
             id = $(this).attr("id");
             UrunID = $(this).attr("UrunID");
             LevhaID = $(this).attr("LevhaID");
+            BoyaID = $(this).attr("BoyaID");
             is = $(this).attr("is");
             Adet = $(this).attr("Adet");
             Tarih = $(this).attr("Tarih");
@@ -236,6 +249,7 @@ if (isset($_POST['Listele'])) {
                     'SetID': <?= $id ?>,
                     'UrunID': UrunID,
                     'LevhaID': LevhaID,
+                    'BoyaID': BoyaID,
                     'is': is,
                     'Tarih': Tarih,
                     'Adet': Adet
@@ -256,8 +270,10 @@ if (isset($_POST["GirSil"])) {
     $Sid = $_POST["SetID"];
     $Uid = $_POST["UrunID"];
     $Lid = $_POST["LevhaID"];
+    $Bid = $_POST["BoyaID"];
     $is = $_POST["is"];
     $Adet = $_POST["Adet"];
+    $KT = $_POST["Tarih"];
     if ($is == "Preslendi" || $is == "Fire") {
         $Ne = "Preslenen";
 
@@ -272,7 +288,7 @@ if (isset($_POST["GirSil"])) {
         $Stok->execute(array($Adet, $Kg, $Lsid));
 
         $Giden = $baglanti->prepare("UPDATE levha_giden SET Kullanilan_Adet=Kullanilan_Adet- ?, Kullanilan_Agirlik=Kullanilan_Agirlik- ? WHERE Levha_Stok_ID= ? AND SetID= ? AND UrunID= ? AND Gidis_Tarihi= ?");
-        $Giden->execute(array($Adet, $Kg, $Lsid, $Sid, $Uid, "$_POST[Tarih]"));
+        $Giden->execute(array($Adet, $Kg, $Lsid, $Sid, $Uid, "$KT"));
         $baglanti->query("DELETE FROM levha_giden WHERE Kullanilan_Adet<=0 OR Kullanilan_Agirlik<=0");
     } elseif ($is == "Tellendi") {
         $Ne = "Tellenen";
@@ -288,6 +304,15 @@ if (isset($_POST["GirSil"])) {
         $Ne = "Paketlenen";
     }
 
+    if ($is == "İçi Boyandı" || $is == "Dışı Boyandı") {
+        $Stok = $baglanti->prepare("UPDATE boya_gelen SET  Stok_Miktar= Stok_Miktar+? WHERE Boya_ID= ?");
+        $Stok->execute(array($Adet, $Bid));
+
+        $Giden = $baglanti->prepare("UPDATE boya_giden SET Kullanilan_Miktar= Kullanilan_Miktar-? WHERE Gidis_Tarihi=? AND UrunID= ? AND SetID= ? AND BoyaID= ?");
+        $Giden->execute(array($Adet, "$KT", $Uid, $Sid, $Bid));
+        $baglanti->query("DELETE FROM boya_giden WHERE Kullanilan_Miktar <= 0");
+    }
+
     $baglanti->query("DELETE FROM set_urunler_asama_akis WHERE ID =" . $_POST["id"] . " AND Yapilan_is='$is'");
     $Adet = $baglanti->query("SELECT " . $Ne . " FROM set_urunler_asama WHERE Urun_ID = " . $Uid . " AND Set_ID=" . $Sid)->fetch()[$Ne];
     $Adet -= $_POST["Adet"];
@@ -298,7 +323,7 @@ if (isset($_POST["GirSil"])) {
 }
 /////////////////////////////////////////////////////////////////////////////////// Fire ve Preslenenlerde stok Miktarını ayarlamak için
 
-function StokDus($Deger, $K_Tarihi, $Kullanici, $UrunID, $SetID, $Lid)
+function LStokDus($Deger, $KT, $Kullanici, $UrunID, $SetID, $Lid)
 {
     global $baglanti;
     if ($baglanti->query("SELECT Levha_Stok_ID FROM view_siparis_levha WHERE Levha_ID=" . $Lid)->rowCount()) {
@@ -326,12 +351,34 @@ function StokDus($Deger, $K_Tarihi, $Kullanici, $UrunID, $SetID, $Lid)
         $StokKaydet = $baglanti->prepare("UPDATE levha_gelen SET  Stok_Adet= ?, Stok_Agirlik= ? WHERE Levha_Stok_ID= ?");
         $StokKaydet->execute(array($TplAdet, $TplAgirlik, $Stokid));
 
-        if ($baglanti->query("SELECT Levha_Stok_ID FROM levha_giden WHERE Gidis_Tarihi='$K_Tarihi' AND Levha_Stok_ID=" . $Stokid . " AND SetID=" . $SetID . " AND UrunID=" . $UrunID . " AND LevhaID=" . $Lid)->rowCount()) {
+        if ($baglanti->query("SELECT Levha_Stok_ID FROM levha_giden WHERE Gidis_Tarihi='$KT' AND Levha_Stok_ID=" . $Stokid . " AND SetID=" . $SetID . " AND UrunID=" . $UrunID . " AND LevhaID=" . $Lid)->rowCount()) {
             $Kaydet = $baglanti->prepare("UPDATE levha_giden SET Kullanilan_Adet=Kullanilan_Adet+?, Kullanilan_Agirlik=Kullanilan_Agirlik+?, Gidis_Tarihi= ?, Kullanici_ID= ? WHERE Levha_Stok_ID= ? AND Gidis_Tarihi= ? AND SetID= ? AND UrunID= ? AND LevhaID=?");
-            $Kaydet->execute(array($Deger, $GAgirlik, $K_Tarihi, $Kullanici, $Stokid, "$K_Tarihi", $SetID, $UrunID, $Lid));
+            $Kaydet->execute(array($Deger, $GAgirlik, $KT, $Kullanici, $Stokid, "$KT", $SetID, $UrunID, $Lid));
         } else {
             $Kaydet = $baglanti->prepare("INSERT INTO levha_giden SET Levha_Stok_ID= ?, Kullanilan_Adet= ?, Kullanilan_Agirlik= ?, Gidis_Tarihi= ?, Kullanici_ID= ?, UrunID= ?, SetID= ?, LevhaID=?");
-            $Kaydet->execute(array($Stokid, $Deger, $GAgirlik, $K_Tarihi, $Kullanici, $UrunID, $SetID, $Lid));
+            $Kaydet->execute(array($Stokid, $Deger, $GAgirlik, $KT, $Kullanici, $UrunID, $SetID, $Lid));
+        }
+    } else {
+        return 0;
+    }
+}
+function BStokDus($Deger, $KT, $Kullanici, $Uid, $Sid, $Bid)
+{
+    global $baglanti;
+
+    $V = $baglanti->query("SELECT Boya_Stok_ID AS id FROM boya_gelen WHERE Stok_Miktar > 0 AND Boya_ID=" . $Bid . " GROUP BY Boya_ID");
+    if ($V->rowCount()) {
+        $Stokid = $V->fetch()["id"];
+
+        $StokKaydet = $baglanti->prepare("UPDATE boya_gelen SET  Stok_Miktar= Stok_Miktar-? WHERE Boya_ID= ?");
+        $StokKaydet->execute(array($Deger, $Bid));
+
+        if ($baglanti->query("SELECT * FROM boya_giden WHERE Gidis_Tarihi='$KT' AND BoyaID=" . $Bid)->rowCount()) {
+            $Kaydet = $baglanti->prepare("UPDATE boya_giden SET Kullanilan_Miktar= Kullanilan_Miktar+?, Gidis_Tarihi= ?, Kullanici_ID= ? WHERE Gidis_Tarihi=? AND UrunID= ? AND SetID= ? AND BoyaID= ?");
+            $Kaydet->execute(array($Deger, $KT, $Kullanici, "$KT", $Uid, $Sid, $Bid));
+        } else {
+            $Kaydet = $baglanti->prepare("INSERT INTO boya_giden SET Boya_Stok_ID= ?, Kullanilan_Miktar= ?, Gidis_Tarihi= ?, Kullanici_ID= ?, UrunID= ? ,SetID= ?, BoyaID= ?");
+            $Kaydet->execute(array($Stokid, $Deger, $KT, $Kullanici, $Uid, $Sid, $Bid));
         }
     } else {
         return 0;

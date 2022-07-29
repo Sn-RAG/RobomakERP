@@ -5,27 +5,20 @@ require __DIR__ . '/../../controller/Header.php';
 require __DIR__ . '/../../controller/Db.php';
 require __DIR__ . '/../../controller/Sil.php';
 ?>
-    <main id="main" class="main">
-        <section class="section">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="card recent-sales overflow-auto">
-                        <div class="card-body">
-                            <h5 class="card-title"><?= $page ?></h5>
-                            <hr>
-                            <a href="../../Navigasyon/SiparisEt.php">
-                                <button type="button" class="btn btn-secondary"><i
-                                            class="bi bi-arrow-left-circle me-1"></i>Geri Dön
-                                </button>
-                            </a>
-                            <a href="LevhaSiparis.php">
-                                <button type="button" class="btn btn-primary"><i class="bi bi-save me-1"></i>
-                                    Yeni Sipariş
-                                </button>
-                            </a>
-                            <hr>
-                            <table class="table datatablem">
-                                <thead>
+<main id="main" class="main">
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card recent-sales overflow-auto">
+                    <div class="card-body">
+                        <h5 class="card-title"><?= $page ?></h5>
+                        <hr>
+                        <a href="<?= isset($_GET["Gecmis"]) ? "LevhaSiparisleri.php" : "../../Navigasyon/SiparisEt.php" ?>" class='btn btn-secondary bi-arrow-left-circle me-3 mb-1'>&nbsp Geri Dön</a>
+                        <a href="LevhaSiparis.php" class="btn btn-primary bi-save me-3 mb-1" <?= isset($_GET["Gecmis"]) ? "hidden" : "" ?>>&nbsp Yeni Sipariş</a>
+                        <a href="LevhaSiparisleri.php?Gecmis" class="btn btn-success bi-clock-history mb-1" <?= isset($_GET["Gecmis"]) ? "hidden" : "" ?>>&nbsp Sipariş Geçmişi</a>
+                        <hr>
+                        <table class="table datatablem">
+                            <thead>
                                 <tr class="table-light">
                                     <th>#</th>
                                     <th>#</th>
@@ -38,10 +31,15 @@ require __DIR__ . '/../../controller/Sil.php';
                                     <th>Sipariş Tarihi</th>
                                     <th>&nbsp</th>
                                 </tr>
-                                </thead>
-                                <tbody>
+                            </thead>
+                            <tbody>
                                 <?php
-                                $sorgu = $baglanti->query('SELECT * FROM view_siparis_levha');
+                                if (isset($_GET["Gecmis"])) {
+                                    $isaret = "<=";
+                                } else {
+                                    $isaret = ">";
+                                }
+                                $sorgu = $baglanti->query("SELECT * FROM view_siparis_levha WHERE Siparis_Adet " . $isaret . "0 OR Siparis_Agirlik" . $isaret . "0");
                                 foreach ($sorgu as $sonuc) {
                                     $id = $sonuc['Levha_Siparis_ID'];
                                     $Levha_Stok_ID = $sonuc['Levha_Stok_ID'];
@@ -52,7 +50,7 @@ require __DIR__ . '/../../controller/Sil.php';
                                     $Siparis_Adet = $sonuc['Siparis_Adet'];
                                     $Siparis_Agirlik = $sonuc['Siparis_Agirlik'];
                                     $S_Tarihi = $sonuc['S_Tarihi'];
-                                    ?>
+                                ?>
                                     <tr>
                                         <th><?= $id ?></th>
                                         <td><?= $Levha_Stok_ID ?></td>
@@ -64,8 +62,7 @@ require __DIR__ . '/../../controller/Sil.php';
                                         <td><?= $Siparis_Adet ?> Adet</td>
                                         <td><?= $S_Tarihi ?></td>
                                         <td>
-                                            <button type="button" class="btn btn-outline-danger bi-x-square" data-bs-toggle="modal" data-bs-target="#SecSil<?= $id ?>">
-                                            </button>
+                                            <button type="button" class="btn btn-outline-danger bi-x-square" data-bs-toggle="modal" data-bs-target="#SecSil<?= $id ?>"></button>
                                         </td>
                                     </tr>
 
@@ -102,29 +99,38 @@ require __DIR__ . '/../../controller/Sil.php';
                                         </div>
                                     </div>
                                     <!-- Modal SON-->
-                                    <?php
+                                <?php
                                 }
                                 ?>
-                                </tbody>
-                            </table>
-                        </div>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
-        </section>
-    </main>
-    <script>
-        $('.datatablem').DataTable({
-            responsive: true,
-            columnDefs: [
-                {responsivePriority:1, targets: -1},
-                {"visible": false, "targets": [0, 1, 2]},
-                {targets: 9, orderable: false},
-            ],
-            pageLength: 100,
-            lengthMenu: [[25, 50, 100, -1],['25 Adet', '50 Adet', '100 Adet', 'Tümü']]
-        });
-    </script>
+        </div>
+    </section>
+</main>
+<script>
+    $('.datatablem').DataTable({
+        responsive: true,
+        order:[0, 'desc'],
+        columnDefs: [
+            {
+                "visible": false,
+                "targets": [0, 1, 2]
+            },
+            {
+                targets: 9,
+                orderable: false
+            },
+        ],
+        pageLength: 100,
+        lengthMenu: [
+            [25, 50, 100, -1],
+            ['25 Adet', '50 Adet', '100 Adet', 'Tümü']
+        ]
+    });
+</script>
 <?php
 require __DIR__ . '/../../controller/Footer.php';
 ob_end_flush();

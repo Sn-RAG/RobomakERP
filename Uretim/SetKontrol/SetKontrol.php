@@ -142,6 +142,28 @@ require __DIR__ . '/Yuzde.php';
                     </div>
                     <div class="col-md-12">
                         <div class="input-group input-group-sm d-flex justify-content-end">
+
+                            <select class="form-select bg-light me-2 icRenk">
+                                <option value="">* İç Renk Seçin</option>
+                                <?php
+                                $RS = $baglanti->query('SELECT DISTINCT icBoya_ID FROM view_set_urun_sec WHERE Set_ID = ' . $SetID);
+                                foreach ($RS as $k) {
+                                    $ir = $baglanti->query('SELECT Renk FROM boya WHERE Boya_ID =' . $k["icBoya_ID"])->fetch()["Renk"];
+                                    echo "<option value='$k[icBoya_ID]'>$ir</option>";
+                                }
+                                ?>
+                            </select>
+
+                            <select class="form-select bg-light me-2 DisRenk">
+                                <option value="">* Dış Renk Seçin</option>
+                                <?php
+                                $RS = $baglanti->query('SELECT DISTINCT DisBoya_ID,DisRenk,DisMarka FROM view_set_urun_sec WHERE Set_ID = ' . $SetID);
+                                foreach ($RS as $k) {
+                                    echo "<option value='$k[DisBoya_ID]'>$k[DisRenk]</option>";
+                                }
+                                ?>
+                            </select>
+
                             <label class="col-form-label me-2">Tarih</label>
                             <div class="me-1"><input type="date" class="form-control Tarih" value="<?= $tarih ?>"></div>
                             <button class="gir btn btn-primary bi-check me-1"></button>
@@ -161,7 +183,7 @@ require __DIR__ . '/Yuzde.php';
                             $Urunler = [];
                             $UrunAdi = [];
                             $i = 0;
-                            $Listele = $baglanti->query('SELECT Kategori_ID,Urun_ID,UrunAdi,KulpAdi,Model_Adi,TepeAdi,icBoya_ID,DisRenk,Adet,Levha_ID FROM view_set_urun_sec WHERE Set_ID = ' . $SetID . " GROUP BY Urun_ID")->fetchAll();
+                            $sor = $baglanti->query('SELECT Kategori_ID,Urun_ID,UrunAdi,KulpAdi,Model_Adi,TepeAdi,icBoya_ID,DisBoya_ID,DisRenk,DisMarka,Adet,Levha_ID FROM view_set_urun_sec WHERE Set_ID = ' . $SetID . " GROUP BY Urun_ID")->fetchAll();
                             foreach ($sor as $s) {
                                 $Uid = $s['Urun_ID'];
                                 $ad = $s['UrunAdi'];
@@ -173,7 +195,7 @@ require __DIR__ . '/Yuzde.php';
                                     <td><?= $ad ?></td>
                                     <td class="text-center" id="yazsayi<?= $Uid ?>"></td>
                                     <td>
-                                        <input type="number" SetID="<?= $SetID ?>" UrunID="<?= $Uid ?>" LevhaID="<?= $s['Levha_ID'] ?>" class="GDeger form-control form-control-sm me-1" placeholder="Adet">
+                                        <input type="number" SetID="<?= $SetID ?>" UrunID="<?= $Uid ?>" LevhaID="<?= $s['Levha_ID'] ?>" iBoya="<?= $s['icBoya_ID'] ?>" dBoya="<?= $s['DisBoya_ID'] ?>" class="GDeger form-control form-control-sm me-1" placeholder="Adet">
                                     </td>
                                 </tr>
                             <?php } ?>
@@ -193,7 +215,7 @@ require __DIR__ . '/Yuzde.php';
                                 <th>Kalınlık</th>
                             </tr>
                             <?php
-                            foreach ($Listele as $s) {
+                            foreach ($sor as $s) {
                                 $Uid = $s['Urun_ID'];
                                 $ad = $s['UrunAdi'];
                                 $C = $baglanti->query("SELECT Cap FROM view_urun_levha_bilgi WHERE Levha_ID=" . $s['Levha_ID'] . " AND Urun_ID=" . $Uid);

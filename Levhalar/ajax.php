@@ -6,19 +6,6 @@
         $(".TumuGeldi").prop('checked', false);
         $(".TumunuKullan").prop('checked', false);
     });
-    $(".TumuGeldi").on("click", function() {
-        var n = $(".TumuGeldi:checked").length;
-        var ID = $(this).attr("id");
-        var SipAgirlik = $('.SipAgirlik' + ID + '').val();
-        var SipAdet = $('.SipAdet' + ID + '').val();
-        if (n === 1) {
-            $('.GirAdet' + ID + '').val(SipAdet);
-            $('#GirAgirlik' + ID + '').val(SipAgirlik);
-        } else {
-            $('.GirAdet' + ID + '').val("");
-            $('#GirAgirlik' + ID + '').val("");
-        }
-    });
 
     //Hesap İşlemi
     $(".GirAgirlik").keyup(function() {
@@ -31,17 +18,20 @@
     });
     $('.Gelen').click(function() {
         var ID = $(this).attr("levhastokid");
-        var SipAgirlik = $('.SipAgirlik' + ID + '').val();
-        var SipAdet = $('.SipAdet' + ID + '').val();
-        var Stok_Agirlik = $('.Stok_Agirlik' + ID + '').val();
-        var Stok_Adet = $('.Stok_Adet' + ID + '').val();
+        var LevhaID = $('.LevhaID' + ID + '').val();
         var GirAgirlik = $('#GirAgirlik' + ID + '').val();
         var GirAdet = $('.GirAdet' + ID + '').val();
         var T_Tarihi = $('.T_Tarihi' + ID + '').val();
+
+        /*Tamamlandı mı?*/
+        var Tamam = 0;
+        if ($(".Tamamlandi:checked").length === 1) {
+            Tamam = 1;
+        }
+        /*SON*/
+        
         if (GirAgirlik == "") {
             $('.Hata').html("Ağırlık boş bırakılamaz!");
-        } else if (Number(SipAgirlik) == 0) {
-            <?= $SiparisTamam ?>
         } else {
             $.ajax({
                 type: "POST",
@@ -49,13 +39,11 @@
                 data: {
                     'Levha_Stok_ID': ID,
                     'T_Tarihi': T_Tarihi,
-                    'SipAdet': SipAdet,
-                    'SipAgirlik': SipAgirlik,
-                    'Stok_Adet': Stok_Adet,
-                    'Stok_Agirlik': Stok_Agirlik,
+                    'LevhaID': LevhaID,
                     'GirAgirlik': GirAgirlik,
                     'GirAdet': GirAdet,
                     'StokEkle': true,
+                    'Tamam': Tamam
                 },
                 error: function(xhr) {
                     alert('Hata: ' + xhr.responseText);
