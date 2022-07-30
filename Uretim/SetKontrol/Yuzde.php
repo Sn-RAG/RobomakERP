@@ -36,19 +36,20 @@ foreach ($sor as $s) {
         $k = $q["Kalinlik"];
         $o = ceil((($c * $c * $k * (0.22)) / 1000) * $s["Adet"]); // Toplam tedarik edilecek levha
         $a += $o;
-        $sorstok = $baglanti->query("SELECT levha.Levha_ID AS LevhaID, Stok_Adet, Stok_Agirlik FROM levha_siparis INNER JOIN levha_gelen ON levha_siparis.Levha_Stok_ID = levha_gelen.Levha_Stok_ID INNER JOIN levha ON levha_siparis.Levha_ID = levha.Levha_ID WHERE levha.Levha_ID =" . $s["Levha_ID"]);
+        $sorstok = $baglanti->query("SELECT levha.Levha_ID AS LevhaID, SUM(Stok_Adet) AS Adt, SUM(Stok_Agirlik) AS kg FROM levha_siparis INNER JOIN levha_gelen ON levha_siparis.Levha_Stok_ID = levha_gelen.Levha_Stok_ID INNER JOIN levha ON levha_siparis.Levha_ID = levha.Levha_ID WHERE Stok_Adet>0 AND Stok_Agirlik>0 AND levha.Levha_ID =" . $s["Levha_ID"]);
         if ($sorstok->rowCount()) {
             foreach ($sorstok as $stk) {
-                $m = $stk["Stok_Agirlik"]; // Stokta olan levha
+                $m = $stk["kg"]; // Stokta olan levha
+                $Adt = $stk["Adt"]; // Stokta olan levha
                 $i++;
-                $CartLevha[$i] = $m;
+                $CartLevha[$i] = $Adt;
                 if ($o > $m) {
                     $b += $m;
                 } else {
                     $b += $o;
                 }
             }
-        } //else echo "<br>Çap= $cap &nbsp Kalinlik= $mm > Stokta yok > <a href='../../SatinAlma/Siparis/LevhaSiparis.php?Kalinlik=$mm&Cap=$cap'>Sipariş</a>";
+        }
     }
     //PRES
     $e += $baglanti->query("SELECT SUM(Adet) AS Toplam FROM set_urunler_asama_akis WHERE Yapilan_is='Preslendi' AND Set_ID=" . $SetID . " AND Urun_ID=" . $UrunID)->fetch()["Toplam"];

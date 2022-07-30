@@ -42,23 +42,20 @@ $tarih = date("Y-m-d");
                                 </thead>
                                 <tbody>
                                     <?php
-                                    $S = $_SESSION["Boyalar"];
+                                    $b = $_SESSION["Boyalar"];
 
-                                    for ($i = 0; $i < count($S); $i++) {
-                                        $sr = $baglanti->query('SELECT * FROM boya WHERE Boya_ID=' . $S[$i]);
-                                        foreach ($sr as $sn) { ?>
-                                            <tr>
-                                                <?= isset($_GET["YazdirBoya"]) ? "" : "<td><?= $sn[Boya_ID] ?></td>" ?>
-                                                <td><?= $sn['Marka'] ?></td>
-                                                <td><?= $sn['Renk'] ?></td>
-                                                <td><?= $sn['Seri'] ?></td>
-                                                <td><?= $sn['Kod'] ?></td>
-                                                <?= isset($_GET["YazdirBoya"]) ? "" : "<td><input type='number' class='form-control Miktar' placeholder='Miktar Giriniz'></td>" ?>
-                                                <?= isset($_GET["YazdirBoya"]) ? "<td>" . $_SESSION["Miktar"][$i] . "</td>" : "" ?>
-                                            </tr>
-                                    <?php
-                                        }
-                                    } ?>
+                                    for ($i = 0; $i < count($b); $i++) {
+                                        $sn = $baglanti->query('SELECT * FROM boya WHERE Boya_ID=' . $b[$i])->fetch(); ?>
+                                        <tr>
+                                            <?= isset($_GET["YazdirBoya"]) ? "" : "<td><?= $sn[Boya_ID] ?></td>" ?>
+                                            <td><?= $sn['Marka'] ?></td>
+                                            <td><?= $sn['Renk'] ?></td>
+                                            <td><?= $sn['Seri'] ?></td>
+                                            <td><?= $sn['Kod'] ?></td>
+                                            <?= isset($_GET["YazdirBoya"]) ? "" : "<td><input type='number' class='form-control Miktar' placeholder='Miktar Giriniz'></td>" ?>
+                                            <?= isset($_GET["YazdirBoya"]) ? "<td>" . $_SESSION["Miktar"][$i] . "</td>" : "" ?>
+                                        </tr>
+                                    <?php } ?>
                                 </tbody>
                             </table>
                         <?php } elseif (isset($_SESSION["Levhalar"])) { ?>
@@ -74,22 +71,18 @@ $tarih = date("Y-m-d");
                                 </thead>
                                 <tbody>
                                     <?php
-                                    $S = $_SESSION["Levhalar"];
-
-                                    for ($i = 0; $i < count($S); $i++) {
-                                        $sr = $baglanti->query('SELECT * FROM levha WHERE Levha_ID=' . $S[$i]);
-                                        foreach ($sr as $sn) {
-                                            $id = $sn["Levha_ID"]; ?>
-                                            <tr>
-                                                <td><?= $id ?></td>
-                                                <td><?= $sn['Tip'] ?></td>
-                                                <td id="Cap<?= $id ?>"><?= $sn['Cap'] ?></td>
-                                                <td id="Kalinlik<?= $id ?>"><?= $sn['Kalinlik'] ?></td>
-                                                <td class="d-flex"><label class="me-2 small"><b id="Agirlik<?= $id ?>" class="Agirlik">0</b> Kg</label><input type='number' class='form-control Adet' id="Adet<?= $id ?>" LevhaID='<?= $id ?>' placeholder='Adet Giriniz'></td>
-                                            </tr>
-                                    <?php
-                                        }
-                                    } ?>
+                                    $l = $_SESSION["Levhalar"];
+                                    for ($i = 0; $i < count($l); $i++) {
+                                        $sn = $baglanti->query('SELECT * FROM levha WHERE Levha_ID=' . $l[$i])->fetch();
+                                        $id = $sn["Levha_ID"]; ?>
+                                        <tr>
+                                            <td><?= $id ?></td>
+                                            <td><?= $sn['Tip'] ?></td>
+                                            <td id="Cap<?= $id ?>"><?= $sn['Cap'] ?></td>
+                                            <td id="Kalinlik<?= $id ?>"><?= $sn['Kalinlik'] ?></td>
+                                            <td class="d-flex"><label class="me-2 small"><b id="Agirlik<?= $id ?>" class="Agirlik">0</b> Kg</label><input type='number' class='form-control Adet' id="Adet<?= $id ?>" LevhaID='<?= $id ?>' placeholder='Adet Giriniz'></td>
+                                        </tr>
+                                    <?php } ?>
                                 </tbody>
                             </table>
                         <?php } ?>

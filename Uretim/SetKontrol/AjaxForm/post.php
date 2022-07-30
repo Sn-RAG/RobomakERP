@@ -1,5 +1,6 @@
 <?php
 require __DIR__ . '/../../../controller/Db.php';
+require __DIR__ . "/../../../logtut.php";
 session_start();
 $Has = ".hasClass('btn-primary')"; //Kısaltma
 $SorKullanici = $baglanti->prepare("SELECT * FROM kullanici WHERE Kadi= ?");
@@ -159,6 +160,13 @@ if (isset($_POST['Listele'])) {
         $kaydet->execute(array($SetID, $UrunID[$i], $Levha[$i], $Boya, $Is, $Deger[$i], $KT));
         echo $sum; //Anlık Post Ajax.
     }
+    
+/*LOG KAYDI*/
+
+logtut($Kullanici, "$SetID numaralı sette $Ekle kaydetti.");
+
+/*LOG KAYDI SON*/
+
     ##########    ##########    ##########    ##########    ##########    ##########    ##########    ##########    ##########    ##########    ##########
 
 } elseif (isset($_POST['FDeger'])) {
@@ -177,6 +185,10 @@ if (isset($_POST['Listele'])) {
             $kaydet->execute(array($SetID, $UrunID[$i], $Lid[$i], "Fire", $Deger[$i], $_POST['FTarih']));
         }
     }
+    /*LOG KAYDI*/
+    logtut($Kullanici, "$SetID numaralı sette Fire kaydetti.");
+    
+    /*LOG KAYDI SON*/
     ##########    ##########    ##########    ##########    ##########    ##########    ##########    ##########    ##########    ##########    ##########
 
 } elseif (isset($_POST["isDurum"])) {
@@ -320,6 +332,9 @@ if (isset($_POST["GirSil"])) {
         $guncelle = $baglanti->prepare("UPDATE set_urunler_asama SET " . $Ne . "= ? WHERE Urun_ID=? AND Set_ID=?");
         $guncelle->execute(array($Adet, $Uid, $Sid));
     }
+    
+logtut($Kullanici, "$Sid numaralı setten $Ne sildi.");
+
 }
 /////////////////////////////////////////////////////////////////////////////////// Fire ve Preslenenlerde stok Miktarını ayarlamak için
 

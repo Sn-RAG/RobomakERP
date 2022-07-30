@@ -4,7 +4,6 @@ $page = "Boya Sipariş";
 require __DIR__ . '/../../controller/Header.php';
 require __DIR__ . '/../../controller/Kayit.php';
 require __DIR__ . '/../../controller/VTHataMesaji.php';
-
 unset($_SESSION["Miktar"], $_SESSION["Boyalar"]);
 ?>
 <main id="main" class="main">

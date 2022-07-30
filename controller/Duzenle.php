@@ -1,6 +1,7 @@
 <?php
 require __DIR__ . '/Db.php';
 require __DIR__ . '/VTHataMesaji.php';
+require __DIR__ . "/../logtut.php";
 //--------------------------------Kullanici Kim
 
 $SorKullanici = $baglanti->prepare("SELECT * FROM kullanici WHERE Kadi= ?");
@@ -37,6 +38,7 @@ if (isset($_POST['UrunBoyaBilgiDuzenle'])) {
     $SetKaydet = $baglanti->prepare("UPDATE urun_boya_bilgi SET Urun_ID= ?, Marka= ?, Renk= ?, icAstar= ?, icUstkat= ?, DisAstar= ?, DisUstkat= ?, Kullanici_ID= ? WHERE Urun_Boya_Bilgi_ID= ?");
     $SonucSor = $SetKaydet->execute(array($Urun_ID, $_POST['Marka'], $_POST['Renk'], $_POST['icAstar'], $_POST['icUstkat'], $_POST['DisAstar'], $_POST['DisUstkat'], $Kullanici, $_POST['Urun_Boya_Bilgi_ID']));
     header("location:UrunBoyaBilgi.php?Urun_ID=$Urun_ID");
+    logtut($Kullanici, "Ürünün boya verisini düzenledi.");
 }
 //---------------------////////-------------------------- Urun LEVHA Bilgisi Düzenle
 if (isset($_POST['UrunLevhaBilgiDuzenle'])) {
@@ -57,4 +59,5 @@ if (isset($_POST['UrunLevhaBilgiDuzenle'])) {
     $Kaydet = $baglanti->prepare("UPDATE urun_levha_bilgi SET Levha_ID= ?, Kullanici_ID= ? WHERE Urun_Levha_Bilgi_ID= ?");
     $SonucSor = $Kaydet->execute(array($Levha_ID, $Kullanici, $id));
     header("location:UrunLevhaBilgi.php?Urun_ID=$_POST[Urun_ID]");
+    logtut($Kullanici, "Ürünün levha verisini düzenledi.");
 }

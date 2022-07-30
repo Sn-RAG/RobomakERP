@@ -39,7 +39,7 @@ require __DIR__ . '/Yuzde.php';
                             </h2>
                             <div id="Levha" class="accordion-collapse collapse">
                                 <div class="accordion-body text-center">
-                                    <label class="fw-bold">Stok KG</label>
+                                    <label class="fw-bold">Stok Adet</label>
                                     <canvas id="ChartLevha" style="max-height: 400px; display: block; box-sizing: border-box; height: 400px; width: 491px;" width="491" height="400"></canvas>
                                 </div>
                             </div>

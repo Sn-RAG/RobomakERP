@@ -1,5 +1,6 @@
 <?php
 require __DIR__ . '/../controller/Db.php';
+require __DIR__ . "/../logtut.php";
 //--------------------------------Kullanici Kim
 session_start();
 $SorKullanici = $baglanti->prepare("SELECT * FROM kullanici WHERE Kadi= ?");
@@ -46,7 +47,11 @@ if (isset($_POST['Gelen'])) {
     $SiparisTarih = $baglanti->prepare("UPDATE boya_siparis SET Boya_Tarih_ID= ? WHERE Boya_Siparis_ID= ?");
     $SiparisTarih->execute(array($UretimT, (int)$_POST['Sipid']));
 
+    /*LOG KAYDI*/
 
+    logtut($Kullanici, "Stoğa boya ekledi.");
+
+    /*LOG KAYDI SON*/
     ##############################################################################################################################################################################
 
 } elseif (isset($_POST['Kullan'])) {
@@ -72,15 +77,18 @@ if (isset($_POST['Gelen'])) {
         $Kaydet = $baglanti->prepare("INSERT INTO boya_giden SET Boya_Stok_ID= ?, Kullanilan_Miktar= ?, Gidis_Tarihi= ?, Kullanici_ID= ?");
         $Kaydet->execute(array($Stokid, $GirMiktar, $KT, $Kullanici));
     }
+    logtut($Kullanici, "Boya kullandı.");
 } elseif (isset($_POST["StkID"])) {
     $S = $_POST["StkID"];
     $M = $_POST["iMiktar"];
     $k = $baglanti->prepare("UPDATE boya_stok SET Siparis_Miktar=Siparis_Miktar-?,iade_Miktar= ? WHERE Boya_Stok_ID= ?");
     $k->execute(array($M, $M, $S));
+    logtut($Kullanici, "Boya iade etti.");
 } elseif (isset($_POST["EStkID"])) {
     $S = $_POST["EStkID"];
     $M = $_POST["EMiktar"];
 
     $k = $baglanti->prepare("UPDATE boya_stok SET Siparis_Miktar=Siparis_Miktar-?,Emanet_Miktar= ? WHERE Boya_Stok_ID= ?");
     $k->execute(array($M, $M, $S));
+    logtut($Kullanici, "Boya emanet verdi.");
 }

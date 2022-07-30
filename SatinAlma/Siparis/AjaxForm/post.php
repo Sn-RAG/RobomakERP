@@ -1,5 +1,6 @@
 <?php
 require __DIR__ . '/../../../controller/Db.php';
+require __DIR__ . "/../../../logtut.php";
 session_start();
 $SorKullanici = $baglanti->prepare("SELECT * FROM kullanici WHERE Kadi= ?");
 $SonucKul = $SorKullanici->execute(array($_SESSION["Kullanici"]));
@@ -13,9 +14,17 @@ if (isset($_POST['BoyaEkle'])) {
         $query = $baglanti->prepare('INSERT INTO boya SET Marka=?, Renk=?, Seri=?, Kod=?');
         $query->execute(array($_POST['Marka'], $_POST['Renk'], $_POST['Seri'], $_POST['Kod']));
     }
+
+    /*LOG KAYDI*/
+
+    logtut($Kullanici, "Boya ekledi.");
+
+    /*LOG KAYDI SON*/
 } elseif (isset($_POST['BoyaDuzenle'])) {
     $query = $baglanti->prepare('UPDATE boya SET Marka=?, Renk=?, Seri=?, Kod=? WHERE Boya_ID=?');
     $query->execute(array($_POST['DMarka'], $_POST['DRenk'], $_POST['DSeri'], $_POST['DKod'], $_POST['DBoyaID']));
+
+    logtut($Kullanici, "Boya düzenledi.");
 } elseif (isset($_POST['BoyaSiparis'])) {
     $b = $_SESSION["Boyalar"];
     $m = $_SESSION["Miktar"];
@@ -42,7 +51,7 @@ if (isset($_POST['BoyaEkle'])) {
         $siparisKaydet = $baglanti->prepare("INSERT INTO boya_siparis SET Boya_ID= ?, Boya_Tarih_ID= ?, Boya_Stok_ID= ?, Siparis_ID= ?");
         $siparisKaydet->execute(array($b[$i], $UretimT, $StokID, $Siparis_ID));
     }
-
+    logtut($Kullanici, "Boya sipariş etti.");
     //##########      ####################      ####################      ####################      ####################      ####################      ####################      ##########
     //##########      ####################      ###################               LEVHA              ####################      ####################      ####################      ##########
     //##########      ####################      ####################      ####################      ####################      ####################      ####################      ##########
@@ -56,10 +65,14 @@ if (isset($_POST['BoyaEkle'])) {
         $query = $baglanti->prepare('INSERT INTO levha SET Firma_ID=?, Tip=?, Cap=?, Kalinlik=?');
         $query->execute(array($F == "" ? null : $F, $T, $C, $K));
     }
+
+    logtut($Kullanici, "Levha ekledi.");
 } elseif (isset($_POST["LevhaDuzenle"])) {
     $F = $_POST['LevhaFirma'];
     $query = $baglanti->prepare('UPDATE levha SET Firma_ID=?, Tip=?, Cap=?, Kalinlik=? WHERE Levha_ID= ?');
     $query->execute(array($F == "" ? null : $F, $_POST['Tip'], $_POST['Cap'],  $_POST['Kalinlik'], $_POST['ID']));
+
+    logtut($Kullanici, "Levha Düzenledi.");
 } elseif (isset($_POST['LevhaSiparis'])) {
     $Adet = $_POST['Adet'];
     $kg = $_POST['Agirlik'];
@@ -79,6 +92,7 @@ if (isset($_POST['BoyaEkle'])) {
         $siparisKaydet->execute(array($StokID, $Siparis_ID, $L[$i]));
     }
 
+    logtut($Kullanici, "Levha sipariş etti.");
     //##########      ####################      ####################      ####################      ####################      ####################      ####################      ##########
     //##########      ####################      ###################               KULP              ####################      ####################      ####################      ##########
     //##########      ####################      ####################      ####################      ####################      ####################      ####################      ##########
@@ -92,11 +106,13 @@ if (isset($_POST['BoyaEkle'])) {
         $query = $baglanti->prepare('INSERT INTO kulp SET Firma_ID=?, KulpAdi=?, KulpCesidi=?, Renk=?');
         $query->execute(array($F == "" ? null : $F, $A, $C, $R));
     }
+    logtut($Kullanici, "Kulp ekledi.");
 } elseif (isset($_POST["KulpDuzenle"])) {
     $F = $_POST['Firma'];
     $query = $baglanti->prepare('UPDATE kulp SET Firma_ID=?, KulpAdi=?, KulpCesidi=?, Renk=? WHERE Kulp_ID= ?');
     $query->execute(array($F == "" ? null : $F, $_POST['Adi'], $_POST['Cesit'],  $_POST['Renk'], $_POST['ID']));
 
+    logtut($Kullanici, "Kulp düzenledi.");
     //##########      ####################      ####################      ####################      ####################      ####################      ####################      ##########
     //##########      ####################      ###################               KAPAK              ####################      ####################      ####################      ##########
     //##########      ####################      ####################      ####################      ####################      ####################      ####################      ##########
@@ -108,11 +124,13 @@ if (isset($_POST['BoyaEkle'])) {
         $query = $baglanti->prepare('INSERT INTO kapak SET Firma_ID=?, Model_Adi=?');
         $query->execute(array($F == "" ? null : $F, $A));
     }
+    logtut($Kullanici, "Kapak ekledi.");
 } elseif (isset($_POST["KapakDuzenle"])) {
     $F = $_POST['Firma'];
     $query = $baglanti->prepare('UPDATE kapak SET Firma_ID=?, Model_Adi=? WHERE Kapak_ID= ?');
     $query->execute(array($F == "" ? null : $F, $_POST['Adi'], $_POST['ID']));
 
+    logtut($Kullanici, "Kapak düzenledi.");
     //##########      ####################      ####################      ####################      ####################      ####################      ####################      ##########
     //##########      ####################      ###################               TEPE              ####################      ####################      ####################      ##########
     //##########      ####################      ####################      ####################      ####################      ####################      ####################      ##########
@@ -124,8 +142,10 @@ if (isset($_POST['BoyaEkle'])) {
         $query = $baglanti->prepare('INSERT INTO tepe SET Firma_ID=?, TepeAdi=?');
         $query->execute(array($F == "" ? null : $F, $A));
     }
+    logtut($Kullanici, "Tepe ekledi.");
 } elseif (isset($_POST["TepeDuzenle"])) {
     $F = $_POST['Firma'];
     $query = $baglanti->prepare('UPDATE tepe SET Firma_ID=?, TepeAdi=? WHERE Tepe_ID= ?');
     $query->execute(array($F == "" ? null : $F, $_POST['Adi'], $_POST['ID']));
+    logtut($Kullanici, "Tepe düzenledi.");
 }

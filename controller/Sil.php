@@ -1,38 +1,48 @@
 <?php
 require __DIR__ . '/Db.php';
 require __DIR__ . '/VTHataMesaji.php';
+require __DIR__ . "/../logtut.php";
 
+//--------------------------------Kullanici Kim
+
+$SorKullanici = $baglanti->prepare("SELECT * FROM kullanici WHERE Kadi= ?");
+$SonucKul = $SorKullanici->execute(array($_SESSION["Kullanici"]));
+$bakKul = $SorKullanici->fetch();
+$Kullanici = $bakKul['Kullanici_ID'];
 //--------------------------------Kullanıcı
 if (isset($_GET['KullaniciSil'])) {
-    $sil = $baglanti->query("DELETE FROM kullanici WHERE Kullanici_ID=" . strip_tags(htmlspecialchars(trim($_GET['KullaniciSil']))));
+    $id = strip_tags(htmlspecialchars(trim($_GET['KullaniciSil'])));
+    $sil = $baglanti->query("DELETE FROM kullanici WHERE Kullanici_ID=" . $id);
+    logtut($id, "Kullanıcı sildi.");
 } //--------------------------------Setler
 elseif (isset($_GET['UretimSetlerSil'])) {
     $Setid = strip_tags(htmlspecialchars(trim($_GET['Set_ID'])));
     try {
         $sorgu = $baglanti->query("DELETE FROM set_icerik WHERE Set_icerik_ID=" . strip_tags(htmlspecialchars(trim($_GET['UretimSetlerSil']))));
-    if ($sorgu) {
-        $sil = $baglanti->query("DELETE FROM set_urun WHERE Set_ID=" . $Setid);
-        if ($sil) {
-            $sil = $baglanti->query("DELETE FROM `set` WHERE Set_ID =" . $Setid);
+        if ($sorgu) {
+            $sil = $baglanti->query("DELETE FROM set_urun WHERE Set_ID=" . $Setid);
             if ($sil) {
-                $sil = $baglanti->query("DELETE FROM set_urun_icerik WHERE Set_ID =" . $Setid);
+                $sil = $baglanti->query("DELETE FROM `set` WHERE Set_ID =" . $Setid);
                 if ($sil) {
-                    $sil = $baglanti->query("DELETE FROM set_urunler WHERE Set_ID =" . $Setid);
+                    $sil = $baglanti->query("DELETE FROM set_urun_icerik WHERE Set_ID =" . $Setid);
                     if ($sil) {
-                        $sil = $baglanti->query("DELETE FROM set_urunler_asama_akis WHERE Set_ID =" . $Setid);
+                        $sil = $baglanti->query("DELETE FROM set_urunler WHERE Set_ID =" . $Setid);
                         if ($sil) {
-                            $sil = $baglanti->query("DELETE FROM set_urunler_asama WHERE Set_ID =" . $Setid);
+                            $sil = $baglanti->query("DELETE FROM set_urunler_asama_akis WHERE Set_ID =" . $Setid);
+                            if ($sil) {
+                                $sil = $baglanti->query("DELETE FROM set_urunler_asama WHERE Set_ID =" . $Setid);
+                            }
                         }
                     }
                 }
             }
         }
-    }
+        logtut($Kullanici, "Set sildi.");
     } catch (\Throwable $th) {
         echo $SilHata;
     }
 
-//--------------------------------Firmalar
+    //--------------------------------Firmalar
 } elseif (isset($_GET['FirmalarSil'])) {
     $sorgu = $baglanti->query("DELETE FROM firmalar WHERE Firma_ID=" . strip_tags(htmlspecialchars(trim($_GET['FirmalarSil']))));
     if ($sorgu) {
@@ -41,7 +51,7 @@ elseif (isset($_GET['UretimSetlerSil'])) {
             $sorgu = $baglanti->query("DELETE FROM firma_telefon WHERE Tel_ID=" . strip_tags(htmlspecialchars(trim($_GET['Tel_ID']))));
         }
     }
-
+    logtut($Kullanici, "Firma sildi.");
 } //--------------------------------Sipariş GİDEN
 
 elseif (isset($_GET['TeklifSil'])) {
@@ -49,7 +59,8 @@ elseif (isset($_GET['TeklifSil'])) {
     if ($sorgu) {
         $sorgu = $baglanti->query("DELETE FROM teklif_setler WHERE S_No=" . strip_tags(htmlspecialchars(trim($_GET['S_No']))));
     }
-}//############################### Levha Sipariş
+    logtut($Kullanici, "Teklif sildi.");
+} //############################### Levha Sipariş
 
 elseif (isset($_GET['LevhaSiparisSil'])) {
     $sorgu = $baglanti->query("DELETE FROM levha_siparis WHERE Levha_Siparis_ID =" . strip_tags(htmlspecialchars(trim($_GET['LevhaSiparisSil']))));
@@ -59,9 +70,8 @@ elseif (isset($_GET['LevhaSiparisSil'])) {
             $sorgu = $baglanti->query("DELETE FROM siparis WHERE Siparis_ID =" . strip_tags(htmlspecialchars(trim($_GET['SiparisID']))));
             header("location:LevhaSiparisleri.php");
         }
-
     }
-
+    logtut($Kullanici, "Levha sipariş sildi.");
 } //--------------------------------Levha Giden
 elseif (isset($_GET['LevhaGidenSil'])) {
     $id = strip_tags(htmlspecialchars(trim($_GET['LevhaGidenSil'])));
@@ -74,8 +84,7 @@ elseif (isset($_GET['LevhaGidenSil'])) {
         $sorgu = $baglanti->query("DELETE FROM levha_giden WHERE Levha_Giden_ID =" . $id);
         header("location:LevhaSiparisleri.php");
     }
-
-
+    logtut($Kullanici, "Kullanılan levha sildi.");
 } //--------------------------------Levha Gelen
 
 elseif (isset($_GET['LevhaGelenSil'])) {
@@ -87,7 +96,6 @@ elseif (isset($_GET['LevhaGelenSil'])) {
         if ($sor->rowCount()) {
 
             echo $Kullanilanvar;
-
         }
     } else {
         $sor = $baglanti->query("SELECT Levha_Stok_ID, Stok_Adet, Stok_Agirlik FROM levha_gelen WHERE Levha_Gelen_ID= " . $id);
@@ -100,9 +108,8 @@ elseif (isset($_GET['LevhaGelenSil'])) {
         }
         header("location:LevhaSiparisleri.php");
     }
-
-
-}//############################### Boya Sipariş
+    logtut($Kullanici, "Levha stok sildi.");
+} //############################### Boya Sipariş
 
 elseif (isset($_GET['Boya_Siparis_Sil'])) {
     $sorgu = $baglanti->query("DELETE FROM boya_siparis WHERE Boya_Siparis_ID=" . strip_tags(htmlspecialchars(trim($_GET['Boya_Siparis_Sil']))));
@@ -113,6 +120,7 @@ elseif (isset($_GET['Boya_Siparis_Sil'])) {
             header("location:BoyaSiparisleri.php");
         }
     }
+    logtut($Kullanici, "Boya sipariş sildi.");
 } //--------------------------------Boya Giden
 elseif (isset($_GET['BoyaGidenSil'])) {
 
@@ -126,6 +134,7 @@ elseif (isset($_GET['BoyaGidenSil'])) {
         $sorgu = $baglanti->query("DELETE FROM boya_giden WHERE Boya_Giden_ID=" . $id);
         header("location:BoyaSiparisleri.php");
     }
+    logtut($Kullanici, "Kullanılan boya sildi.");
 } //--------------------------------Boya Gelen
 elseif (isset($_GET['BoyaGelenSil'])) {
 
@@ -149,9 +158,10 @@ elseif (isset($_GET['BoyaGelenSil'])) {
             header("location:BoyaSiparisleri.php");
         }
     }
+    logtut($Kullanici, "Boya stok sildi.");
 
-
-}//############################### Kulp Sipariş
+########################################################################
+} //#################################################################### Kulp Sipariş
 elseif (isset($_GET['KulpSiparisSil'])) {
 
     $sorgu = $baglanti->query("DELETE FROM kulp_siparis WHERE Kulp_Siparis_ID =" . strip_tags(htmlspecialchars(trim($_GET['KulpSiparisSil']))));
@@ -161,8 +171,8 @@ elseif (isset($_GET['KulpSiparisSil'])) {
             $sorgu = $baglanti->query("DELETE FROM siparis WHERE Siparis_ID =" . strip_tags(htmlspecialchars(trim($_GET['Siparis_ID']))));
         }
     }
-
-}//--------------------------------Kulp Gelen
+    logtut($Kullanici, "Kulp sipariş sildi.");
+} //--------------------------------Kulp Gelen
 elseif (isset($_GET['KulpGelenSil'])) {
     $id = strip_tags(htmlspecialchars(trim($_GET['KulpGelenSil'])));
     $kntrl = strip_tags(htmlspecialchars(trim($_GET['KulpGdnKntrl'])));
@@ -184,7 +194,8 @@ elseif (isset($_GET['KulpGelenSil'])) {
             header("location:KulpSiparisleri.php");
         }
     }
-}//--------------------------------Kulp Giden
+    logtut($Kullanici, "Kulp stok sildi.");
+} //--------------------------------Kulp Giden
 elseif (isset($_GET['KulpGidenSil'])) {
 
     $id = strip_tags(htmlspecialchars(trim($_GET['KulpGidenSil'])));
@@ -197,43 +208,5 @@ elseif (isset($_GET['KulpGidenSil'])) {
         $sorgu = $baglanti->query("DELETE FROM kulp_giden WHERE Kulp_Giden_ID=" . $id);
         header("location:KulpSiparisleri.php");
     }
-
-}//############################### Kapak Sipariş
-elseif (isset($_GET['KapakSiparisSil'])) {
-
-}//--------------------------------Kapak Gelen
-elseif (isset($_GET['KapakGelenSil'])) {
-
-}//--------------------------------Kapak Giden
-elseif (isset($_GET['KapakGidenSil'])) {
-
-} ########################################################################
-elseif (isset($_GET['UrunTasarimiSil'])) {
-    $sorgu = $baglanti->query("DELETE FROM yeni_urun");
-    if ($sorgu->rowCount()) {
-        $baglanti->query("DELETE FROM yeni_urun_bilgi");
-    }
-    header("location:../../Uretim/UrunTasarla/UrunTasarla.php");
-
-
-} elseif (isset($_GET['Yeni_Urun_Bilgi_ID'])) {
-
-
-    $id = strip_tags(htmlspecialchars(trim($_GET['Yeni_Urun_Bilgi_ID'])));
-    $sorgu = $baglanti->query("DELETE FROM yeni_urun WHERE Yeni_Urun_Bilgi_ID=" . $id);
-    if ($sorgu->rowCount()) {
-        $baglanti->query("DELETE FROM yeni_urun_bilgi WHERE Yeni_Urun_Bilgi_ID=" . $id);
-    }
-    header("location:../../Uretim/UrunTasarla/UrunTasarla.php");
-
-
-} elseif (isset($_GET['YeniSetLevhaTumSil'])) {
-
-    $sorgu = $baglanti->query("DELETE FROM yeniset_levha");
-    header("location:Anasayfa.php");
-
-} elseif (isset($_GET['YeniSetLevhaSil'])) {
-
-    $sorgu = $baglanti->query("DELETE FROM yeniset_levha WHERE YeniSet_Levha_ID=" . strip_tags(htmlspecialchars(trim($_GET['YeniSetLevhaSil']))));
-    header("location:Anasayfa.php");
+    logtut($Kullanici, "Kullanılan kulp sildi.");
 }

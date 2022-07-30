@@ -1,5 +1,6 @@
 <?php
 require __DIR__ . '/../controller/Db.php';
+require __DIR__ . "/../logtut.php";
 session_start();
 $SorKullanici = $baglanti->prepare("SELECT * FROM kullanici WHERE Kadi= ?");
 $SonucKul = $SorKullanici->execute(array($_SESSION["Kullanici"]));
@@ -26,6 +27,11 @@ if (isset($_POST['StokEkle'])) {
         $GelenLKaydet = $baglanti->prepare("INSERT INTO levha_gelen SET Levha_Stok_ID= ?, LevhaID=?, Stok_Adet= ?, Stok_Agirlik= ?, Teslim_Tarihi= ?, Kullanici_ID= ?");
         $GelenLKaydet->execute(array($id, $LevhaID, $GAdet, $GAgirlik, $TT, $Kullanici));
     }
+    /*LOG KAYDI*/
+
+    logtut($Kullanici, "Stoğa levha ekledi.");
+
+    /*LOG KAYDI SON*/
 }
 if (isset($_POST['Kullan'])) {
     $id = $_POST['LevhaStokID'];
@@ -58,4 +64,5 @@ if (isset($_POST['Kullan'])) {
         $Kaydet = $baglanti->prepare("INSERT INTO levha_giden SET Levha_Stok_ID= ?, Kullanilan_Adet= ?, Kullanilan_Agirlik= ?, Gidis_Tarihi= ?, Kullanici_ID= ?");
         $Kaydet->execute(array($id, $GAdet, $GAgirlik, $KT, $Kullanici));
     }
+    logtut($Kullanici, "Levha kullandı.");
 }

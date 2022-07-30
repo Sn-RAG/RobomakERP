@@ -80,6 +80,14 @@ FROM view_uretim_setler
 INNER JOIN set_urun_icerik ON view_uretim_setler.Set_ID = set_urun_icerik.Set_ID 
 INNER JOIN set_urun ON view_uretim_setler.Set_ID = set_urun.Set_ID 
 WHERE view_uretim_setler.Set_ID = " . $Set_ID . " GROUP BY set_urun_icerik.Set_Urun_icerik_ID, set_urun.Set_Urun_ID");
+
+/*LOG KAYDI*/
+
+require __DIR__ . "/../../logtut.php";
+logtut($Kullanici, "Set Oluşturdu.");
+
+/*LOG KAYDI SON*/
+
     #############################################################################################################################################
 } elseif (isset($_POST["SetAdiKontrol"])) {
     $SetVarmi = $baglanti->prepare("SELECT * FROM `set` WHERE SetAdi=?");

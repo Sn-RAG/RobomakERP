@@ -1,6 +1,7 @@
 <?php
 require __DIR__ . '/Db.php';
 require __DIR__ . '/VTHataMesaji.php';
+require __DIR__ . "/../logtut.php";
 
 //--------------------------------Kullanici Kim
 
@@ -36,6 +37,7 @@ if (isset($_POST['UrunEkle'])) {
             $Ekle->execute(array($Kategori_ID, $UrunAdi, $ResimYeni, $Aciklama));
         }
     }
+    logtut($Kullanici, "Ürün ekledi.");
 }
 
 //---------------------------------------Ürün Boya Bilgileri
@@ -55,6 +57,7 @@ if (isset($_POST['UrunBoyaBilgiEkle'])) {
         $SonucSor = $Kaydet->execute(array($Urun_ID, $Marka, $Renk, $_POST['icAstar'], $_POST['icUstkat'], $_POST['DisAstar'], $_POST['DisUstkat'], $Kullanici));
         header("location:UrunBoyaBilgi.php?Urun_ID=$Urun_ID");
     }
+    logtut($Kullanici, "Ürüne boya verisi ekledi.");
 }
 //---------------------------------------Ürün Levha Bilgileri
 
@@ -81,6 +84,7 @@ if (isset($_POST['UrunLevhaBilgiEkle'])) {
         $Kaydet->execute(array($ID, $Yeniid, $Kullanici));
         header("location:UrunLevhaBilgi.php?Urun_ID=$ID");
     }
+    logtut($Kullanici, "Ürüne levha verisi ekledi.");
 }
 
 //#######################################################################        FİRMA İŞLEMLERİ      ##########################################################################################
@@ -121,6 +125,7 @@ if (isset($_POST['FirmaEkle'])) {
     } else {
         header("location:Firmalar.php");
     }
+    logtut($Kullanici, "firma ekledi.");
 }
 
 //#######################################################################        SİPARİŞ İŞLEMLERİ      ##########################################################################################

@@ -53,16 +53,31 @@ require __DIR__ . "/controller/Yetki.php";
                 </a>
             </div>
             <div class="card">
-                <div class="card-header">
-                    <h5 class="m-3 text-dark">İşlem Takibi</h5>
+                <div class="card-body m-3 p-3">
+                    <h5>&nbsp</h5>
+                    <div class="d-flex justify-content-between mb-4">
+                        <h5>İşlem Takibi</h5>
+                        <button class="btn btn-sm btn-primary bi-arrow-repeat yenile">&nbsp Yenile</button>
+                        <button class="btn btn-sm btn-outline-danger bi-trash temizle">&nbsp Temizle</button>
+                    </div>
+                    <table class="table table-sm table-bordered small">
+                        <thead>
+                            <tr class="table-light">
+                                <th>#</th>
+                                <th>Kullanıcı</th>
+                                <th>İşlem</th>
+                                <th>Zaman</th>
+                            </tr>
+                        </thead>
+                        <tbody class="loglar"></tbody>
+                    </table>
                 </div>
-                <div class="card-body m-3 p-3 loglar"></div>
             </div>
         </div>
     </section>
 </main>
 <script>
-    $(function() {
+    $.Listele = function() {
         $.ajax({
             type: "POST",
             url: "postlog.php",
@@ -76,6 +91,30 @@ require __DIR__ . "/controller/Yetki.php";
                 $(".loglar").html(data);
             }
         })
+    }
+
+    $(function() {
+        $.Listele();
+    });
+
+    $(".temizle").click(function() {
+        $.ajax({
+            type: "POST",
+            url: "postlog.php",
+            data: {
+                'sil': true,
+            },
+            error: function(xhr) {
+                alert('Hata: ' + xhr.responseText);
+            },
+            success: function() {
+                $.Listele();
+            }
+        })
+    });
+
+    $(".yenile").click(function() {
+        $.Listele();
     });
 </script>
 <?php
