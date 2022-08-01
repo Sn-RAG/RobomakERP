@@ -36,31 +36,44 @@ $id = (int)$_GET["id"];
                     <tbody>
                         <?php
                         //Hesap
-                        $Toplamic = [];
-                        $Toplamdis = [];
+                        $i = 0;
+                        $TicUstkat = 0;
+                        $TicAstar = 0;
+                        $TDisUstkat = 0;
+                        $TDisAstar = 0;
+
+                        $icUstkat = [];
+                        $icAstar = [];
+                        $DisUstkat = [];
+                        $DisAstar = [];
+
                         $Set = $baglanti->query('SELECT Adet, icBoya, DisBoya FROM set_urun_icerik WHERE Set_ID = ' . $id)->fetchAll();
-                        $QUERY = $baglanti->query("SELECT Urun_ID,icBoya_ID,DisRenk,Adet FROM view_set_urun_sec WHERE Set_ID =$id");
+                        $QUERY = $baglanti->query("SELECT Urun_ID,icBoya_ID,DisBoya_ID,Adet FROM view_set_urun_sec WHERE Set_ID =$id");
                         foreach ($QUERY as $b) {
                             $Uid = $b["Urun_ID"];
                             $Adet = $b["Adet"];
-                            $icRenk = $baglanti->query('SELECT Renk FROM boya WHERE Boya_ID =' . $b["icBoya_ID"])->fetch()["Renk"];
-                            $disRenk = $b["DisRenk"];
+                            $icID = $b["icBoya_ID"];
+                            $disID = $b["DisBoya_ID"];
 
-                            $icBoya = $baglanti->query("SELECT icAstar,icUstkat FROM view_urun_boya_bilgi WHERE Urun_ID = " . $Uid . " AND Renk='$icRenk'");
-                            $disBoya = $baglanti->query("SELECT DisAstar,DisUstkat FROM view_urun_boya_bilgi WHERE Urun_ID = " . $Uid . " AND Renk='$disRenk'");
+                            $icBoya = $baglanti->query("SELECT icAstar,icUstkat FROM urun_boya_bilgi WHERE Urun_ID = $Uid AND Boya_ID=$icID");
+                            $disBoya = $baglanti->query("SELECT DisAstar,DisUstkat FROM urun_boya_bilgi WHERE Urun_ID =$Uid AND Boya_ID=$disID");
 
                             if ($icBoya->rowCount() && $disBoya->rowCount()) {
                                 //toplam ic boya
                                 foreach ($icBoya as $bb) {
-                                    $ic = (((float)$bb["icAstar"] + (float)$bb["icUstkat"]) / 1000) * $Adet;
-                                    @$Toplamic["$icRenk"] += $ic; // Boyaya özel toplam
+                                    $TicUstkat += $bb["icUstkat"] * $Adet;
+                                    $TicAstar += $bb["icAstar"] * $Adet;
+                                    $icUstkat[$i] = $bb["icUstkat"];
+                                    $icAstar[$i] = $bb["icAstar"];
                                 }
-
                                 //toplam dış boya
                                 foreach ($disBoya as $bb) {
-                                    $dis = (($bb["DisAstar"] + $bb["DisUstkat"]) / 1000) * $Adet;
-                                    @$Toplamdis["$disRenk"] += $dis; // Boyaya özel toplam
+                                    $TDisUstkat += $bb["DisUstkat"] * $Adet;
+                                    $TDisAstar += $bb["DisAstar"] * $Adet;
+                                    $DisUstkat[$i] = $bb["DisUstkat"];
+                                    $DisAstar[$i] = $bb["DisAstar"];
                                 }
+                                $i++;
                             } else {
                                 echo "<script>" . $BoyaBilgisiYok . "</script>";
                             }
@@ -71,11 +84,17 @@ $id = (int)$_GET["id"];
                         $n = 1;
                         $sorgu = $baglanti->query("SELECT UrunAdi,Adet FROM view_set_urun_sec WHERE Set_ID =$id GROUP BY Urun_ID ORDER BY UrunAdi ASC");
                         foreach ($sorgu as $s) {
+                            $icID = $b["icBoya_ID"];
+                            $disID = $b["DisBoya_ID"];
                         ?>
                             <tr>
                                 <td><?= $n++ ?></td>
                                 <td><?= $s["UrunAdi"] ?></td>
                                 <td><?= $s["Adet"] ?></td>
+                                <!--<td><?= $icAstar[$i] ?></td>
+                                <td><?= $icUstkat[$i] ?></td>
+                                <td><?= $DisAstar[$i] ?></td>
+                                <td><?= $DisUstkat[$i] ?></td>-->
                             </tr>
                         <?php } ?>
                         <tr>
@@ -86,20 +105,23 @@ $id = (int)$_GET["id"];
                             <th>Dış Boya</th>
                             <th rowspan="<?= count($Set) + 1 ?>"></th>
                         </tr>
-                        <?php foreach ($Set as $s) {
-                            $iR = $baglanti->query('SELECT Renk FROM boya WHERE Boya_ID =' . $s["icBoya"])->fetch()["Renk"];
-                            $dR = $baglanti->query('SELECT Renk FROM boya WHERE Boya_ID =' . $s["DisBoya"])->fetch()["Renk"];
+                        <?php for ($i = 0; $i < count($Set); $i++) {
+
+                            $ic = $Set[$i]["icBoya"];
+                            $Dis = $Set[$i]["DisBoya"];
+                            $iR = $baglanti->query('SELECT Renk FROM boya WHERE Boya_ID =' . $ic)->fetch()["Renk"];
+                            $dR = $baglanti->query('SELECT Renk FROM boya WHERE Boya_ID =' . $Dis)->fetch()["Renk"];
+
                         ?>
                             <tr>
                                 <td>
-                                    <div class="d-flex justify-content-between"><span><?= $iR ?></span> Toplam= <?= @$Toplamic["$iR"] ?> Kg</div>
+                                    <div class="d-flex justify-content-between ic"><span><?= $iR ?></span> Toplam= &nbsp <?= @number_format($Toplamic[$ic]) ?> &nbsp gr</div>
                                 </td>
                                 <td>
-                                    <div class="d-flex justify-content-between"><span><?= $dR ?></span> Toplam= <?= @$Toplamdis["$dR"] ?> Kg</div>
+                                    <div class="d-flex justify-content-between dis"><span><?= $dR ?></span> Toplam= &nbsp <?= @number_format($Toplamdis[$Dis]) ?> &nbsp gr</div>
                                 </td>
                             </tr>
                         <?php } ?>
-
                     </tbody>
                 </table>
             </div>
@@ -128,6 +150,20 @@ $id = (int)$_GET["id"];
 <script>
     $("#yazdir").click(function() {
         window.print();
+    });
+    $(function() {
+        $(".ic").map(function() {
+            if ($(this).text() != "") {
+                Uid.push($(this).attr("UrunID"));
+                LevhaID.push($(this).attr("LevhaID"));
+                deger.push($(this).val());
+            }
+        });
+        $(".dis").map(function() {
+            if ($(this).val() != "") {
+
+            }
+        });
     });
 </script>
 <?php

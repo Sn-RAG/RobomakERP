@@ -22,12 +22,19 @@ $Urun_ID = (int)$_GET['Urun_ID'];
                         <input type="hidden" name="Urun_ID" value="<?= $Urun_ID ?>" />
 
                         <div class="form-floating">
-                            <input type="text" name="Marka" value="" class="form-control" required>
+                            <select name="Marka" class="form-select Marka" required>
+                                <option value=''>* İç Boya Marka Seç</option>
+                                <?php
+                                $Marka = $baglanti->query("SELECT DISTINCT Marka FROM boya");
+                                foreach ($Marka as $s) { ?>
+                                    <option value="<?= $s["Marka"] ?>"><?= $s["Marka"] ?></option>
+                                <?php } ?>
+                            </select>
                             <label>Marka</label>
                         </div>
 
                         <div class="form-floating">
-                            <input type="text" name="Renk" value="" class="form-control" required>
+                            <select name="Renk" class="form-select Renk" disabled required></select>
                             <label>Renk</label>
                         </div>
 
@@ -58,6 +65,25 @@ $Urun_ID = (int)$_GET['Urun_ID'];
         </div>
     </section>
 </main>
+<script>
+    $(".Marka").change(function() {
+        var v = $(".Marka").val();
+        $.ajax({
+            type: "POST",
+            url: "../AjaxForm/post.php",
+            data: {
+                'Marka': v,
+            },
+            error: function(xhr, textStatus, errorThrown) {
+                alert('Hata: ' + xhr.responseText);
+            },
+            success: function(data) {
+                $(".Renk").html(data);
+                $(".Renk").prop("disabled", false);
+            }
+        })
+
+    });
+</script>
 <?php
 require __DIR__ . '/../../controller/Footer.php';
-?>

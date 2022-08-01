@@ -28,12 +28,19 @@ $Sor = $sorgu->fetch();
                         <input type="hidden" name="Urun_Boya_Bilgi_ID" value="<?= $id ?>" />
 
                         <div class="form-floating">
-                            <input type="text" name="Marka" value="<?= $Sor['Marka'] ?>" class="form-control" required>
+                            <select name="Marka" class="form-select Marka" required>
+                                <?php
+                                $Marka = $baglanti->query("SELECT DISTINCT Marka FROM boya");
+                                foreach ($Marka as $s) {
+                                    $m = $s["Marka"] ?>
+                                    <option <?= $Sor['Marka'] == $m ? "selected" : "" ?> value="<?= $m ?>"><?= $m ?></option>
+                                <?php } ?>
+                            </select>
                             <label>Marka</label>
                         </div>
 
                         <div class="form-floating">
-                            <input type="text" name="Renk" value="<?= $Sor['Renk'] ?>" class="form-control" required>
+                            <select name="Renk" class="form-select Renk" disabled required></select>
                             <label>Renk</label>
                         </div>
 
@@ -64,6 +71,25 @@ $Sor = $sorgu->fetch();
         </div>
     </section>
 </main>
+<script>
+    $(function() {
+        var v = $(".Marka").val();
+        $.ajax({
+            type: "POST",
+            url: "../AjaxForm/post.php",
+            data: {
+                'Marka': v,
+            },
+            error: function(xhr, textStatus, errorThrown) {
+                alert('Hata: ' + xhr.responseText);
+            },
+            success: function(data) {
+                $(".Renk").html(data);
+                $(".Renk").prop("disabled", false);
+            }
+        })
+    });
+</script>
 <?php
 require __DIR__ . '/../../controller/Footer.php';
 ?>
