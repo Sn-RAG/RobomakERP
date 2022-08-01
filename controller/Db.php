@@ -1,8 +1,8 @@
 <?php
-$host = '94.73.150.194';
-$dbname = 'robomak_com_tr_er';
-$username = 'robomak_com_tr_er';
-$password = 'Serhat8388Serhat8388';
+$host = 'localhost';
+$dbname = 'robomakerp';
+$username = 'root';
+$password = '';
 $charset = 'utf8';
 //$collate = 'utf8_unicode_ci';
 @$dsn = "mysql:host=$host;dbname=$dbname;charset=$charset";
