@@ -2,12 +2,10 @@
 require __DIR__ . '/../../controller/Db.php';
 
 session_start();
-$SorKullanici = $baglanti->prepare("SELECT * FROM kullanici WHERE Kadi= ?");
-$SonucKul = $SorKullanici->execute(array($_SESSION["Kullanici"]));
-$bakKul = $SorKullanici->fetch();
-$Kullanici = $bakKul['Kullanici_ID'];
+$Sor = $baglanti->query("SELECT Kullanici_ID FROM kullanici WHERE Kadi='$_SESSION[Kullanici]'");
+$Kullanici = $Sor->fetch()['Kullanici_ID'];
 
-if (isset($_POST['Sec'])) {
+if (isset($_POST['SetTamam'])) {
     $UIDler = $_POST["UrunIDler"];
     //Kapak Kulp ve Tepe idleri Kendi tablolarında olmayınca Listelenmiyor o yüzden yok adında kayıt kontrolü yapıcaz
     $Adetler = $_POST["Adetler"];
@@ -62,8 +60,8 @@ if (isset($_POST['Sec'])) {
 
     $Set_Urun_ID = $baglanti->lastInsertId();
     for ($i = 0; $i < count($Adetler); $i++) {
-        $Kaydet = $baglanti->prepare("INSERT INTO set_urun_icerik SET Set_ID= ?, Adet= ?, DisBoya= ?, icBoya= ?");
-        $Sonuc = $Kaydet->execute(array($Set_ID, $Adetler[$i], $_POST["DisBoyalar"][$i], $_POST["icBoyalar"][$i]));
+        $Kaydet = $baglanti->prepare("INSERT INTO set_urun_icerik SET Set_ID= ?, Adet= ?, DisBoya= ?, icBoya= ?, Kircil= ?, Kircill= ?");
+        $Sonuc = $Kaydet->execute(array($Set_ID, $Adetler[$i], $_POST["DisBoyalar"][$i], $_POST["icBoyalar"][$i], $_POST["Kircil"][$i], $_POST["Kircill"][$i]));
     }
 
     $Set_Urun_icerik_ID = $baglanti->lastInsertId();
@@ -74,19 +72,19 @@ if (isset($_POST['Sec'])) {
     // Düzenlemek için Kombinasyonu yapılan verinin bütün varyasyonlarını başka bir veri tabanına ekliyoruz sırf ürüne özel düzenlemeler gerçekleştirmek için
     ###############################################
 
-    $baglanti->query("INSERT INTO set_urunler (Set_Urun_icerik_ID, Set_ID, Urun_ID, Levha_ID, icBoya_ID, DisBoya_ID, Kulp_ID, Kapak_ID, Tepe_ID, Adet) 
-SELECT set_urun_icerik.Set_Urun_icerik_ID, set_urun.Set_ID, set_urun.Urun_ID, set_urun.Levha_ID, icBoya, DisBoya, Kulp_ID, Kapak_ID, Tepe_ID, Adet 
+    $baglanti->query("INSERT INTO set_urunler (Set_Urun_icerik_ID, Set_ID, Urun_ID, Levha_ID, icBoya_ID, DisBoya_ID, Kircil, Kircill, Kulp_ID, Kapak_ID, Tepe_ID, Adet) 
+SELECT set_urun_icerik.Set_Urun_icerik_ID, set_urun.Set_ID, set_urun.Urun_ID, set_urun.Levha_ID, icBoya, DisBoya, Kircil, Kircill, Kulp_ID, Kapak_ID, Tepe_ID, Adet 
 FROM view_uretim_setler 
 INNER JOIN set_urun_icerik ON view_uretim_setler.Set_ID = set_urun_icerik.Set_ID 
 INNER JOIN set_urun ON view_uretim_setler.Set_ID = set_urun.Set_ID 
 WHERE view_uretim_setler.Set_ID = " . $Set_ID . " GROUP BY set_urun_icerik.Set_Urun_icerik_ID, set_urun.Set_Urun_ID");
 
-/*LOG KAYDI*/
+    /*LOG KAYDI*/
 
-require __DIR__ . "/../../logtut.php";
-logtut($Kullanici, "Set Oluşturdu.");
+    require __DIR__ . "/../../logtut.php";
+    logtut($Kullanici, "Set Oluşturdu.");
 
-/*LOG KAYDI SON*/
+    /*LOG KAYDI SON*/
 
     #############################################################################################################################################
 } elseif (isset($_POST["SetAdiKontrol"])) {
@@ -201,4 +199,11 @@ elseif (isset($_POST["Listele"])) {
 
     $icerik = $baglanti->prepare("UPDATE set_urunler SET Adet= ?, DisBoya_ID= ?, icBoya_ID= ?, Kapak_ID= ?, Kulp_ID= ? WHERE Set_Urun_Duzenle_ID= ?");
     $Doldur = $icerik->execute(array($Adet, $DisBoya, $icBoya, $Kapak, $Kulp, $id));
+} elseif (isset($_POST["Marka"])) { ?>
+
+    <option value=''>* Boya Seç</option>
+    <?php $boya = $baglanti->query("SELECT Boya_ID, Renk FROM boya WHERE Seri<>'Kırçıl' AND Marka='$_POST[Marka]' GROUP BY Renk");
+    foreach ($boya as $s) { ?>
+        <option value="<?= $s["Boya_ID"] ?>"><?= $s["Renk"] ?></option>
+<?php }
 }

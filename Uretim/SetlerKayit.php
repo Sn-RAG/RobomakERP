@@ -222,26 +222,60 @@ require __DIR__ . '/../controller/Kayit.php';
                             </div>
                             <div class="mb-3">
                                 <div class="inputlar">
-                                    <div class="form-group row g-3 mb-3">
-                                        <div class="col-md-4">
-                                            <select name='icBoyalar' class='form-select icBoyalar'>
-                                                <option value=''>* İç Boya Seç</option>
-                                                <?php $boya = $baglanti->query("SELECT Boya_ID, Renk FROM boya GROUP BY Renk")->fetchAll();
-                                                foreach ($boya as $s) { ?>
-                                                    <option <?= isset($_SESSION["icBoyaSec"]) ? ($_SESSION["icBoyaSec"] == $s["Boya_ID"] ? "selected" : "") : "" ?> value="<?= $s["Boya_ID"] ?>"><?= $s["Renk"] ?></option>
-                                                <?php } ?>
-                                            </select>
+                                    <div class="form-group border-bottom border-dark mb-3">
+                                        <div class="mb-3"></div>
+                                        <div class="d-flex align-items-center mb-3">
+
+                                            <div class="input-group me-1">
+                                                <select class='form-select icM'>
+                                                    <option value=''>* İç Boya Marka Seç</option>
+                                                    <?php
+                                                    $Marka = $baglanti->query("SELECT DISTINCT Marka FROM boya")->fetchAll();
+                                                    foreach ($Marka as $s) { ?>
+                                                        <option value="<?= $s["Marka"] ?>"><?= $s["Marka"] ?></option>
+                                                    <?php } ?>
+                                                </select>
+                                                <select class='form-select icBoyalar' id="icBoya" disabled>
+                                                </select>
+                                            </div>
+
+                                            <i class="bi bi-dash-lg me-1"></i>
+
+                                            <div class="input-group">
+                                                <select class='form-select icD'>
+                                                    <option value=''>* Dış Boya Marka Seç</option>
+                                                    <?php foreach ($Marka as $s) { ?>
+                                                        <option value="<?= $s["Marka"] ?>"><?= $s["Marka"] ?></option>
+                                                    <?php } ?>
+                                                </select>
+                                                <select class='form-select DisBoyalar' id="DisBoya" disabled>
+                                                </select>
+                                            </div>
                                         </div>
-                                        <div class="col-md-4">
-                                            <select name='DisBoyalar' class='form-select DisBoyalar'>
-                                                <option value=''>* Dış Boya Seç</option>
-                                                <?php foreach ($boya as $s) { ?>
-                                                    <option <?= isset($_SESSION["DisBoyaSec"]) ? ($_SESSION["DisBoyaSec"] == $s["Boya_ID"] ? "selected" : "") : "" ?> value="<?= $s["Boya_ID"] ?>"><?= $s["Renk"] ?></option>
-                                                <?php } ?>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <input type="number" name="Adetler" class="form-control Adetler" placeholder="* Adet gir">
+
+                                        <div>
+                                            <div>
+                                                <div class="d-flex mb-3">
+
+                                                    <select class='form-select me-3 Kircil'>
+                                                        <option value=''>Kırçıl Seç</option>
+                                                        <?php $kircil = $baglanti->query("SELECT Boya_ID, Renk FROM boya WHERE Seri='Kırçıl' GROUP BY Renk")->fetchAll();
+                                                        foreach ($kircil as $s) { ?>
+                                                            <option value="<?= $s["Boya_ID"] ?>"><?= $s["Renk"] ?></option>
+                                                        <?php } ?>
+                                                    </select>
+
+                                                    <select class='form-select me-3 Kircill'>
+                                                        <option value=''>Kırçıl Seç</option>
+                                                        <?php foreach ($kircil as $s) { ?>
+                                                            <option value="<?= $s["Boya_ID"] ?>"><?= $s["Renk"] ?></option>
+                                                        <?php } ?>
+                                                    </select>
+
+                                                    <input type="number" name="Adetler" class="form-control Adetler me-3" placeholder="* Adet gir">
+
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

@@ -61,11 +61,11 @@
 
         //####################################### Form input ekle
 
+
         $(document).on('click', '.input-ekle', function(e) {
             var DisBoyalar = [];
-            $("select.DisBoyalar").each(function(i, sel) {
-                var selectedVal = $(sel).val();
-                DisBoyalar.push(selectedVal);
+            $(".DisBoyalar").map(function() {
+                DisBoyalar.push($(this).val());
             });
             if (DisBoyalar.length > 5) {
                 $(".input-ekle").prop("disabled", true)
@@ -74,26 +74,83 @@
             e.preventDefault();
             examsList = $('.inputlar');
             clone = examsList.children('.form-group:first').clone(true);
-            clone.append($('<button>').addClass('btn col-md-1 btn-danger bi-trash input-sil'));
+            clone.children("div").children("div").children("div").append($('<button>').addClass('btn btn-danger bi-trash input-sil'));
+            if (DisBoyalar.length > 0) {
+                $(".input-sil").prop("disabled", false);
+            }
+
+            clone.children("div").children("div").find("#icBoya").prop("disabled",true);
+            clone.children("div").children("div").find("#DisBoya").prop("disabled",true);
+
             return examsList.append(clone);
+
         });
         $(document).on('click', '.input-sil', function(e) {
             var DisBoyalar = [];
-            $("select.DisBoyalar").each(function(i, sel) {
-                var selectedVal = $(sel).val();
-                DisBoyalar.push(selectedVal);
+            $(".DisBoyalar").map(function() {
+                DisBoyalar.push($(this).val());
             });
-            if (DisBoyalar.length <= 8) { // O anki değeri geriden geldiği için
+            if (DisBoyalar.length == 7) {
                 $(".input-ekle").prop("disabled", false);
             }
             e.preventDefault();
-            return $(this).parent().remove();
+            return $(this).parent("div").parent("div").parent("div").parent("div").remove();
         });
         $("#Setadii").prop("disabled", true);
         $("#Urunn").prop("disabled", true);
         $("#Kutuu").prop("disabled", true);
         $("#Renkk").prop("disabled", true);
         $("#Listee").prop("disabled", true);
+    });
+
+    $(".icM").change(function() {
+        var v = $(this).val();
+
+        const icBoya = $(this).parent("div").parent("div").find("#icBoya");
+
+        if (v != "") {
+            $.ajax({
+                type: "POST",
+                url: "AjaxForm/post.php",
+                data: {
+                    'Marka': v,
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    alert('Hata: ' + xhr.responseText);
+                },
+                success: function(data) {
+                    icBoya.html(data);
+                    icBoya.prop("disabled", false);
+                }
+            })
+        } else {
+            icBoya.prop("disabled", true);
+        }
+    });
+
+    $(".icD").change(function() {
+        var v = $(this).val();
+
+        const DisBoya = $(this).parent("div").parent("div").find("#DisBoya");
+
+        if (v != "") {
+            $.ajax({
+                type: "POST",
+                url: "AjaxForm/post.php",
+                data: {
+                    'Marka': v,
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    alert('Hata: ' + xhr.responseText);
+                },
+                success: function(data) {
+                    DisBoya.html(data);
+                    DisBoya.prop("disabled", false);
+                }
+            })
+        } else {
+            DisBoya.prop("disabled", true);
+        }
     });
 
     $("#ileriUrun").click(function() {
@@ -212,6 +269,8 @@
         var Adetler = [];
         var icBoyalar = [];
         var DisBoyalar = [];
+        var Kircil = [];
+        var Kircill = [];
         $(".UrunSecim:checked").map(function() {
             var h = Number($(this).attr("id"));
             UrunIDler.push(h);
@@ -222,15 +281,20 @@
         });
 
         $(".Adetler").each(function(i, sel) {
-            Adetler.push($(sel).val());
+            Adetler.push($(this).val());
         });
-        $(".icBoyalar").each(function(i, sel) {
-            icBoyalar.push($(sel).val());
+        $(".icBoyalar").map(function() {
+            icBoyalar.push($(this).val());
         });
-        $(".DisBoyalar").each(function(i, sel) {
-            DisBoyalar.push($(sel).val());
+        $(".DisBoyalar").map(function() {
+            DisBoyalar.push($(this).val());
         });
-
+        $(".Kircil").map(function() {
+            Kircil.push($(this).val());
+        });
+        $(".Kircill").map(function() {
+            Kircill.push($(this).val());
+        });
         for (let i = 0; i < DisBoyalar.length; i++) {
             if (DisBoyalar[i] == '' || icBoyalar[i] == '' || Adetler[i] == '') {
                 $(".Fazlainput").text("* Zorunlu alanları doldurun!");
@@ -256,8 +320,10 @@
                                 'Kutu': Kutu,
                                 'icBoyalar': icBoyalar,
                                 'DisBoyalar': DisBoyalar,
+                                'Kircil': Kircil,
+                                'Kircill': Kircill,
                                 'Adetler': Adetler,
-                                'Sec': true,
+                                'SetTamam': true,
                             },
                             error: function(xhr) {
                                 alert('Hata: ' + xhr.responseText);

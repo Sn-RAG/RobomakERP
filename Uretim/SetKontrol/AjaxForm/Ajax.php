@@ -77,17 +77,12 @@ $Has = ".hasClass('btn-primary')";
         var SetID = $(".GDeger").attr("SetID");
         var Uid = [];
         var LevhaID = [];
+        var deger = [];
 
         var iBoya = $(".icRenk").val();
         var dBoya = $(".DisRenk").val();
 
-        var deger = [];
         var Tarih = $(".Tarih").val();
-        var sum = 0;
-        $(".Tadet").map(function() {
-            sum += Number($(this).val());
-        });
-
         $(".GDeger").map(function() {
             if ($(this).val() != "") {
                 Uid.push($(this).attr("UrunID"));
@@ -95,13 +90,18 @@ $Has = ".hasClass('btn-primary')";
                 deger.push($(this).val());
             }
         });
-        /*if (Number($("#yazsayi" + Uid + "").html()) + Number(deger) > sum) {
-            <?= $FazlaDeger ?>
-            $(".GDeger").val("");
-        } else*/
+        for (let i = 0; i < Uid.length; i++) {
+            var sum = 0;
+            $(".Tadet" + Uid[i] + "").map(function() {
+                sum += Number($(this).text());
+            });
+            if (Number($("#yazsayi" + Uid[i] + "").html()) + Number(deger[i]) > sum) {
+                <?= $FazlaDeger ?>
+                return $(".GDeger").val("");
+            }
+        }
         if (Number(deger) <= 0 || deger == "") {
             <?= $Gecersiz ?>
-            $(".GDeger").val("");
         } else {
             switch (true) {
                 case $("#Pres") <?= $Has ?>:
@@ -148,10 +148,10 @@ $Has = ".hasClass('btn-primary')";
                     } else {
                         $.Listele();
                     }
-                    $(".GDeger").val("");
                 }
             })
         }
+        $(".GDeger").val("");
     });
     $('.fire').click(function() {
         var SetID = $(".GDeger").attr("SetID");
@@ -159,10 +159,6 @@ $Has = ".hasClass('btn-primary')";
         var LevhaID = [];
         var deger = [];
         var Tarih = $(".Tarih").val();
-        var sum = 0;
-        $(".Tadet").map(function() {
-            sum += Number($(this).val());
-        });
         $(".GDeger").map(function() {
             if ($(this).val() != "") {
                 Uid.push($(this).attr("UrunID"));
@@ -170,13 +166,8 @@ $Has = ".hasClass('btn-primary')";
                 deger.push($(this).val());
             }
         });
-        /*if (Number($("#yazsayi" + Uid + "").html()) + Number(deger) > sum) {
-            <?= $FazlaDeger ?>
-            $(".GDeger").val("");
-        } else*/
         if (Number(deger) <= 0 || deger == "") {
             <?= $Gecersiz ?>
-            $(".GDeger").val("");
         } else {
             $.ajax({
                 type: "POST",
@@ -197,10 +188,10 @@ $Has = ".hasClass('btn-primary')";
                     } else {
                         $.Listele();
                     }
-                    $(".GDeger").val("");
                 }
             })
         }
+        $(".GDeger").val("");
     });
 
     //###################################################################################################################################################

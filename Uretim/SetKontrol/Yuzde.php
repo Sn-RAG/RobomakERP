@@ -4,10 +4,9 @@
 /*Toplam Set içerik Adeti*/ $Toplam = $baglanti->query('SELECT SUM(Adet) AS Toplam FROM view_set_urun_sec WHERE Set_ID =' . $SetID)->fetch()["Toplam"];
 //Levha
 $CartLevha = [];
+$LevhaTed = 0;
 $i = 0;
 $Hesap = 0;
-$a = 0;
-$b = 0;
 //Pres
 $Prs = 0;
 $e = 0;
@@ -34,20 +33,18 @@ foreach ($sor as $s) {
         $q = $l->fetch();
         $c = $q["Cap"];
         $k = $q["Kalinlik"];
-        $o = ceil((($c * $c * $k * (0.22)) / 1000) * $s["Adet"]); // Toplam tedarik edilecek levha
-        $a += $o;
-        $sorstok = $baglanti->query("SELECT levha.Levha_ID AS LevhaID, SUM(Stok_Adet) AS Adt, SUM(Stok_Agirlik) AS kg FROM levha_siparis INNER JOIN levha_gelen ON levha_siparis.Levha_Stok_ID = levha_gelen.Levha_Stok_ID INNER JOIN levha ON levha_siparis.Levha_ID = levha.Levha_ID WHERE Stok_Adet>0 AND Stok_Agirlik>0 AND levha.Levha_ID =" . $s["Levha_ID"]);
+        $a = $s["Adet"];
+        $sorstok = $baglanti->query("SELECT levha.Levha_ID AS LevhaID, SUM(Stok_Adet) AS Adt FROM levha_siparis INNER JOIN levha_gelen ON levha_siparis.Levha_Stok_ID = levha_gelen.Levha_Stok_ID INNER JOIN levha ON levha_siparis.Levha_ID = levha.Levha_ID WHERE Stok_Adet>0 AND Stok_Agirlik>0 AND levha.Levha_ID =" . $s["Levha_ID"]);
         if ($sorstok->rowCount()) {
             foreach ($sorstok as $stk) {
-                $m = $stk["kg"]; // Stokta olan levha
-                $Adt = $stk["Adt"]; // Stokta olan levha
+                $b = $stk["Adt"]; // Stokta olan levha
                 $i++;
-                $CartLevha[$i] = $Adt;
-                if ($o > $m) {
-                    $b += $m;
-                } else {
-                    $b += $o;
-                }
+                $CartLevha[$i] = $b;
+
+                //PRES
+                $pr = $baglanti->query("SELECT SUM(Adet) AS Toplam FROM set_urunler_asama_akis WHERE Yapilan_is='Preslendi' AND Set_ID=" . $SetID . " AND Levha_ID=" . $stk["LevhaID"])->fetch()["Toplam"];
+                $tt = floor(($b + $pr) / ($a / 100));
+                $LevhaTed += $tt > 99 ? 100 : $tt;
             }
         }
     }
@@ -59,11 +56,12 @@ foreach ($sor as $s) {
     $g += $baglanti->query("SELECT SUM(Adet) AS Toplam FROM set_urunler_asama_akis WHERE Yapilan_is='Kumlandı' AND Set_ID=" . $SetID . " AND Urun_ID=" . $UrunID)->fetch()["Toplam"];
     //Telleme
     $h += $baglanti->query("SELECT SUM(Adet) AS Toplam FROM set_urunler_asama_akis WHERE Yapilan_is='Tellendi' AND Set_ID=" . $SetID . " AND Urun_ID=" . $UrunID)->fetch()["Toplam"];
-    //Boyama
-    $j += $baglanti->query("SELECT SUM(Adet) AS Toplam FROM set_urunler_asama_akis WHERE Yapilan_is='İçi Boyandı' AND Set_ID=" . $SetID . " OR Set_ID=" . $SetID . " AND Yapilan_is='Dışı Boyandı'")->fetch()["Toplam"];
     //Paketleme
     $p += $baglanti->query("SELECT SUM(Adet) AS Toplam FROM set_urunler_asama_akis WHERE Yapilan_is='Paketlendi' AND Set_ID=" . $SetID . " AND Urun_ID=" . $UrunID)->fetch()["Toplam"];
 }
+//Boyama
+$j += $baglanti->query("SELECT SUM(Adet) AS Toplam FROM set_urunler_asama_akis WHERE Yapilan_is='İçi Boyandı' AND Set_ID=$SetID OR Set_ID=$SetID AND Yapilan_is='Dışı Boyandı'")->fetch()["Toplam"];
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -141,33 +139,31 @@ if ($Cart->rowCount()) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //Yüzde Hesabı
-if ($a <> null) { //Levha
-    $Hesap = floor($b / ($a / 100));
-    $Hesap = $Hesap > 100 ? 100 : $Hesap;
-}
+
+$Hesap = floor($LevhaTed / count($sor));
 
 if ($e <> null) { //Pres
     $Prs = floor($e / ($Toplam / 100));
-    $Prs = $Prs > 100 ? 100 : $Prs;
+    $Prs = $Prs > 99 ? 100 : $Prs;
 }
 if ($f <> null) { //Yıkama
     $Yika = floor($f / ($Toplam / 100));
-    $Yika = $Yika > 100 ? 100 : $Yika;
+    $Yika = $Yika > 99 ? 100 : $Yika;
 }
 if ($g <> null) { //Kumlama
     $Kumla = floor($g / ($Toplam / 100));
-    $Kumla = $Kumla > 100 ? 100 : $Kumla;
+    $Kumla = $Kumla > 99 ? 100 : $Kumla;
 }
 if ($h <> null) { //Teleme
     $Telle = floor($h / ($Toplam / 100));
-    $Telle = $Telle > 100 ? 100 : $Telle;
+    $Telle = $Telle > 99 ? 100 : $Telle;
 }
 if ($j <> null) { //Boyama
     $Boya = floor(($j / 2) / ($Toplam / 100));
-    $Boya = $Boya > 100 ? 100 : $Boya;
+    $Boya = $Boya > 99 ? 100 : $Boya;
 }
 if ($p <> null) { //Paketleme
     $Paket = floor($p / ($Toplam / 100));
-    $Paket = $Paket > 100 ? 100 : $Paket;
+    $Paket = $Paket > 99 ? 100 : $Paket;
 }
 $SetYuzde = floor(($Prs + $Yika + $Kumla + $Telle + $Boya + $Paket) / 6);

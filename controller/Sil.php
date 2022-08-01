@@ -5,10 +5,9 @@ require __DIR__ . "/../logtut.php";
 
 //--------------------------------Kullanici Kim
 
-$SorKullanici = $baglanti->prepare("SELECT * FROM kullanici WHERE Kadi= ?");
-$SonucKul = $SorKullanici->execute(array($_SESSION["Kullanici"]));
-$bakKul = $SorKullanici->fetch();
-$Kullanici = $bakKul['Kullanici_ID'];
+$Sor = $baglanti->query("SELECT Kullanici_ID FROM kullanici WHERE Kadi='$_SESSION[Kullanici]'");
+$Kullanici = $Sor->fetch()['Kullanici_ID'];
+
 //--------------------------------Kullanıcı
 if (isset($_GET['KullaniciSil'])) {
     $id = strip_tags(htmlspecialchars(trim($_GET['KullaniciSil'])));

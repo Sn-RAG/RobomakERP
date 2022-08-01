@@ -4,11 +4,8 @@ require __DIR__ . '/VTHataMesaji.php';
 require __DIR__ . "/../logtut.php";
 //--------------------------------Kullanici Kim
 
-$SorKullanici = $baglanti->prepare("SELECT * FROM kullanici WHERE Kadi= ?");
-$SonucKul = $SorKullanici->execute(array($_SESSION["Kullanici"]));
-$bakKul = $SorKullanici->fetch();
-$Kullanici = $bakKul['Kullanici_ID'];
-
+$Sor = $baglanti->query("SELECT Kullanici_ID FROM kullanici WHERE Kadi='$_SESSION[Kullanici]'");
+$Kullanici = $Sor->fetch()['Kullanici_ID'];
 
 //----------------------------------------------- Urun Düzenle
 if (isset($_POST['UrunDuzenle'])) {

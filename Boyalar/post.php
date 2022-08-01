@@ -3,10 +3,8 @@ require __DIR__ . '/../controller/Db.php';
 require __DIR__ . "/../logtut.php";
 //--------------------------------Kullanici Kim
 session_start();
-$SorKullanici = $baglanti->prepare("SELECT * FROM kullanici WHERE Kadi= ?");
-$SonucKul = $SorKullanici->execute(array($_SESSION["Kullanici"]));
-$bakKul = $SorKullanici->fetch();
-$Kullanici = $bakKul['Kullanici_ID'];
+$Sor = $baglanti->query("SELECT Kullanici_ID FROM kullanici WHERE Kadi='$_SESSION[Kullanici]'");
+$Kullanici = $Sor->fetch()['Kullanici_ID'];
 
 if (isset($_POST['Gelen'])) {
     $Stokid = (int)$_POST['BoyaStokID'];

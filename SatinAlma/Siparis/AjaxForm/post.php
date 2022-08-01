@@ -2,9 +2,8 @@
 require __DIR__ . '/../../../controller/Db.php';
 require __DIR__ . "/../../../logtut.php";
 session_start();
-$SorKullanici = $baglanti->prepare("SELECT * FROM kullanici WHERE Kadi= ?");
-$SonucKul = $SorKullanici->execute(array($_SESSION["Kullanici"]));
-$Kullanici = $SorKullanici->fetch()['Kullanici_ID'];
+$Sor = $baglanti->query("SELECT Kullanici_ID FROM kullanici WHERE Kadi='$_SESSION[Kullanici]'");
+$Kullanici = $Sor->fetch()['Kullanici_ID'];
 if (isset($_POST['BoyaEkle'])) {
     $query = $baglanti->prepare('SELECT * FROM boya WHERE Marka=? AND Renk=? AND Seri=? AND Kod=?');
     $query->execute(array($_POST['Marka'], $_POST['Renk'], $_POST['Seri'], $_POST['Kod']));

@@ -234,7 +234,7 @@ require __DIR__ . '/Yuzde.php';
                                 }
                             }
                             $SetBilgi = $baglanti->query('SELECT Adet, icBoya, DisBoya FROM set_urun_icerik WHERE Set_ID = ' . $SetID)->fetchAll();
-                            $UrunBilgi = $baglanti->query('SELECT UrunAdi,icBoya_ID,DisRenk,Adet FROM view_set_urun_sec WHERE Set_ID = ' . $SetID . " ORDER BY UrunAdi")->fetchAll();
+                            $UrunBilgi = $baglanti->query('SELECT Urun_ID,UrunAdi,icBoya_ID,DisRenk,Adet FROM view_set_urun_sec WHERE Set_ID = ' . $SetID . " ORDER BY UrunAdi")->fetchAll();
                             ?>
                             <tr class="table-light text-center">
                                 <th colspan="6">SET BOYA BİLGİ</th>
@@ -251,7 +251,7 @@ require __DIR__ . '/Yuzde.php';
                                 <tr>
                                     <td><?= $baglanti->query('SELECT Renk FROM boya WHERE Boya_ID =' . $s["icBoya"])->fetch()["Renk"] ?></td>
                                     <td><?= $baglanti->query('SELECT Renk FROM boya WHERE Boya_ID =' . $s["DisBoya"])->fetch()["Renk"] ?></td>
-                                    <td><input class='Tadet' type='hidden' value='<?= $s['Adet'] ?>'><?= $s['Adet'] ?></td>
+                                    <td><?= $s['Adet'] ?></td>
                                 </tr>
                             <?php } ?>
                             <tr class="table-light text-center">
@@ -269,7 +269,7 @@ require __DIR__ . '/Yuzde.php';
                                     <td><?= $b["UrunAdi"] ?></td>
                                     <td><?= $b["DisRenk"] ?></td>
                                     <td><?= $baglanti->query('SELECT Renk FROM boya WHERE Boya_ID =' . $b["icBoya_ID"])->fetch()["Renk"] ?></td>
-                                    <td><?= $b["Adet"] ?></td>
+                                    <td class='Tadet<?= $b["Urun_ID"] ?>'><?= $b["Adet"] ?></td>
                                 </tr>
                             <?php } ?>
                         </tbody>

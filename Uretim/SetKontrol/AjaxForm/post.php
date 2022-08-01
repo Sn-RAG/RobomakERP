@@ -3,10 +3,8 @@ require __DIR__ . '/../../../controller/Db.php';
 require __DIR__ . "/../../../logtut.php";
 session_start();
 $Has = ".hasClass('btn-primary')"; //Kısaltma
-$SorKullanici = $baglanti->prepare("SELECT * FROM kullanici WHERE Kadi= ?");
-$SonucKul = $SorKullanici->execute(array($_SESSION["Kullanici"]));
-$bakKul = $SorKullanici->fetch();
-$Kullanici = $bakKul['Kullanici_ID'];
+$Sor = $baglanti->query("SELECT Kullanici_ID FROM kullanici WHERE Kadi='$_SESSION[Kullanici]'");
+$Kullanici = $Sor->fetch()['Kullanici_ID'];
 
 if (isset($_POST['Listele'])) {
     $Urunler = $_POST['Urunler'];
@@ -160,12 +158,12 @@ if (isset($_POST['Listele'])) {
         $kaydet->execute(array($SetID, $UrunID[$i], $Levha[$i], $Boya, $Is, $Deger[$i], $KT));
         echo $sum; //Anlık Post Ajax.
     }
-    
-/*LOG KAYDI*/
 
-logtut($Kullanici, "$SetID numaralı sette $Ekle kaydetti.");
+    /*LOG KAYDI*/
 
-/*LOG KAYDI SON*/
+    logtut($Kullanici, "$SetID numaralı sette $Ekle kaydetti.");
+
+    /*LOG KAYDI SON*/
 
     ##########    ##########    ##########    ##########    ##########    ##########    ##########    ##########    ##########    ##########    ##########
 
@@ -187,7 +185,7 @@ logtut($Kullanici, "$SetID numaralı sette $Ekle kaydetti.");
     }
     /*LOG KAYDI*/
     logtut($Kullanici, "$SetID numaralı sette Fire kaydetti.");
-    
+
     /*LOG KAYDI SON*/
     ##########    ##########    ##########    ##########    ##########    ##########    ##########    ##########    ##########    ##########    ##########
 
@@ -302,6 +300,10 @@ if (isset($_POST["GirSil"])) {
         $Giden = $baglanti->prepare("UPDATE levha_giden SET Kullanilan_Adet=Kullanilan_Adet- ?, Kullanilan_Agirlik=Kullanilan_Agirlik- ? WHERE Levha_Stok_ID= ? AND SetID= ? AND UrunID= ? AND Gidis_Tarihi= ?");
         $Giden->execute(array($Adet, $Kg, $Lsid, $Sid, $Uid, "$KT"));
         $baglanti->query("DELETE FROM levha_giden WHERE Kullanilan_Adet<=0 OR Kullanilan_Agirlik<=0");
+        if ($is == "Fire") {
+            $baglanti->query("DELETE FROM set_urunler_asama_akis WHERE ID =" . $_POST["id"] . " AND Yapilan_is='$is'");
+            return;
+        }
     } elseif ($is == "Tellendi") {
         $Ne = "Tellenen";
     } elseif ($is == "Kumlandı") {
@@ -332,9 +334,8 @@ if (isset($_POST["GirSil"])) {
         $guncelle = $baglanti->prepare("UPDATE set_urunler_asama SET " . $Ne . "= ? WHERE Urun_ID=? AND Set_ID=?");
         $guncelle->execute(array($Adet, $Uid, $Sid));
     }
-    
-logtut($Kullanici, "$Sid numaralı setten $Ne sildi.");
 
+    logtut($Kullanici, "$Sid numaralı setten $Ne sildi.");
 }
 /////////////////////////////////////////////////////////////////////////////////// Fire ve Preslenenlerde stok Miktarını ayarlamak için
 

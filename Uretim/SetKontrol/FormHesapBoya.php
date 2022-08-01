@@ -52,7 +52,7 @@ $id = (int)$_GET["id"];
                             if ($icBoya->rowCount() && $disBoya->rowCount()) {
                                 //toplam ic boya
                                 foreach ($icBoya as $bb) {
-                                    $ic = (($bb["icAstar"] + $bb["icUstkat"]) / 1000) * $Adet;
+                                    $ic = (((float)$bb["icAstar"] + (float)$bb["icUstkat"]) / 1000) * $Adet;
                                     @$Toplamic["$icRenk"] += $ic; // Boyaya özel toplam
                                 }
 
