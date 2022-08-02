@@ -30,13 +30,13 @@ $tarih = date("Y-m-d");
                     <tbody>
                         <?php
                         if (isset($_GET["Gecmis"])) {
-                            $gor = "Siparis_Adet <= 0 OR Siparis_Agirlik <= 0";
+                            $g = 1;
                         } else {
-                            $gor = "Siparis_Adet > 0 OR Siparis_Agirlik > 0";
+                            $g = 0;
                         }
 
                         $span = "<span class='text-black-50'>";
-                        $sorgu = $baglanti->query("SELECT *,SUM( Siparis_Adet ) AS Adet, SUM( Siparis_Agirlik ) AS Agirlik FROM view_siparis_levha WHERE " . $gor . " GROUP BY Levha_ID");
+                        $sorgu = $baglanti->query("SELECT *,SUM( Siparis_Adet ) AS Adet, SUM( Siparis_Agirlik ) AS Agirlik FROM view_siparis_levha WHERE Durum=" . $g . " GROUP BY Levha_ID");
                         foreach ($sorgu as $s) {
                             $id = $s['Levha_Stok_ID'];
                             $Levha_ID = $s['Levha_ID'];

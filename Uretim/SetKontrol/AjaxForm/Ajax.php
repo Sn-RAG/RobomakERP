@@ -72,7 +72,9 @@ $Has = ".hasClass('btn-primary')";
         }
         $.Listele();
     });
+
     //##### ########## ########## ########## ########## ########## ########## ########## ########## ########## ########## ########## #####
+
     $('.gir').click(function() {
         var SetID = $(".GDeger").attr("SetID");
         var Uid = [];
@@ -90,7 +92,7 @@ $Has = ".hasClass('btn-primary')";
                 deger.push($(this).val());
             }
         });
-        for (let i = 0; i < Uid.length; i++) {
+       /* for (let i = 0; i < Uid.length; i++) {
             var sum = 0;
             $(".Tadet" + Uid[i] + "").map(function() {
                 sum += Number($(this).text());
@@ -99,7 +101,7 @@ $Has = ".hasClass('btn-primary')";
                 <?= $FazlaDeger ?>
                 return $(".GDeger").val("");
             }
-        }
+        }*/
         if (Number(deger) <= 0 || deger == "") {
             <?= $Gecersiz ?>
         } else {

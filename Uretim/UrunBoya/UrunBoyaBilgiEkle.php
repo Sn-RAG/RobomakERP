@@ -23,19 +23,19 @@ $Urun_ID = (int)$_GET['Urun_ID'];
 
                         <div class="form-floating">
                             <select name="Marka" class="form-select Marka" required>
-                                <option value=''>* İç Boya Marka Seç</option>
+                                <option value=''>Marka Seç</option>
                                 <?php
                                 $Marka = $baglanti->query("SELECT DISTINCT Marka FROM boya");
                                 foreach ($Marka as $s) { ?>
                                     <option value="<?= $s["Marka"] ?>"><?= $s["Marka"] ?></option>
                                 <?php } ?>
                             </select>
-                            <label>Marka</label>
+                            <label>* Marka</label>
                         </div>
 
                         <div class="form-floating">
-                            <select name="Renk" class="form-select Renk" disabled required></select>
-                            <label>Renk</label>
+                            <select name="Bid" class="form-select Renk" disabled required></select>
+                            <label>* Renk</label>
                         </div>
 
                         <div class="form-floating">

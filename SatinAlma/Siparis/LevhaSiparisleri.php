@@ -26,8 +26,9 @@ require __DIR__ . '/../../controller/Sil.php';
                                     <th>Tip</th>
                                     <th>Çap</th>
                                     <th>Kalınlık</th>
-                                    <th>Ağırlık</th>
-                                    <th>Adet</th>
+                                    <th>Sipariş Adeti</th>
+                                    <th>Kalan Ağırlık</th>
+                                    <th>Kalan Adet</th>
                                     <th>Sipariş Tarihi</th>
                                     <th>&nbsp</th>
                                 </tr>
@@ -35,32 +36,27 @@ require __DIR__ . '/../../controller/Sil.php';
                             <tbody>
                                 <?php
                                 if (isset($_GET["Gecmis"])) {
-                                    $isaret = "<=";
+                                    $a = 1;
                                 } else {
-                                    $isaret = ">";
+                                    $a = 0;
                                 }
-                                $sorgu = $baglanti->query("SELECT * FROM view_siparis_levha WHERE Siparis_Adet " . $isaret . "0 OR Siparis_Agirlik" . $isaret . "0");
-                                foreach ($sorgu as $sonuc) {
-                                    $id = $sonuc['Levha_Siparis_ID'];
-                                    $Levha_Stok_ID = $sonuc['Levha_Stok_ID'];
-                                    $Siparis_ID = $sonuc['Siparis_ID'];
-                                    $Tip = $sonuc['Tip'];
-                                    $Cap = $sonuc['Cap'];
-                                    $Kalinlik = $sonuc['Kalinlik'];
-                                    $Siparis_Adet = $sonuc['Siparis_Adet'];
-                                    $Siparis_Agirlik = $sonuc['Siparis_Agirlik'];
-                                    $S_Tarihi = $sonuc['S_Tarihi'];
+                                $sorgu = $baglanti->query("SELECT * FROM view_siparis_levha WHERE Durum=" . $a);
+                                foreach ($sorgu as $s) {
+                                    $id = $s['Levha_Siparis_ID'];
+                                    $Levha_Stok_ID = $s['Levha_Stok_ID'];
+                                    $Siparis_ID = $s['Siparis_ID'];
                                 ?>
                                     <tr>
                                         <th><?= $id ?></th>
                                         <td><?= $Levha_Stok_ID ?></td>
                                         <td><?= $Siparis_ID ?></td>
-                                        <td><?= $Tip ?></td>
-                                        <td><?= $Cap ?> cm</td>
-                                        <td><?= $Kalinlik ?> mm</td>
-                                        <td><?= $Siparis_Agirlik ?> Kg</td>
-                                        <td><?= $Siparis_Adet ?> Adet</td>
-                                        <td><?= $S_Tarihi ?></td>
+                                        <td><?= $s['Tip'] ?></td>
+                                        <td><?= $s['Cap'] ?> cm</td>
+                                        <td><?= $s['Kalinlik'] ?> mm</td>
+                                        <td><?= $s['Adet'] ?> Adet</td>
+                                        <td><?= $s['Siparis_Agirlik'] ?> Kg</td>
+                                        <td><?= $s['Siparis_Adet'] ?> Adet</td>
+                                        <td><?= $s['S_Tarihi'] ?></td>
                                         <td>
                                             <button type="button" class="btn btn-outline-danger bi-x-square" data-bs-toggle="modal" data-bs-target="#SecSil<?= $id ?>"></button>
                                         </td>
@@ -113,9 +109,8 @@ require __DIR__ . '/../../controller/Sil.php';
 <script>
     $('.datatablem').DataTable({
         responsive: true,
-        order:[0, 'desc'],
-        columnDefs: [
-            {
+        order: [0, 'desc'],
+        columnDefs: [{
                 "visible": false,
                 "targets": [0, 1, 2]
             },

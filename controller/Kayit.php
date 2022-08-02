@@ -41,19 +41,16 @@ if (isset($_POST['UrunEkle'])) {
 //---------------------------------------Ürün Boya Bilgileri
 
 if (isset($_POST['UrunBoyaBilgiEkle'])) {
-    $Urun_ID = $_POST['Urun_ID'];
-    $Marka = $_POST['Marka'];
-    $Renk = $_POST['Renk'];
-    
-    $Varmi = $baglanti->prepare("SELECT Marka, Renk FROM urun_boya_bilgi WHERE Urun_ID= ?");
-    $SonucSor = $Varmi->execute(array($Urun_ID));
-    $bak = $Varmi->fetch();
-    if ($Marka == $bak['Marka'] & $Renk==$bak['Renk']) {
+    $Uid = $_POST['Urun_ID'];
+    $Bid = $_POST["Bid"];
+
+    $sor = $baglanti->query("SELECT * FROM urun_boya_bilgi WHERE Urun_ID=" . $Uid . " AND Boya_ID=" . $Bid);
+    if ($sor->rowCount()) {
         echo $Kayitvar;
     } else {
-        $Kaydet = $baglanti->prepare("INSERT INTO urun_boya_bilgi SET Urun_ID= ?, Marka= ?, Renk= ?, icAstar= ?, icUstkat= ?, DisAstar= ?, DisUstkat= ?, Kullanici_ID= ?");
-        $SonucSor = $Kaydet->execute(array($Urun_ID, $Marka, $Renk, $_POST['icAstar'], $_POST['icUstkat'], $_POST['DisAstar'], $_POST['DisUstkat'], $Kullanici));
-        header("location:UrunBoyaBilgi.php?Urun_ID=$Urun_ID");
+        $Kaydet = $baglanti->prepare("INSERT INTO urun_boya_bilgi SET Urun_ID= ?, Boya_ID= ?, icAstar= ?, icUstkat= ?, DisAstar= ?, DisUstkat= ?, Kullanici_ID= ?");
+        $SonucSor = $Kaydet->execute(array($Uid, $Bid, $_POST['icAstar'], $_POST['icUstkat'], $_POST['DisAstar'], $_POST['DisUstkat'], $Kullanici));
+        header("location:UrunBoyaBilgi.php?Urun_ID=$Uid");
     }
     logtut($Kullanici, "Ürüne boya verisi ekledi.");
 }

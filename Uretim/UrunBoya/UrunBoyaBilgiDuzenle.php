@@ -6,7 +6,7 @@ require __DIR__ . '/../../controller/Db.php';
 require __DIR__ . '/../../controller/Duzenle.php';
 $Urun_ID = (int)$_GET['Urun_ID'];
 $id = (int)$_GET['id'];
-$sorgu = $baglanti->query("SELECT * FROM urun_boya_bilgi WHERE Urun_Boya_Bilgi_ID =" . $id);
+$sorgu = $baglanti->query("SELECT * FROM view_urun_boya_bilgi WHERE Urun_Boya_Bilgi_ID =" . $id);
 $Sor = $sorgu->fetch();
 ?>
 <main id="main" class="main">
@@ -40,7 +40,7 @@ $Sor = $sorgu->fetch();
                         </div>
 
                         <div class="form-floating">
-                            <select name="Renk" class="form-select Renk" disabled required></select>
+                            <select name="Bid" class="form-select Renk" disabled required></select>
                             <label>Renk</label>
                         </div>
 
@@ -73,21 +73,28 @@ $Sor = $sorgu->fetch();
 </main>
 <script>
     $(function() {
-        var v = $(".Marka").val();
-        $.ajax({
-            type: "POST",
-            url: "../AjaxForm/post.php",
-            data: {
-                'Marka': v,
-            },
-            error: function(xhr, textStatus, errorThrown) {
-                alert('Hata: ' + xhr.responseText);
-            },
-            success: function(data) {
-                $(".Renk").html(data);
-                $(".Renk").prop("disabled", false);
-            }
-        })
+        $.sec = function() {
+
+            var v = $(".Marka").val();
+            $.ajax({
+                type: "POST",
+                url: "../AjaxForm/post.php",
+                data: {
+                    'Marka': v,
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    alert('Hata: ' + xhr.responseText);
+                },
+                success: function(data) {
+                    $(".Renk").html(data);
+                    $(".Renk").prop("disabled", false);
+                }
+            })
+        }
+        $.sec();
+        $(".Marka").change(function() {
+            $.sec();
+        });
     });
 </script>
 <?php
