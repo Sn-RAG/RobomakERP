@@ -231,9 +231,9 @@ require __DIR__ . '/../controller/Kayit.php';
                                                     <option value=''>* İç Boya Marka Seç</option>
                                                     <?php
                                                     $Marka = $baglanti->query("SELECT DISTINCT Marka FROM boya")->fetchAll();
-                                                    foreach ($Marka as $s) { ?>
-                                                        <option value="<?= $s["Marka"] ?>"><?= $s["Marka"] ?></option>
-                                                    <?php } ?>
+                                                    foreach ($Marka as $s) {
+                                                        echo "<option value='$s[Marka]'>$s[Marka]</option>";
+                                                    } ?>
                                                 </select>
                                                 <select class='form-select icBoyalar' id="icBoya" disabled>
                                                 </select>
@@ -244,9 +244,9 @@ require __DIR__ . '/../controller/Kayit.php';
                                             <div class="input-group">
                                                 <select class='form-select icD'>
                                                     <option value=''>* Dış Boya Marka Seç</option>
-                                                    <?php foreach ($Marka as $s) { ?>
-                                                        <option value="<?= $s["Marka"] ?>"><?= $s["Marka"] ?></option>
-                                                    <?php } ?>
+                                                    <?php foreach ($Marka as $s) {
+                                                        echo "<option value='$s[Marka]'>$s[Marka]</option>";
+                                                    } ?>
                                                 </select>
                                                 <select class='form-select DisBoyalar' id="DisBoya" disabled>
                                                 </select>
@@ -260,16 +260,16 @@ require __DIR__ . '/../controller/Kayit.php';
                                                     <select class='form-select me-3 Kircil'>
                                                         <option value=''>Kırçıl Seç</option>
                                                         <?php $kircil = $baglanti->query("SELECT Boya_ID, Renk FROM boya WHERE Seri='Kırçıl' GROUP BY Renk")->fetchAll();
-                                                        foreach ($kircil as $s) { ?>
-                                                            <option value="<?= $s["Boya_ID"] ?>"><?= $s["Renk"] ?></option>
-                                                        <?php } ?>
+                                                        foreach ($kircil as $s) {
+                                                            echo "<option value='$s[Boya_ID]'>$s[Renk]</option>";
+                                                        } ?>
                                                     </select>
 
                                                     <select class='form-select me-3 Kircill'>
                                                         <option value=''>Kırçıl Seç</option>
-                                                        <?php foreach ($kircil as $s) { ?>
-                                                            <option value="<?= $s["Boya_ID"] ?>"><?= $s["Renk"] ?></option>
-                                                        <?php } ?>
+                                                        <?php foreach ($kircil as $s) {
+                                                            echo "<option value='$s[Boya_ID]'>$s[Renk]</option>";
+                                                        } ?>
                                                     </select>
 
                                                     <input type="number" name="Adetler" class="form-control Adetler me-3" placeholder="* Adet gir">
@@ -337,7 +337,7 @@ require __DIR__ . '/../controller/Kayit.php';
                                         <div class="col-md-12 d-flex justify-content-end">
                                             <button id="icerikSec" type="button" class="btn btn-success me-3 etkin" hidden disabled>Ürün Düzenle</button>
                                             <a href="Setler.php" class="btn col-md-2 btn-primary me-3">Kaydet</a>
-                                            <a href="SetKontrol/FormLevha.php?id=<?= isset($_SESSION["Set_ID"]) ? $_SESSION["Set_ID"] : "" ?>" class="btn col-md-2 btn-primary me-3" target="_blank" rel="noreferrer noopener">Levha Hesapla</a>
+                                            <a href="SetKontrol/FormHesapLevha.php?id=<?= isset($_SESSION["Set_ID"]) ? $_SESSION["Set_ID"] : "" ?>" class="btn col-md-2 btn-primary me-3" target="_blank" rel="noreferrer noopener">Levha Hesapla</a>
                                             <div class="col-md-3 row me-3">
                                                 <label class="col-sm-4 col-form-label">Adet</label>
                                                 <div class="col-sm-8">

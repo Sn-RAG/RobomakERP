@@ -55,19 +55,20 @@ if (isset($_POST['SetTamam'])) {
             $Tepe = $_POST["Tepeler"][$i];
         }
         $Kaydet = $baglanti->prepare("INSERT INTO set_urun SET Set_ID= ?, Urun_ID= ?, Levha_ID= ?, Kapak_ID= ?, Kulp_ID= ?, Tepe_ID= ?");
-        $Sonuc = $Kaydet->execute(array($Set_ID, $UIDler[$i], $_POST['mmler'][$i], $Kapak, $Kulp, $Tepe));
+        $Kaydet->execute(array($Set_ID, $UIDler[$i], $_POST['mmler'][$i], $Kapak, $Kulp, $Tepe));
     }
 
     $Set_Urun_ID = $baglanti->lastInsertId();
+
     for ($i = 0; $i < count($Adetler); $i++) {
         $Kaydet = $baglanti->prepare("INSERT INTO set_urun_icerik SET Set_ID= ?, Adet= ?, DisBoya= ?, icBoya= ?, Kircil= ?, Kircill= ?");
-        $Sonuc = $Kaydet->execute(array($Set_ID, $Adetler[$i], $_POST["DisBoyalar"][$i], $_POST["icBoyalar"][$i], $_POST["Kircil"][$i], $_POST["Kircill"][$i]));
+        $Kaydet->execute(array($Set_ID, $Adetler[$i], $_POST["DisBoyalar"][$i], $_POST["icBoyalar"][$i], (int)$_POST["Kircil"][$i], (int)$_POST["Kircill"][$i]));
     }
 
     $Set_Urun_icerik_ID = $baglanti->lastInsertId();
 
     $SetKaydet = $baglanti->prepare("INSERT INTO set_icerik SET Set_Urun_ID= ?, Set_Urun_icerik_ID= ?, Kutu= ?, Kullanici_ID= ?");
-    $Sonuc = $SetKaydet->execute(array($Set_Urun_ID, $Set_Urun_icerik_ID, $_POST["Kutu"], $Kullanici));
+    $SetKaydet->execute(array($Set_Urun_ID, $Set_Urun_icerik_ID, $_POST["Kutu"], $Kullanici));
     ############################################
     // Düzenlemek için Kombinasyonu yapılan verinin bütün varyasyonlarını başka bir veri tabanına ekliyoruz sırf ürüne özel düzenlemeler gerçekleştirmek için
     ###############################################
@@ -85,7 +86,6 @@ WHERE view_uretim_setler.Set_ID = " . $Set_ID . " GROUP BY set_urun_icerik.Set_U
     logtut($Kullanici, "Set Oluşturdu.");
 
     /*LOG KAYDI SON*/
-
     #############################################################################################################################################
 } elseif (isset($_POST["SetAdiKontrol"])) {
     $SetVarmi = $baglanti->prepare("SELECT * FROM `set` WHERE SetAdi=?");
@@ -199,11 +199,13 @@ elseif (isset($_POST["Listele"])) {
 
     $icerik = $baglanti->prepare("UPDATE set_urunler SET Adet= ?, DisBoya_ID= ?, icBoya_ID= ?, Kapak_ID= ?, Kulp_ID= ? WHERE Set_Urun_Duzenle_ID= ?");
     $Doldur = $icerik->execute(array($Adet, $DisBoya, $icBoya, $Kapak, $Kulp, $id));
-} elseif (isset($_POST["Marka"])) { ?>
 
-    <option value=''>* Boya Seç</option>
-    <?php $boya = $baglanti->query("SELECT Boya_ID, Renk FROM boya WHERE Seri<>'Kırçıl' AND Marka='$_POST[Marka]' GROUP BY Renk");
-    foreach ($boya as $s) { ?>
-        <option value="<?= $s["Boya_ID"] ?>"><?= $s["Renk"] ?></option>
-<?php }
+    ################################################################
+
+} elseif (isset($_POST["Marka"])) {
+    echo "<option value=''>* Boya Seç</option>";
+    $boya = $baglanti->query("SELECT Boya_ID, Renk FROM boya WHERE Seri<>'Kırçıl' AND Marka='$_POST[Marka]' GROUP BY Renk");
+    foreach ($boya as $s) {
+        echo "<option value='$s[Boya_ID]'>$s[Renk]</option>";
+    }
 }

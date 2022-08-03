@@ -79,8 +79,8 @@
                 $(".input-sil").prop("disabled", false);
             }
 
-            clone.children("div").children("div").find("#icBoya").prop("disabled",true);
-            clone.children("div").children("div").find("#DisBoya").prop("disabled",true);
+            clone.children("div").children("div").find("#icBoya").prop("disabled", true);
+            clone.children("div").children("div").find("#DisBoya").prop("disabled", true);
 
             return examsList.append(clone);
 
@@ -280,7 +280,7 @@
             Kulplar.push($("#Kulp" + h + "").val());
         });
 
-        $(".Adetler").each(function(i, sel) {
+        $(".Adetler").map(function() {
             Adetler.push($(this).val());
         });
         $(".icBoyalar").map(function() {
@@ -325,11 +325,11 @@
                                 'Adetler': Adetler,
                                 'SetTamam': true,
                             },
-                            error: function(xhr) {
-                                alert('Hata: ' + xhr.responseText);
-                            },
                             success: function() {
                                 window.location.reload();
+                            },
+                            error: function(xhr) {
+                                alert('Hata: ' + xhr.responseText);
                             }
                         })
 

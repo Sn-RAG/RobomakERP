@@ -4,7 +4,8 @@ require __DIR__ . '/../../controller/Db.php';
 require __DIR__ . '/../../controller/VTHataMesaji.php';
 $id = (int)$_GET["id"];
 ?>
-<html>
+<!DOCTYPE html>
+<html lang="tr">
 
 <head>
     <title><?= $page ?></title>
@@ -31,27 +32,24 @@ $id = (int)$_GET["id"];
                             <th>S_NO</th>
                             <th>Ürünler</th>
                             <th>Adet</th>
+                            <th>İç Astar</th>
+                            <th>İç Boya</th>
+                            <th>Dış Astar</th>
+                            <th>Dış Boya</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php
                         //Hesap
-                        $i = 0;
-                        $TicUstkat = 0;
-                        $TicAstar = 0;
-                        $TDisUstkat = 0;
-                        $TDisAstar = 0;
-
-                        $icUstkat = [];
-                        $icAstar = [];
-                        $DisUstkat = [];
-                        $DisAstar = [];
-
+                        $Tic = [];
+                        $Tdis = [];
+                        $TicA = [];
+                        $TdisA = [];
                         $Set = $baglanti->query('SELECT Adet, icBoya, DisBoya FROM set_urun_icerik WHERE Set_ID = ' . $id)->fetchAll();
                         $QUERY = $baglanti->query("SELECT Urun_ID,icBoya_ID,DisBoya_ID,Adet FROM view_set_urun_sec WHERE Set_ID =$id");
                         foreach ($QUERY as $b) {
                             $Uid = $b["Urun_ID"];
-                            $Adet = $b["Adet"];
+                            $Adt = $b["Adet"];
                             $icID = $b["icBoya_ID"];
                             $disID = $b["DisBoya_ID"];
 
@@ -60,20 +58,15 @@ $id = (int)$_GET["id"];
 
                             if ($icBoya->rowCount() && $disBoya->rowCount()) {
                                 //toplam ic boya
-                                foreach ($icBoya as $bb) {
-                                    $TicUstkat += $bb["icUstkat"] * $Adet;
-                                    $TicAstar += $bb["icAstar"] * $Adet;
-                                    $icUstkat[$i] = $bb["icUstkat"];
-                                    $icAstar[$i] = $bb["icAstar"];
+                                foreach ($icBoya as $b) {
+                                    @$TicA[$icID] += $b["icAstar"] * $Adt;
+                                    @$Tic[$icID] += $b["icUstkat"] * $Adt;
                                 }
                                 //toplam dış boya
-                                foreach ($disBoya as $bb) {
-                                    $TDisUstkat += $bb["DisUstkat"] * $Adet;
-                                    $TDisAstar += $bb["DisAstar"] * $Adet;
-                                    $DisUstkat[$i] = $bb["DisUstkat"];
-                                    $DisAstar[$i] = $bb["DisAstar"];
+                                foreach ($disBoya as $b) {
+                                    @$TdisA[$disID] += $b["DisAstar"] * $Adt;
+                                    @$Tdis[$disID] += $b["DisUstkat"]  * $Adt;
                                 }
-                                $i++;
                             } else {
                                 echo "<script>" . $BoyaBilgisiYok . "</script>";
                             }
@@ -82,53 +75,71 @@ $id = (int)$_GET["id"];
                         ######################// Ürün Listele
 
                         $n = 1;
-                        $sorgu = $baglanti->query("SELECT UrunAdi,Adet FROM view_set_urun_sec WHERE Set_ID =$id GROUP BY Urun_ID ORDER BY UrunAdi ASC");
+                        $sorgu = $baglanti->query("SELECT Urun_ID,UrunAdi,Adet FROM view_set_urun_sec WHERE Set_ID =$id GROUP BY Urun_ID ORDER BY UrunAdi ASC");
                         foreach ($sorgu as $s) {
-                            $icID = $b["icBoya_ID"];
-                            $disID = $b["DisBoya_ID"];
+                            $Gr = $baglanti->query("SELECT icAstar,icUstkat,DisAstar,DisUstkat FROM view_urun_boya_bilgi WHERE Urun_ID=" . $s["Urun_ID"])->fetch();
                         ?>
                             <tr>
                                 <td><?= $n++ ?></td>
                                 <td><?= $s["UrunAdi"] ?></td>
                                 <td><?= $s["Adet"] ?></td>
-                                <!--<td><?= $icAstar[$i] ?></td>
-                                <td><?= $icUstkat[$i] ?></td>
-                                <td><?= $DisAstar[$i] ?></td>
-                                <td><?= $DisUstkat[$i] ?></td>-->
+                                <td><?= $Gr["icAstar"] ?></td>
+                                <td><?= $Gr["icUstkat"] ?></td>
+                                <td><?= $Gr["DisAstar"] ?></td>
+                                <td><?= $Gr["DisUstkat"] ?></td>
                             </tr>
                         <?php } ?>
                         <tr>
-                            <th colspan="3" class="text-center table-light">TOPLAM</th>
+                            <th colspan="7" class="text-center table-light">TOPLAM</th>
                         </tr>
-                        <tr>
-                            <th>İç Boya</th>
-                            <th>Dış Boya</th>
-                            <th rowspan="<?= count($Set) + 1 ?>"></th>
-                        </tr>
-                        <?php for ($i = 0; $i < count($Set); $i++) {
-
-                            $ic = $Set[$i]["icBoya"];
-                            $Dis = $Set[$i]["DisBoya"];
+                        <?php foreach ($Set as $s) {
+                            $ic = $s["icBoya"];
+                            $Dis = $s["DisBoya"];
                             $iR = $baglanti->query('SELECT Renk FROM boya WHERE Boya_ID =' . $ic)->fetch()["Renk"];
                             $dR = $baglanti->query('SELECT Renk FROM boya WHERE Boya_ID =' . $Dis)->fetch()["Renk"];
+                            if ($ic <> $Dis) { ?>
+                                <tr class="small">
+                                    <td>
+                                        <div class="d-flex justify-content-between"><span><b>İç Astar</b> &nbsp <?= $iR ?></span><?= @number_format($TicA[$ic]) ?> &nbsp gr</div>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex justify-content-between"><span><b>İç Boya</b> &nbsp <?= $iR ?></span><?= @number_format($Tic[$ic]) ?> &nbsp gr</div>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex justify-content-between"><span><b>Dış Astar</b> &nbsp <?= $dR ?></span><?= @number_format($TdisA[$Dis]) ?> &nbsp gr</div>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex justify-content-between"><span><b>Dış Boya</b> &nbsp <?= $dR ?></span><?= @number_format($Tdis[$Dis]) ?> &nbsp gr</div>
+                                    </td>
+                                </tr>
+                            <?php } else {
+                                if ($iR == "ŞEKER PEMBE") {
+                                    $AstarAdi="ŞEKER PEMBE ASTAR";
+                                }elseif($iR == "KREM"){
+                                    $AstarAdi="KREM ASTAR";
+                                }elseif($iR == "CAPUCİNO"){
+                                    $AstarAdi="CAPPICINO ASTAR";
+                                }else{
+                                    $AstarAdi="SİYAH ASTAR";
+                                } ?>
+                                <tr class="small">
+                                    <td colspan="4">
+                                        <div class="d-flex justify-content-between"><span><b><?= $AstarAdi ?></b> &nbsp </span><?= @number_format($TicA[$ic] + $TdisA[$Dis]) ?> &nbsp gr</div>
+                                    </td>
+                                    <td colspan="3">
+                                        <div class="d-flex justify-content-between"><span><b>Boya</b> &nbsp <?= $iR ?></span><?= @number_format($Tic[$ic] + $Tdis[$Dis]) ?> &nbsp gr</div>
+                                    </td>
+                                </tr>
+                        <?php }
+                        } ?>
 
-                        ?>
-                            <tr>
-                                <td>
-                                    <div class="d-flex justify-content-between ic"><span><?= $iR ?></span> Toplam= &nbsp <?= @number_format($Toplamic[$ic]) ?> &nbsp gr</div>
-                                </td>
-                                <td>
-                                    <div class="d-flex justify-content-between dis"><span><?= $dR ?></span> Toplam= &nbsp <?= @number_format($Toplamdis[$Dis]) ?> &nbsp gr</div>
-                                </td>
-                            </tr>
-                        <?php } ?>
                     </tbody>
                 </table>
             </div>
 
             <div class="text-center">
                 <h5 class="card-title">Set Adı: <?= $_GET["adi"] ?></h5>
-                <button id="yazdir" class="btn btn-lg btn-primary">Yazdır</button>
+                <button id="yazdir" class="btn btn-lg btn-primary" onclick="window.print()">Yazdır</button>
             </div>
         </div>
     </div>
@@ -147,25 +158,6 @@ $id = (int)$_GET["id"];
     }
 </style>
 
-<script>
-    $("#yazdir").click(function() {
-        window.print();
-    });
-    $(function() {
-        $(".ic").map(function() {
-            if ($(this).text() != "") {
-                Uid.push($(this).attr("UrunID"));
-                LevhaID.push($(this).attr("LevhaID"));
-                deger.push($(this).val());
-            }
-        });
-        $(".dis").map(function() {
-            if ($(this).val() != "") {
-
-            }
-        });
-    });
-</script>
 <?php
 require __DIR__ . '/../../controller/Footer.php';
 ?>
