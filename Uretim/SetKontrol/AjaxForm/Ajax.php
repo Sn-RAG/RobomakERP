@@ -92,16 +92,16 @@ $Has = ".hasClass('btn-primary')";
                 deger.push($(this).val());
             }
         });
-       /* for (let i = 0; i < Uid.length; i++) {
-            var sum = 0;
-            $(".Tadet" + Uid[i] + "").map(function() {
-                sum += Number($(this).text());
-            });
-            if (Number($("#yazsayi" + Uid[i] + "").html()) + Number(deger[i]) > sum) {
-                <?= $FazlaDeger ?>
-                return $(".GDeger").val("");
-            }
-        }*/
+        /* for (let i = 0; i < Uid.length; i++) {
+             var sum = 0;
+             $(".Tadet" + Uid[i] + "").map(function() {
+                 sum += Number($(this).text());
+             });
+             if (Number($("#yazsayi" + Uid[i] + "").html()) + Number(deger[i]) > sum) {
+                 <?= $FazlaDeger ?>
+                 return $(".GDeger").val("");
+             }
+         }*/
         if (Number(deger) <= 0 || deger == "") {
             <?= $Gecersiz ?>
         } else {
@@ -134,7 +134,7 @@ $Has = ".hasClass('btn-primary')";
                 data: {
                     'SetID': SetID,
                     'UrunID': Uid,
-                    'Deger': deger,
+                    'gir': deger,
                     'LevhaID': LevhaID,
                     'dBoya': dBoya,
                     'iBoya': iBoya,

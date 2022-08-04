@@ -10,6 +10,7 @@ $Say = count($Boyalar);
 <head>
     <title><?= $page ?></title>
     <link href="../../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
     <link href="../../assets/vendor/datatables/datatables.min.css" rel="stylesheet">
 
     <!-- Template Main CSS File -->
@@ -86,7 +87,7 @@ $Say = count($Boyalar);
                 </table>
             </div>
             <div class="text-center">
-                <button id="yazdir" class="btn btn-lg btn-primary">Yazdır</button>
+                <button id="yazdir" class="btn btn-lg btn-primary bi-printer">&nbsp Yazdır</button>
             </div>
         </div>
     </div>

@@ -9,6 +9,7 @@ $id = (int)$_GET["id"];
 <head>
     <title><?= $page ?></title>
     <link href="../../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
     <link href="../../assets/vendor/datatables/datatables.min.css" rel="stylesheet">
 
     <!-- Template Main CSS File -->
@@ -114,7 +115,7 @@ $id = (int)$_GET["id"];
             </div>
             <div class="text-center">
                 <h5 class="card-title">Set Adı: <?= $_GET["adi"] ?> <code class="fs-5">+ %5 Fire</code></h5>
-                <button id="yazdir" class="btn btn-lg btn-primary">Yazdır</button>
+                <button id="yazdir" class="btn btn-lg btn-primary bi-printer">&nbsp Yazdır</button>
             </div>
         </div>
     </div>

@@ -21,17 +21,17 @@ require __DIR__ . '/Yuzde.php';
                 <h5 class='card-title text-center fs-5'><?= $SetAdi ?></h5>
                 <div>
                     <div class="btn-group btn-group-sm">
-                        <a class="btn btn-outline-dark" href="FormHesapBoya.php?id=<?= $SetID ?>&adi=<?= $SetAdi ?>" target="_blank" rel="noreferrer noopener">Boya Hesapla</a>
-                        <a class="btn btn-outline-dark" href="FormHesapLevha.php?id=<?= $SetID ?>&adi=<?= $SetAdi ?>" target="_blank" rel="noreferrer noopener">Levha Hesapla</a>
-                        <a class="btn btn-outline-dark" href="FormPres.php?id=<?= $SetID ?>&adi=<?= $SetAdi ?>" target="_blank" rel="noreferrer noopener">Preshane Formu</a>
-                        <a class="btn btn-outline-dark" href="FormBoya.php?id=<?= $SetID ?>&adi=<?= $SetAdi ?>" target="_blank" rel="noreferrer noopener">Boyahane Formu</a>
+                        <a class="btn btn-outline-dark bi-calculator" href="FormHesapBoya.php?id=<?= $SetID ?>&adi=<?= $SetAdi ?>" target="_blank" rel="noreferrer noopener">&nbsp Boya Hesapla</a>
+                        <a class="btn btn-outline-dark bi-calculator" href="FormHesapLevha.php?id=<?= $SetID ?>&adi=<?= $SetAdi ?>" target="_blank" rel="noreferrer noopener">&nbsp Levha Hesapla</a>
+                        <a class="btn btn-outline-dark bi-circle-square" href="FormPres.php?id=<?= $SetID ?>&adi=<?= $SetAdi ?>" target="_blank" rel="noreferrer noopener">&nbsp Preshane Formu</a>
+                        <a class="btn btn-outline-dark bi-brush" href="FormBoya.php?id=<?= $SetID ?>&adi=<?= $SetAdi ?>" target="_blank" rel="noreferrer noopener">&nbsp Boyahane Formu</a>
                     </div>
                 </div>
             </div>
             <div class="card-body row g-3">
-                <div class="col-md-12">
+                <div class="col-md-12 mb-2 border-bottom border-dark">
                     <!-- Akordiyon -->
-                    <div class="accordion accordion-flush" id="accordionExample">
+                    <div class="accordion accordion-flush mb-3" id="accordionExample">
                         <div class="accordion-item row mb-1">
                             <label class="col-md-2 fw-bold">Levha Tedarik</label>
                             <h2 class="col-md-10" type="button" data-bs-toggle="collapse" data-bs-target="#Levha">
@@ -121,29 +121,29 @@ require __DIR__ . '/Yuzde.php';
                     </div>
                     <!-- Akordiyon SON -->
                 </div>
-                <hr>
+
+                <div class="col-md-12 text-center">
+                    <button class="mb-3 me-2 btn btn-primary t" id="Pres">Pres</button>
+                    <button class="mb-3 me-2 btn btn-outline-dark t" id="Yikama">Yıkama</button>
+                    <button class="mb-3 me-2 btn btn-outline-dark t" id="Kumlama">Kumlama</button>
+                    <button class="mb-3 me-2 btn btn-outline-dark t" id="Telleme">Telleme</button>
+                    <button class="mb-3 me-2 btn btn-outline-dark t" id="icBoyama">İç Boya</button>
+                    <button class="mb-3 me-2 btn btn-outline-dark t" id="DisBoyama">Dış Boya</button>
+                    <button class="mb-3 me-2 btn btn-outline-dark t" id="Paketleme">Paketleme</button>
+                </div>
+                
                 <!-- Scroll Tablo -->
-                <div class="col-md-6 mb-3">
-                    <h5> &nbsp Detaylar</h5>
-                    <div class="border isDurum">
+                <div class="col-md-6 border mb-3">
+                    <div class="isDurum mb-1">
                     </div>
                 </div>
                 <!-- Scroll Tablo SON -->
 
-                <div class="col-md-6 mb-3">
-                    <div class="input-group-sm col-md-12">
-                        <button class="mb-3 me-2 btn btn-primary t" id="Pres">Pres</button>
-                        <button class="mb-3 me-2 btn btn-outline-dark t" id="Yikama">Yıkama</button>
-                        <button class="mb-3 me-2 btn btn-outline-dark t" id="Kumlama">Kumlama</button>
-                        <button class="mb-3 me-2 btn btn-outline-dark t" id="Telleme">Telleme</button>
-                        <button class="mb-3 me-2 btn btn-outline-dark t" id="icBoyama">İç Boya</button>
-                        <button class="mb-3 me-2 btn btn-outline-dark t" id="DisBoyama">Dış Boya</button>
-                        <button class="mb-3 me-2 btn btn-outline-dark t" id="Paketleme">Paketleme</button>
-                    </div>
+                <div class="col-md-6 border mb-3">
                     <div class="col-md-12">
-                        <div class="input-group input-group-sm d-flex justify-content-end">
-
-                            <select class="form-select bg-light me-2 icRenk">
+                        <div class="mb-2"></div>
+                        <div class="d-flex justify-content-end mb-1">
+                            <select class="form-select form-select-sm bg-light me-2 icRenk">
                                 <option value="">* İç Renk Seçin</option>
                                 <?php
                                 $RS = $baglanti->query('SELECT DISTINCT icBoya_ID FROM view_set_urun_sec WHERE Set_ID = ' . $SetID);
@@ -154,7 +154,7 @@ require __DIR__ . '/Yuzde.php';
                                 ?>
                             </select>
 
-                            <select class="form-select bg-light me-2 DisRenk">
+                            <select class="form-select form-select-sm bg-light me-2 DisRenk">
                                 <option value="">* Dış Renk Seçin</option>
                                 <?php
                                 $RS = $baglanti->query('SELECT DISTINCT DisBoya_ID,DisRenk,DisMarka FROM view_set_urun_sec WHERE Set_ID = ' . $SetID);
@@ -170,7 +170,7 @@ require __DIR__ . '/Yuzde.php';
                             <button class="fire btn btn-warning bi-dash"></button>
                         </div>
                     </div>
-                    <table class="table table-sm table-bordered datatablem">
+                    <table class="table table-sm table-bordered mb-1 datatablem" id="Yuksek">
                         <thead>
                             <tr class="table-light">
                                 <th>Ürünler</th>
@@ -202,7 +202,8 @@ require __DIR__ . '/Yuzde.php';
                         </tbody>
                     </table>
                 </div>
-                <div class="col-md-12">
+
+                <div class="col-md-12 border-top border-dark py-1">
                     <h5 class="card-title text-center">SET DETAY</h5>
                     <table class="table table-sm small table-bordered table-responsive">
                         <tbody>

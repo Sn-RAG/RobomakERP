@@ -94,7 +94,7 @@ if (isset($_POST['Listele'])) {
         <?php } ?>
     </script>
 
-<?php } elseif (isset($_POST['Deger'])) {
+<?php } elseif (isset($_POST['gir'])) {
     $SetID = $_POST['SetID'];
     $UrunID = $_POST['UrunID'];
     $H = $_POST['Hangisi'];
@@ -105,7 +105,7 @@ if (isset($_POST['Listele'])) {
     $iBoya = $_POST['iBoya'];
     $dBoya = $_POST['dBoya'];
 
-    $Deger = $_POST['Deger'];
+    $Deger = $_POST['gir'];
 
     if ($H == "Pres") {
         $Ekle = "Preslenen";
@@ -138,20 +138,24 @@ if (isset($_POST['Listele'])) {
                 return;
             }
         } elseif ($Is == "İçi Boyandı") {
-            if (BStokDus($Deger[$i], $KT, $Kullanici, $UrunID[$i], $SetID, $iBoya) === 0) {
+            /* if (BStokDus($Deger[$i], $KT, $Kullanici, $UrunID[$i], $SetID, $iBoya) === 0) {
                 echo "StokYok";
                 return;
-            } else {
-                $Boya = $iBoya;
-            }
+            } else {*/
+            $Boya = $iBoya;
+            // }
         } elseif ($Is == "Dışı Boyandı") {
-            if (BStokDus($Deger[$i], $KT, $Kullanici, $UrunID[$i], $SetID, $dBoya) === 0) {
+            /*if (BStokDus($Deger[$i], $KT, $Kullanici, $UrunID[$i], $SetID, $dBoya) === 0) {
                 echo "StokYok";
                 return;
-            } else {
-                $Boya = $dBoya;
-            }
+            } else {*/
+            $Boya = $dBoya;
+            // }
         }
+        
+        $Boya = 0;
+
+
         $guncelle = $baglanti->prepare("UPDATE set_urunler_asama SET " . $Ekle . "= ? WHERE Urun_ID=? AND Set_ID=?");
         $guncelle->execute(array($sum, $UrunID[$i], $SetID));
         $kaydet = $baglanti->prepare("INSERT INTO set_urunler_asama_akis SET Set_ID= ?,Urun_ID= ?,Levha_ID= ?,Boya_ID= ?,Yapilan_is= ?,Adet= ?, Tarih= ?");
@@ -192,8 +196,11 @@ if (isset($_POST['Listele'])) {
 } elseif (isset($_POST["isDurum"])) {
     $is = $_POST["Is"];
     $id = $_POST['isDurum']; ?>
-    <table class="table table-sm table-responsive Tablois">
+    <table class="table table-sm border mb-1 Tablois">
         <thead>
+            <tr>
+                <td colspan="5" class="text-center">DETAYLAR</td>
+            </tr>
             <tr class="table-light">
                 <th>Ürünler</th>
                 <th>Adet</th>
@@ -237,7 +244,7 @@ if (isset($_POST['Listele'])) {
                     targets: [3]
                 }
             ],
-            scrollY: 400,
+            scrollY: $("#Yuksek").height(),
             paging: false,
             bFilter: false,
             bInfo: false

@@ -204,7 +204,7 @@ elseif (isset($_POST["Listele"])) {
 
 } elseif (isset($_POST["Marka"])) {
     echo "<option value=''>* Boya Seç</option>";
-    $boya = $baglanti->query("SELECT Boya_ID, Renk FROM boya WHERE Seri<>'Kırçıl' AND Marka='$_POST[Marka]' GROUP BY Renk");
+    $boya = $baglanti->query("SELECT Boya_ID, Renk FROM boya WHERE Marka='$_POST[Marka]' AND Seri='ÜST KAT' GROUP BY Renk");
     foreach ($boya as $s) {
         echo "<option value='$s[Boya_ID]'>$s[Renk]</option>";
     }

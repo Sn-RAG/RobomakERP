@@ -10,6 +10,7 @@ $id = (int)$_GET["id"];
 <head>
     <title><?= $page ?></title>
     <link href="../../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
     <link href="../../assets/vendor/datatables/datatables.min.css" rel="stylesheet">
 
     <!-- Template Main CSS File -->
@@ -26,16 +27,16 @@ $id = (int)$_GET["id"];
         <div class="card-body">
             <br>
             <div class="yazdir">
-                <table class="table table-bordered">
+                <table class="table table-sm small table-bordered">
                     <thead>
                         <tr>
                             <th>S_NO</th>
                             <th>Ürünler</th>
                             <th>Adet</th>
                             <th>İç Astar</th>
-                            <th>İç Boya</th>
+                            <th>İç Üstkat</th>
                             <th>Dış Astar</th>
-                            <th>Dış Boya</th>
+                            <th>Dış Üstkat</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -83,63 +84,124 @@ $id = (int)$_GET["id"];
                                 <td><?= $n++ ?></td>
                                 <td><?= $s["UrunAdi"] ?></td>
                                 <td><?= $s["Adet"] ?></td>
-                                <td><?= $Gr["icAstar"] ?></td>
-                                <td><?= $Gr["icUstkat"] ?></td>
-                                <td><?= $Gr["DisAstar"] ?></td>
-                                <td><?= $Gr["DisUstkat"] ?></td>
+                                <td><?= $Gr["icAstar"] ?> &nbsp gr</td>
+                                <td><?= $Gr["icUstkat"] ?> &nbsp gr</td>
+                                <td><?= $Gr["DisAstar"] ?> &nbsp gr</td>
+                                <td><?= $Gr["DisUstkat"] ?> &nbsp gr</td>
                             </tr>
                         <?php } ?>
                         <tr>
                             <th colspan="7" class="text-center table-light">TOPLAM</th>
                         </tr>
-                        <?php foreach ($Set as $s) {
+                        <?php
+                        $i = 0;
+                        $renk = [];
+                        $renkm = [];
+                        $b = [];
+                        foreach ($Set as $s) {
                             $ic = $s["icBoya"];
                             $Dis = $s["DisBoya"];
                             $iR = $baglanti->query('SELECT Renk FROM boya WHERE Boya_ID =' . $ic)->fetch()["Renk"];
                             $dR = $baglanti->query('SELECT Renk FROM boya WHERE Boya_ID =' . $Dis)->fetch()["Renk"];
-                            if ($ic <> $Dis) { ?>
-                                <tr class="small">
+                            if ($iR == "ŞEKER PEMBE") {
+                                $icAstarAdi = "ŞEKER PEMBE ASTAR";
+                            } elseif ($iR == "KREM") {
+                                $icAstarAdi = "KREM ASTAR";
+                            } elseif ($iR == "CAPUCİNO") {
+                                $icAstarAdi = "CAPPICINO ASTAR";
+                            } else {
+                                $icAstarAdi = "SİYAH ASTAR";
+                            }
+                            if ($dR == "ŞEKER PEMBE") {
+                                $disAstarAdi = "ŞEKER PEMBE ASTAR";
+                            } elseif ($dR == "KREM") {
+                                $disAstarAdi = "KREM ASTAR";
+                            } elseif ($dR == "CAPUCİNO") {
+                                $disAstarAdi = "CAPPICINO ASTAR";
+                            } else {
+                                $disAstarAdi = "SİYAH ASTAR";
+                            }
+                            if ($ic <> $Dis) {
+                                @$b[$icAstarAdi] += $TicA[$ic];
+                                @$b[$disAstarAdi] += $TdisA[$Dis];
+                                $renk[$i] = $iR;
+                                $renk[$i] = $dR;
+                                $renkm[$i] = $Tic[$ic];
+                                $renkm[$i] = $Tdis[$Dis];
+                        ?>
+                                <tr>
                                     <td>
-                                        <div class="d-flex justify-content-between"><span><b>İç Astar</b> &nbsp <?= $iR ?></span><?= @number_format($TicA[$ic]) ?> &nbsp gr</div>
+                                        <div class="d">İç Astar &nbsp<span><?= $icAstarAdi ?></span><code><?= $TicA[$ic] / 1000 ?> kg</code></div>
                                     </td>
                                     <td>
-                                        <div class="d-flex justify-content-between"><span><b>İç Boya</b> &nbsp <?= $iR ?></span><?= @number_format($Tic[$ic]) ?> &nbsp gr</div>
+                                        <div class="d">İç Üstkat<span><?= $iR ?></span><code><?= $Tic[$ic] / 1000 ?> kg</code></div>
                                     </td>
                                     <td>
-                                        <div class="d-flex justify-content-between"><span><b>Dış Astar</b> &nbsp <?= $dR ?></span><?= @number_format($TdisA[$Dis]) ?> &nbsp gr</div>
+                                        <div class="d">Dış Astar &nbsp<span><?= $disAstarAdi ?></span><code><?= $TdisA[$Dis] / 1000 ?> kg</code></div>
                                     </td>
-                                    <td>
-                                        <div class="d-flex justify-content-between"><span><b>Dış Boya</b> &nbsp <?= $dR ?></span><?= @number_format($Tdis[$Dis]) ?> &nbsp gr</div>
+                                    <td colspan="4">
+                                        <div class="d">Dış Üstkat<span><?= $dR ?></span><code><?= $Tdis[$Dis] / 1000 ?> kg</code></div>
                                     </td>
                                 </tr>
                             <?php } else {
-                                if ($iR == "ŞEKER PEMBE") {
-                                    $AstarAdi="ŞEKER PEMBE ASTAR";
-                                }elseif($iR == "KREM"){
-                                    $AstarAdi="KREM ASTAR";
-                                }elseif($iR == "CAPUCİNO"){
-                                    $AstarAdi="CAPPICINO ASTAR";
-                                }else{
-                                    $AstarAdi="SİYAH ASTAR";
-                                } ?>
-                                <tr class="small">
-                                    <td colspan="4">
-                                        <div class="d-flex justify-content-between"><span><b><?= $AstarAdi ?></b> &nbsp </span><?= @number_format($TicA[$ic] + $TdisA[$Dis]) ?> &nbsp gr</div>
-                                    </td>
+                                @$b[$icAstarAdi] += $TicA[$ic] + $TdisA[$Dis];
+                                $renk[$i] = $iR;
+                                $renkm[$i] = $Tic[$ic] + $Tdis[$Dis]; ?>
+                                <tr>
                                     <td colspan="3">
-                                        <div class="d-flex justify-content-between"><span><b>Boya</b> &nbsp <?= $iR ?></span><?= @number_format($Tic[$ic] + $Tdis[$Dis]) ?> &nbsp gr</div>
+                                        <div class="d">İç ve Dış Astar &nbsp<span><?= $icAstarAdi ?></span><code><?= ($TicA[$ic] + $TdisA[$Dis]) / 1000 ?> kg</code></div>
+                                    </td>
+                                    <td colspan="4">
+                                        <div class="d">İç ve Dış Üstkat &nbsp<span><?= $iR ?></span><code><?= ($Tic[$ic] + $Tdis[$Dis]) / 1000 ?> kg</code></div>
                                     </td>
                                 </tr>
                         <?php }
+                            $i++;
                         } ?>
-
+                        <tr>
+                            <th colspan="7" class="text-center table-light">GENEL TOPLAM</th>
+                        </tr>
+                        <tr>
+                            <?php for ($i = 0; $i < count($renk); $i++) { ?>
+                                <td>
+                                    <div class="d"><?= $renk[$i] ?><code><?= ceil($renkm[$i] / 1000) ?> kg</code></div>
+                                </td>
+                            <?php } ?>
+                            <td colspan="<?= count($renk) < 7 ? 7 - count($renk) : count($renk) ?>"></td>
+                        </tr>
+                        <tr>
+                            <?php
+                            if (array_key_exists('CAPPICINO ASTAR', $b)) { ?>
+                                <td>
+                                    <div class="d">CAPPICINO ASTAR<code><?= ceil($b["CAPPICINO ASTAR"] / 1000) ?> kg</code></div>
+                                </td>
+                            <?php }
+                            if (array_key_exists('KREM ASTAR', $b)) { ?>
+                                <td>
+                                    <div class="d">KREM ASTAR<code><?= ceil($b["KREM ASTAR"] / 1000) ?> kg</code></div>
+                                </td>
+                            <?php }
+                            if (array_key_exists('ŞEKER PEMBE ASTAR', $b)) { ?>
+                                <td>
+                                    <div class="d">ŞEKER PEMBE ASTAR<code><?= ceil($b["ŞEKER PEMBE ASTAR"] / 1000) ?> kg</code></div>
+                                </td>
+                            <?php }
+                            if (array_key_exists('SİYAH ASTAR', $b)) { ?>
+                                <td>
+                                    <div class="d">SİYAH ASTAR<code><?= ceil($b["SİYAH ASTAR"] / 1000) ?> kg</code></div>
+                                </td>
+                            <?php } ?>
+                            <td colspan="<?= count($b) < 7 ? 7 - count($b) : count($b) ?>"></td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
 
             <div class="text-center">
                 <h5 class="card-title">Set Adı: <?= $_GET["adi"] ?></h5>
-                <button id="yazdir" class="btn btn-lg btn-primary" onclick="window.print()">Yazdır</button>
+                <button id="yazdir" class="bi-printer" onclick="window.print()">&nbsp Yazdır</button>
+                &nbsp
+                <button class="bi-file-text">&nbsp Sipariş</button>
             </div>
         </div>
     </div>
@@ -157,7 +219,13 @@ $id = (int)$_GET["id"];
         }
     }
 </style>
-
+<script>
+    $(function() {
+        $(".d-flex").addClass("small");
+        $("button").addClass("btn btn-primary");
+        $(".d").addClass("d-flex justify-content-between");
+    });
+</script>
 <?php
 require __DIR__ . '/../../controller/Footer.php';
 ?>
