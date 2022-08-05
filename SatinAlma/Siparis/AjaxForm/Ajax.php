@@ -74,19 +74,33 @@
     });
 
     // Boya Sipariş
+    $(".sil").click(function() {
+        $(this).parent("td").parent("tr").remove();
+    });
 
     $('.BoyaSiparisEt').click(function() {
         var Miktar = [];
-        $("input.Miktar").each(function(i, sel) {
-            var selectedVal = $(sel).val();
-            Miktar.push(selectedVal);
+        var Boyalar = [];
+        $(".Miktar").map(function() {
+            Miktar.push($(this).val());
+            Boyalar.push(Number($(this).attr("id")));
         });
-        var S_Tarihi = $(".tarih").val();
+
+        var STarihi = $(".tarih").val();
+
+        for (let i = 0; i < Miktar.length; i++) {
+            if (STarihi == "" || Miktar[i] <= 0) {
+                <?= $Gecersiz ?>
+                return;
+            }
+        }
+
         $.ajax({
             type: 'POST',
             url: 'SiparisListesi.php',
             data: {
                 'Miktar': Miktar,
+                'Boyalar': Boyalar
             },
             error: function(xhr) {
                 alert('Hata: ' + xhr.responseText);
@@ -98,13 +112,12 @@
             type: 'POST',
             url: "AjaxForm/post.php",
             data: {
-                'S_Tarihi': S_Tarihi,
+                'S_Tarihi': STarihi,
                 'BoyaSiparis': true,
             },
             error: function(xhr) {
                 alert('Hata: ' + xhr.responseText);
-            },
-            success: function() {}
+            }
         })
 
         Swal.fire({
@@ -178,10 +191,9 @@
     //Hesap İşlemi
     $(".Adet").change(function() {
         var id = $(this).attr("LevhaID");
-        var a = parseFloat($("#Cap" + id + "").text());
-        var b = parseFloat($("#Kalinlik" + id + "").text());
-        var d = $("#Adet" + id + "").val();
-        var Kg = Math.ceil(((a * a * b * (0.22)) * d) / 1000);
+        var a = parseFloat($("#Hesap" + id + "").text());
+        var b = $("#Adet" + id + "").val();
+        var Kg = Math.ceil((a * b) / 1000);
         $("#Agirlik" + id + "").text(Kg);
     });
 
@@ -189,13 +201,11 @@
         var STarihi = $(".tarih").val();
         var Adet = [];
         var Agirlik = [];
-        $("input.Adet").each(function(i, sel) {
-            var Val = $(sel).val();
-            Adet.push(Val);
+        $("input.Adet").map(function() {
+            Adet.push($(this).val());
         });
-        $(".Agirlik").each(function(i, sel) {
-            var Val = Number($(sel).text());
-            Agirlik.push(Val);
+        $(".Agirlik").map(function() {
+            Agirlik.push(Number($(this).text()));
         });
 
         for (let i = 0; i < Adet.length; i++) {

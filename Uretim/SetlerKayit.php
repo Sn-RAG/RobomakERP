@@ -10,7 +10,7 @@ require __DIR__ . '/../controller/Kayit.php';
     <section class="section">
         <div class="card">
             <div class="card-body">
-                <a href="Setler.php" class="bi-arrow-left btn btn-secondary m-3"> &nbsp;&nbsp; Geri Dön</a>
+                <a href="Setler.php" class="bi-arrow-left btn btn-secondary m-3">&nbsp Geri Dön</a>
                 <hr>
                 <!-- Pills Tabs -->
                 <ul class="nav nav-pills mb-3 steps">
@@ -337,7 +337,7 @@ require __DIR__ . '/../controller/Kayit.php';
                                         <div class="col-md-12 d-flex justify-content-end">
                                             <button id="icerikSec" type="button" class="btn btn-success me-3 etkin" hidden disabled>Ürün Düzenle</button>
                                             <a href="Setler.php" class="btn col-md-2 btn-primary me-3">Kaydet</a>
-                                            <a href="SetKontrol/FormHesapLevha.php?id=<?= isset($_SESSION["Set_ID"]) ? $_SESSION["Set_ID"] : "" ?>" class="btn col-md-2 btn-primary me-3" target="_blank" rel="noreferrer noopener">Levha Hesapla</a>
+                                            <a href="SetKontrol/FormHesapLevha.php?id=<?= isset($_SESSION["Set_ID"]) ? $_SESSION["Set_ID"] : "" ?>&adi=<?= isset($_SESSION["SetAdi"]) ? $_SESSION["SetAdi"] : "" ?>" class="btn col-md-2 btn-primary me-3" target="_blank" rel="noreferrer noopener">Levha Hesapla</a>
                                             <div class="col-md-3 row me-3">
                                                 <label class="col-sm-4 col-form-label">Adet</label>
                                                 <div class="col-sm-8">

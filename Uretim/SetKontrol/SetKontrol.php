@@ -17,7 +17,7 @@ require __DIR__ . '/Yuzde.php';
     <section class="section">
         <div class="card">
             <div class="card-header d-flex justify-content-between">
-                <div><a href="../Setler.php" class="bi-arrow-left btn btn-secondary"> &nbsp&nbsp Geri Dön</a></div>
+                <div><a href="../Setler.php" class="bi-arrow-left btn btn-secondary">&nbsp Geri Dön</a></div>
                 <h5 class='card-title text-center fs-5'><?= $SetAdi ?></h5>
                 <div>
                     <div class="btn-group btn-group-sm">

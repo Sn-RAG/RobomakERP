@@ -60,24 +60,22 @@ if (isset($_POST['UrunLevhaBilgiEkle'])) {
     $ID = $_POST['Urun_ID'];
     $T = $_POST['Tip'];
     $C = $_POST['Cap'];
+    $C2 = $_POST['Cap2'];
     $K = $_POST['Kalinlik'];
-
+    $bak = $T == "DikDörtgen" ? " AND Cap2='$C2'" : "";
     //-----------------------------------------------------Levha Varmı Yok mu Sorgu /// Yoksa ekle
-    $Varmi = $baglanti->prepare("SELECT Levha_ID FROM levha WHERE Tip= ? AND Cap= ? AND Kalinlik= ?");
-    $Varmi->execute(array($T, $C, $K));
-    //--------------------------------------------------LEVHA VARMI SOR
+    $Varmi = $baglanti->query("SELECT Levha_ID FROM levha WHERE Tip='$T' AND Cap='$C' AND Kalinlik='$K'" . $bak);
     if ($Varmi->rowCount()) {
-        $Kaydet = $baglanti->prepare("INSERT INTO urun_levha_bilgi SET Urun_ID= ?, Levha_ID= ?, Kullanici_ID= ?");
-        $SonucSor = $Kaydet->execute(array($ID, $Varmi->fetch()['Levha_ID'], $Kullanici));
-        header("location:UrunLevhaBilgi.php?Urun_ID=$ID");
+        $Lid = $Varmi->fetch()['Levha_ID'];
+        if ($baglanti->query("SELECT * FROM urun_levha_bilgi WHERE Levha_ID=" . $Lid)->rowCount()) {
+            echo "<script>" . $Kayitvarr . "</script>";
+        } else {
+            $Kaydet = $baglanti->prepare("INSERT INTO urun_levha_bilgi SET Urun_ID= ?, Levha_ID= ?, Kullanici_ID= ?");
+            $Kaydet->execute(array($ID, $Lid, $Kullanici));
+            header("location:UrunLevhaBilgi.php?Urun_ID=$ID");
+        }
     } else {
-        //--------------------------------------------------LEVHA BİLGİSİ YOKSA EKLE
-        $Kaydet = $baglanti->prepare("INSERT INTO levha SET Tip= ?, Cap= ?, Kalinlik= ?");
-        $Kaydet->execute(array($T, $C, $K));
-        $Yeniid = $baglanti->lastInsertId();
-        $Kaydet = $baglanti->prepare("INSERT INTO urun_levha_bilgi SET Urun_ID= ?, Levha_ID= ?, Kullanici_ID= ?");
-        $Kaydet->execute(array($ID, $Yeniid, $Kullanici));
-        header("location:UrunLevhaBilgi.php?Urun_ID=$ID");
+        echo $KayitAcilmamis;
     }
     logtut($Kullanici, "Ürüne levha verisi ekledi.");
 }

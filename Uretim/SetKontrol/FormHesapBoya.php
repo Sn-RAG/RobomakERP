@@ -1,8 +1,10 @@
 <?php
+ob_start();
+session_start();
 $page = "Boya Hesabı";
 require __DIR__ . '/../../controller/Db.php';
 require __DIR__ . '/../../controller/VTHataMesaji.php';
-$id = (int)$_GET["id"];
+@$id = (int)$_GET["id"];
 ?>
 <!DOCTYPE html>
 <html lang="tr">
@@ -171,37 +173,57 @@ $id = (int)$_GET["id"];
                         </tr>
                         <tr>
                             <?php
-                            if (array_key_exists('CAPPICINO ASTAR', $b)) { ?>
+                            $i = 0;
+                            $Astar = [];
+                            $Astarm = [];
+                            if (array_key_exists('CAPPICINO ASTAR', $b)) {
+                                $Astar[$i] = "CAPPICINO";
+                                $Astarm[$i] = ceil($b["CAPPICINO ASTAR"] / 1000);
+                            ?>
                                 <td>
-                                    <div class="d">CAPPICINO ASTAR<code><?= ceil($b["CAPPICINO ASTAR"] / 1000) ?> kg</code></div>
+                                    <div class="d">CAPPICINO ASTAR<code><?= $Astarm[$i] ?> kg</code></div>
                                 </td>
-                            <?php }
-                            if (array_key_exists('KREM ASTAR', $b)) { ?>
+                            <?php
+                                $i++;
+                            }
+                            if (array_key_exists('KREM ASTAR', $b)) {
+                                $Astar[$i] = "KREM";
+                                $Astarm[$i] = ceil($b["KREM ASTAR"] / 1000); ?>
                                 <td>
-                                    <div class="d">KREM ASTAR<code><?= ceil($b["KREM ASTAR"] / 1000) ?> kg</code></div>
+                                    <div class="d">KREM ASTAR<code><?= $Astarm[$i] ?> kg</code></div>
                                 </td>
-                            <?php }
-                            if (array_key_exists('ŞEKER PEMBE ASTAR', $b)) { ?>
+                            <?php
+                                $i++;
+                            }
+                            if (array_key_exists('ŞEKER PEMBE ASTAR', $b)) {
+                                $Astar[$i] = "ŞEKER PEMBE";
+                                $Astarm[$i] = ceil($b["ŞEKER PEMBE ASTAR"] / 1000); ?>
                                 <td>
-                                    <div class="d">ŞEKER PEMBE ASTAR<code><?= ceil($b["ŞEKER PEMBE ASTAR"] / 1000) ?> kg</code></div>
+                                    <div class="d">ŞEKER PEMBE ASTAR<code><?= $Astarm[$i] ?> kg</code></div>
                                 </td>
-                            <?php }
-                            if (array_key_exists('SİYAH ASTAR', $b)) { ?>
+                            <?php
+                                $i++;
+                            }
+                            if (array_key_exists('SİYAH ASTAR', $b)) {
+                                $Astar[$i] = "SİYAH";
+                                $Astarm[$i] = ceil($b["SİYAH ASTAR"] / 1000) ?>
                                 <td>
-                                    <div class="d">SİYAH ASTAR<code><?= ceil($b["SİYAH ASTAR"] / 1000) ?> kg</code></div>
+                                    <div class="d">SİYAH ASTAR<code><?= $Astarm[$i] ?> kg</code></div>
                                 </td>
-                            <?php } ?>
+                            <?php
+                                $i++;
+                            }
+                            ?>
                             <td colspan="<?= count($b) < 7 ? 7 - count($b) : count($b) ?>"></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-
             <div class="text-center">
                 <h5 class="card-title">Set Adı: <?= $_GET["adi"] ?></h5>
-                <button id="yazdir" class="bi-printer" onclick="window.print()">&nbsp Yazdır</button>
+                <button class="bi-printer" onclick="window.print()">&nbsp Yazdır</button>
                 &nbsp
-                <button class="bi-file-text">&nbsp Sipariş</button>
+                <button id="Siparis" class="bi-file-text">&nbsp Sipariş</button>
             </div>
         </div>
     </div>
@@ -225,7 +247,32 @@ $id = (int)$_GET["id"];
         $("button").addClass("btn btn-primary");
         $(".d").addClass("d-flex justify-content-between");
     });
+    $("#Siparis").click(function() {
+        $.ajax({
+            type: "POST",
+            url: "FormHesapBoya.php",
+            data: {
+                'Siparis': true,
+                'BAstar': <?= json_encode($Astar) ?>,
+                'BAstarm': <?= json_encode($Astarm) ?>,
+                'BRenk': <?= json_encode($renk) ?>,
+                'BRenkm': <?= json_encode($renkm) ?>
+            },
+            error: function(xhr) {
+                alert('Hata: ' + xhr.responseText);
+            },
+            success: function() {
+                window.location.assign("../../SatinAlma/Siparis/SiparisListesi.php");
+            }
+        })
+    });
 </script>
 <?php
-require __DIR__ . '/../../controller/Footer.php';
+if (isset($_POST["Siparis"])) {
+    $_SESSION["BAstar"] = $_POST["BAstar"];
+    $_SESSION["BAstarm"] = $_POST["BAstarm"];
+    $_SESSION["BRenk"] = $_POST["BRenk"];
+    $_SESSION["BRenkm"] = $_POST["BRenkm"];
+    $_SESSION["Boyalar"] = true;
+}
 ?>

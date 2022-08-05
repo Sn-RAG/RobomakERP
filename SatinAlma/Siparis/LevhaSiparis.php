@@ -3,6 +3,7 @@ ob_start();
 $page = "Levha Sipariş";
 require __DIR__ . '/../../controller/Header.php';
 require __DIR__ . '/../../controller/Kayit.php';
+unset($_SESSION["Levhalar"], $_SESSION["Koseli"]);
 ?>
 <main id="main" class="main">
     <section class="section">
@@ -35,18 +36,20 @@ require __DIR__ . '/../../controller/Kayit.php';
                             $YonSiparis = "";
                         }
                         $sorgu = $baglanti->query("SELECT * FROM levha" . $YonSiparis);
-                        foreach ($sorgu as $sonuc) {
-                            $id = $sonuc['Levha_ID'];
-                            $Tip = $sonuc['Tip'];
-                            $Cap = $sonuc['Cap'];
-                            $Kalinlik = $sonuc['Kalinlik'];
+                        foreach ($sorgu as $s) {
+                            $id = $s['Levha_ID'];
+                            $Tip = $s['Tip'];
+                            $Cap = $s['Cap'];
+                            $Kalinlik = $s['Kalinlik'];
+                            //Köşeli mi?
+                            $bak = $s['Cap2'] <> null ? " &nbsp <i class='bi-dash-lg'></i> &nbsp " . $s['Cap2'] . " cm" : "";
                         ?>
                             <tr>
                                 <td><?= $id ?></td>
                                 <td><label class="form-check-label" for="Check<?= $id ?>"><input class="form-check-input" type="checkbox" id="Check<?= $id ?>" value="<?= $id ?>"> Seç</label></td>
                                 <td><?= $Tip ?></td>
-                                <td><?= $Cap ?></td>
-                                <td><?= $Kalinlik ?></td>
+                                <td><?= $Cap." cm " . $bak ?></td>
+                                <td><?= $Kalinlik ?> mm</td>
                                 <td>
                                     <button type="button" class="btn btn-outline-warning bi-pencil-fill" data-bs-toggle="modal" data-bs-target="#Duzenle<?= $id ?>">&nbsp Düzenle</button>
                                 </td>
@@ -68,7 +71,7 @@ require __DIR__ . '/../../controller/Kayit.php';
                                                             <?php
                                                             $query = $baglanti->query("SELECT Firma_ID, Firma FROM firmalar");
                                                             foreach ($query as $s) { ?>
-                                                                <option <?= $s["Firma_ID"] == $sonuc['Firma_ID'] ? "selected" : "" ?> value='<?= $s["Firma_ID"] ?>'><?= $s["Firma"] ?></option>
+                                                                <option <?= $s["Firma_ID"] == $s['Firma_ID'] ? "selected" : "" ?> value='<?= $s["Firma_ID"] ?>'><?= $s["Firma"] ?></option>
                                                             <?php } ?>
                                                         </select>
                                                         <label>Çalışılan Firma</label>

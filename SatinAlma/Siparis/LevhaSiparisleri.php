@@ -4,6 +4,7 @@ $page = "Levha Siparişleri";
 require __DIR__ . '/../../controller/Header.php';
 require __DIR__ . '/../../controller/Db.php';
 require __DIR__ . '/../../controller/Sil.php';
+unset($_SESSION["Levhalar"]);
 ?>
 <main id="main" class="main">
     <section class="section">
@@ -45,13 +46,15 @@ require __DIR__ . '/../../controller/Sil.php';
                                     $id = $s['Levha_Siparis_ID'];
                                     $Levha_Stok_ID = $s['Levha_Stok_ID'];
                                     $Siparis_ID = $s['Siparis_ID'];
+                                    //Köşeli mi?
+                                    $bak = $s['Cap2'] <> null ? " &nbsp <i class='bi-dash-lg'></i> &nbsp " . $s['Cap2'] . " cm" : "";
                                 ?>
                                     <tr>
                                         <th><?= $id ?></th>
                                         <td><?= $Levha_Stok_ID ?></td>
                                         <td><?= $Siparis_ID ?></td>
                                         <td><?= $s['Tip'] ?></td>
-                                        <td><?= $s['Cap'] ?> cm</td>
+                                        <td><?= $s['Cap'] . " cm " . $bak ?></td>
                                         <td><?= $s['Kalinlik'] ?> mm</td>
                                         <td><?= $s['Adet'] ?> Adet</td>
                                         <td><?= $s['Siparis_Agirlik'] ?> Kg</td>

@@ -42,20 +42,42 @@ $tarih = date("Y-m-d");
                                 </thead>
                                 <tbody>
                                     <?php
-                                    $b = $_SESSION["Boyalar"];
 
-                                    for ($i = 0; $i < count($b); $i++) {
-                                        $sn = $baglanti->query('SELECT * FROM boya WHERE Boya_ID=' . $b[$i])->fetch(); ?>
-                                        <tr>
-                                            <?= isset($_GET["YazdirBoya"]) ? "" : "<td><?= $sn[Boya_ID] ?></td>" ?>
-                                            <td><?= $sn['Marka'] ?></td>
-                                            <td><?= $sn['Renk'] ?></td>
-                                            <td><?= $sn['Seri'] ?></td>
-                                            <td><?= $sn['Kod'] ?></td>
-                                            <?= isset($_GET["YazdirBoya"]) ? "" : "<td><input type='number' class='form-control Miktar' placeholder='Miktar Giriniz'></td>" ?>
-                                            <?= isset($_GET["YazdirBoya"]) ? "<td>" . $_SESSION["Miktar"][$i] . "</td>" : "" ?>
-                                        </tr>
-                                    <?php } ?>
+                                    if (isset($_SESSION["BRenk"])) {
+                                        $r = $_SESSION["BRenk"];
+                                        $a = $_SESSION["BAstar"];
+                                        for ($i = 0; $i < count($r); $i++) {
+                                            $ss = $baglanti->query("SELECT * FROM boya WHERE Renk='" . @$r[$i] . "' AND Seri='ÜST KAT' OR Seri='ASTAR' AND Renk='" . @$a[$i] . "'");
+                                            foreach ($ss as $s) {
+                                                $id = $s["Boya_ID"];
+                                                $seri = $s['Seri']; ?>
+                                                <tr>
+                                                    <td><button class="btn btn-danger bi-x-lg sil"></button></td>
+                                                    <td><?= $s['Marka'] ?></td>
+                                                    <td><?= $s['Renk'] ?></td>
+                                                    <td><?= $seri ?></td>
+                                                    <td><?= $s['Kod'] ?></td>
+                                                    <td>
+                                                        <div class="input-group"><input type='number' id="<?= $id ?>" class='form-control Miktar' value="<?= $seri == "ASTAR" ? $_SESSION["BAstarm"][$i] : ceil($_SESSION["BRenkm"][$i] / 1000) ?>" placeholder='Miktar Giriniz'><span class="input-group-text"> &nbsp KG &nbsp </span></div>
+                                                    </td>
+                                                </tr>
+                                            <?php }
+                                        }
+                                    } else {
+                                        $b = $_SESSION["Boyalar"];
+                                        for ($i = 0; $i < count($b); $i++) {
+                                            $sn = $baglanti->query('SELECT * FROM boya WHERE Boya_ID=' . $b[$i])->fetch(); ?>
+                                            <tr>
+                                                <?= isset($_GET["YazdirBoya"]) ? "" : "<td><?= $sn[Boya_ID] ?></td>" ?>
+                                                <td><?= $sn['Marka'] ?></td>
+                                                <td><?= $sn['Renk'] ?></td>
+                                                <td><?= $sn['Seri'] ?></td>
+                                                <td><?= $sn['Kod'] ?></td>
+                                                <?= isset($_GET["YazdirBoya"]) ? "" : "<td><div class='input-group'><input type='number' class='form-control Miktar' placeholder='Miktar Giriniz'><span class='input-group-text'> &nbsp KG &nbsp </span></div></td>" ?>
+                                                <?= isset($_GET["YazdirBoya"]) ? "<td>" . $_SESSION["Miktar"][$i] . "</td>" : "" ?>
+                                            </tr>
+                                    <?php }
+                                    } ?>
                                 </tbody>
                             </table>
                         <?php } elseif (isset($_SESSION["Levhalar"])) { ?>
@@ -74,19 +96,26 @@ $tarih = date("Y-m-d");
                                     $l = $_SESSION["Levhalar"];
                                     for ($i = 0; $i < count($l); $i++) {
                                         $sn = $baglanti->query('SELECT * FROM levha WHERE Levha_ID=' . $l[$i])->fetch();
-                                        $id = $sn["Levha_ID"]; ?>
+                                        $id = $sn["Levha_ID"];
+                                        //Köşeli mi?
+                                        $bak = $sn['Cap2'] <> null ? " &nbsp <i class='bi-dash-lg'></i> &nbsp " . $sn['Cap2'] . " cm" : "";
+                                        $cap = $sn['Cap2'] <> null ? $sn['Cap2'] : $sn['Cap']; //Hesap
+                                    ?>
                                         <tr>
                                             <td><?= $id ?></td>
                                             <td><?= $sn['Tip'] ?></td>
-                                            <td id="Cap<?= $id ?>"><?= $sn['Cap'] ?></td>
-                                            <td id="Kalinlik<?= $id ?>"><?= $sn['Kalinlik'] ?></td>
+                                            <td><?= $sn['Cap'] . $bak ?>
+                                                <!--HESAP-->
+                                                <i hidden id="Hesap<?= $id ?>"><?= $sn['Cap'] * $cap * $sn['Kalinlik'] * (0.22) ?></i>
+                                                <!--HESAP SON-->
+                                            </td>
+                                            <td><?= $sn['Kalinlik'] ?></td>
                                             <td class="d-flex"><label class="me-2 small"><b id="Agirlik<?= $id ?>" class="Agirlik">0</b> Kg</label><input type='number' class='form-control Adet' id="Adet<?= $id ?>" LevhaID='<?= $id ?>' placeholder='Adet Giriniz'></td>
                                         </tr>
                                     <?php } ?>
                                 </tbody>
                             </table>
                         <?php } ?>
-                        <div class="yaz"></div>
                     </div>
                 </div>
             </div>
@@ -106,17 +135,17 @@ $tarih = date("Y-m-d");
             $('.BoyaTablo').DataTable({
                 responsive: true,
                 columnDefs: [{
-                        'visible': false,
-                        'targets': 0
-                    },
-                    {
                         targets: '_all',
                         orderable: false
                     },
                     {
                         'width': '20%',
                         'targets': 5
-                    }
+                    },
+                    <?php if (!(isset($_SESSION["BRenk"]))) {
+                        echo "{'visible': false,
+                        'targets': 0}";
+                    } ?>
                 ],
                 paging: false,
                 bFilter: false,
@@ -148,6 +177,7 @@ $tarih = date("Y-m-d");
 require __DIR__ . '/AjaxForm/Ajax.php';
 require __DIR__ . '/../../controller/Footer.php';
 if (isset($_POST["Miktar"])) {
-    $_SESSION["Miktar"]  = $_POST["Miktar"];
+    $_SESSION["Miktar"] = $_POST["Miktar"];
+    $_SESSION["Boyalar"] = $_POST["Boyalar"];
 }
 ?>

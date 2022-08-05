@@ -1,10 +1,12 @@
 <?php
+session_start();
 $page = "Levha Hesabı";
 require __DIR__ . '/../../controller/Db.php';
 require __DIR__ . '/../../controller/VTHataMesaji.php';
 $id = (int)$_GET["id"];
 ?>
-<html>
+<!DOCTYPE html>
+<html lang="tr">
 
 <head>
     <title><?= $page ?></title>
@@ -41,16 +43,18 @@ $id = (int)$_GET["id"];
                         <?php
                         $i = 1;
                         $Topla = 0;
-                        $Caplar = [];
                         $say = 0;
+                        $Levhalar = [];
 
                         $sor = $baglanti->query("SELECT Urun_ID, UrunAdi, Levha_ID, SUM(Adet) AS Adet FROM view_set_urun_sec WHERE Set_ID =" . $id . " GROUP BY Urun_ID");
                         foreach ($sor as $s) {
-                            $l = $baglanti->query("SELECT Cap,Kalinlik FROM urun_levha_bilgi INNER JOIN levha ON urun_levha_bilgi.Levha_ID = levha.Levha_ID WHERE Urun_ID =" . $s["Urun_ID"] . " AND levha.Levha_ID =" . $s["Levha_ID"]);
+                            $l = $baglanti->query("SELECT Cap,Cap2,Kalinlik FROM urun_levha_bilgi INNER JOIN levha ON urun_levha_bilgi.Levha_ID = levha.Levha_ID WHERE Urun_ID =" . $s["Urun_ID"] . " AND levha.Levha_ID =" . $s["Levha_ID"]);
                             if ($l->rowCount()) {
-
+                                $Levhalar[$say] = $s["Levha_ID"];
+                                $say++;
                                 $q = $l->fetch();
                                 $c = $q["Cap"];
+                                $c2 = $q["Cap2"];
                                 $k = $q["Kalinlik"];
                                 //GRİLL HESAPLA 
                                 $sor = $baglanti->query("SELECT * FROM urun WHERE Urun_ID=" . $s["Urun_ID"] . " AND UrunAdi LIKE '%Gril%'")->rowCount();
@@ -58,23 +62,12 @@ $id = (int)$_GET["id"];
                                 $cl = $baglanti->query("SELECT * FROM urun WHERE Urun_ID=" . $s["Urun_ID"] . " AND UrunAdi LIKE '%Köşeli%'")->rowCount();
                                 if ($cl) {
                                     $etk = true;
-                                    $mm = $baglanti->query("SELECT Cap, Kalinlik FROM view_urun_levha_bilgi WHERE Kalinlik=" . $k . " AND Urun_ID=" . $s["Urun_ID"]);
-                                    foreach ($mm as $m) {
-                                        $Caplar[$say] = $m["Cap"];
-                                        $say++;
-                                    }
-                                    for ($ii = 0; $ii < count($Caplar); $ii++) {
-                                        $c1 = $Caplar[$ii];
-                                        $ii += 1;
-                                        $c2 = $Caplar[$ii];
-                                        $c = $c1 . " &nbsp " . $c2;
-                                        $adt = $s["Adet"];
-                                        $Fire = ceil(($s["Adet"] * 5) / 100);
-                                        $adt += $Fire;
-                                    }
+                                    $adt = $s["Adet"];
+                                    $Fire = ceil(($s["Adet"] * 5) / 100);
+                                    $adt += $Fire;
+                                    //KÖŞELİ HESAPLAMA SON
                                 } elseif ($sor) {
                                     $etk = true;
-                                    //KÖŞELİ HESAPLAMA SON
                                     $adt = $s["Adet"];
                                     $Fire = ceil(($s["Adet"] * 5) / 100);
                                     $adt += $Fire;
@@ -85,15 +78,13 @@ $id = (int)$_GET["id"];
                                     $Fire = ceil((ceil((($c * $c * $k * (0.22)) / 1000) * $s["Adet"]) * 5) / 100);
                                     $AdetKg += $Fire;
                                 }
-
                                 @$yaz = $etk == false ? $AdetKg : $adt . " Adet";
-                                @$sp = $AdetKg == null ? 0 : $AdetKg;
                                 @$Topla += $AdetKg;
-                        ?>
+                                $bak = $c2 <> null ? " &nbsp <i class='bi-dash-lg'></i> &nbsp " . $c2." cm" : ""; ?>
                                 <tr>
                                     <td><?= $i++ ?></td>
-                                    <td><?= $c ?></td>
-                                    <td><?= $k ?></td>
+                                    <td><?= $c." cm " . $bak ?></td>
+                                    <td><?= $k." mm" ?></td>
                                     <td><?= $s["UrunAdi"] ?></td>
                                     <td><?= $yaz ?></td>
                                     <td></td>
@@ -103,10 +94,7 @@ $id = (int)$_GET["id"];
                             }
                         } ?>
                         <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            <td colspan="4"></td>
                             <td>Toplam= <?= $Topla ?> Kg</td>
                             <td></td>
                         </tr>
@@ -115,7 +103,9 @@ $id = (int)$_GET["id"];
             </div>
             <div class="text-center">
                 <h5 class="card-title">Set Adı: <?= $_GET["adi"] ?> <code class="fs-5">+ %5 Fire</code></h5>
-                <button id="yazdir" class="btn btn-lg btn-primary bi-printer">&nbsp Yazdır</button>
+                <button class="bi-printer" onclick="window.print()">&nbsp Yazdır</button>
+                &nbsp
+                <button id="Siparis" class="bi-file-text">&nbsp Sipariş</button>
             </div>
         </div>
     </div>
@@ -135,7 +125,27 @@ $id = (int)$_GET["id"];
 </style>
 
 <script>
-    $("#yazdir").click(function() {
-        window.print();
+    $(function() {
+        $("button").addClass("btn btn-primary");
+    });
+    $("#Siparis").click(function() {
+        $.ajax({
+            type: "POST",
+            url: "FormHesapLevha.php",
+            data: {
+                'Levhalar': <?= json_encode($Levhalar) ?>
+            },
+            error: function(xhr) {
+                alert('Hata: ' + xhr.responseText);
+            },
+            success: function() {
+                window.location.assign("../../SatinAlma/Siparis/SiparisListesi.php");
+            }
+        })
     });
 </script>
+<?php
+if (isset($_POST["Levhalar"])) {
+    $_SESSION["Levhalar"] = $_POST["Levhalar"];
+}
+?>

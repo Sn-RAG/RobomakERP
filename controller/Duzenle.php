@@ -40,7 +40,7 @@ if (isset($_POST['UrunBoyaBilgiDuzenle'])) {
     } else {
         $SetKaydet = $baglanti->prepare("UPDATE urun_boya_bilgi SET Urun_ID= ?, Boya_ID= ?, icAstar= ?, icUstkat= ?, DisAstar= ?, DisUstkat= ?, Kullanici_ID= ? WHERE Urun_Boya_Bilgi_ID= ?");
         $SonucSor = $SetKaydet->execute(array($Uid, $Bid, $_POST['icAstar'], $_POST['icUstkat'], $_POST['DisAstar'], $_POST['DisUstkat'], $Kullanici, $_POST['Urun_Boya_Bilgi_ID']));
-        
+
         logtut($Kullanici, "Ürünün boya verisini düzenledi.");
         header("location:UrunBoyaBilgi.php?Urun_ID=$Uid");
     }
@@ -48,21 +48,27 @@ if (isset($_POST['UrunBoyaBilgiDuzenle'])) {
 //---------------------////////-------------------------- Urun LEVHA Bilgisi Düzenle
 if (isset($_POST['UrunLevhaBilgiDuzenle'])) {
     $id = $_POST['Urun_Levha_Bilgi_ID'];
-    $Tip = $_POST['Tip'];
-    $Cap = $_POST['Cap'];
-    $Kalinlik = $_POST['Kalinlik'];
+    $T = $_POST['Tip'];
+    $C = $_POST['Cap'];
+    $C2 = $_POST['Cap2'];
+    $K = $_POST['Kalinlik'];
+    $bak = $T == "DikDörtgen" ? " AND Cap2='$C2'" : "";
+    $EKLE = $T == "DikDörtgen" ? $C2 : null;
 
-    $Sor = $baglanti->prepare("SELECT Levha_ID FROM levha WHERE Tip= ? AND Cap= ? AND Kalinlik= ?");
-    $Sor->execute(array($Tip, $Cap, $Kalinlik));
+    $Sor = $baglanti->query("SELECT Levha_ID FROM levha WHERE Tip='$T' AND Cap='$C' AND Kalinlik='$K'" . $bak);
     if ($Sor->rowCount()) {
-        $Levha_ID = $Sor->fetch()['Levha_ID'];
+        $Lid = $Sor->fetch()['Levha_ID'];
+        if ($baglanti->query("SELECT * FROM urun_levha_bilgi WHERE Levha_ID=" . $Lid)->rowCount()) {
+            echo "<script>" . $Kayitvarr . "</script>";
+            return;
+        }
     } else {
-        $Kaydet = $baglanti->prepare("INSERT INTO levha SET Tip= ?, Cap= ?, Kalinlik= ?");
-        $Kaydet->execute(array($Tip, $Cap, $Kalinlik));
-        $Levha_ID = $baglanti->lastInsertId();
+        $Kaydet = $baglanti->prepare("INSERT INTO levha SET Tip= ?, Cap= ?, Cap2= ?, Kalinlik= ?");
+        $Kaydet->execute(array($T, $C, $EKLE, $K));
+        $Lid = $baglanti->lastInsertId();
     }
     $Kaydet = $baglanti->prepare("UPDATE urun_levha_bilgi SET Levha_ID= ?, Kullanici_ID= ? WHERE Urun_Levha_Bilgi_ID= ?");
-    $SonucSor = $Kaydet->execute(array($Levha_ID, $Kullanici, $id));
+    $SonucSor = $Kaydet->execute(array($Lid, $Kullanici, $id));
     header("location:UrunLevhaBilgi.php?Urun_ID=$_POST[Urun_ID]");
     logtut($Kullanici, "Ürünün levha verisini düzenledi.");
 }
