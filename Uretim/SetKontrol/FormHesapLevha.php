@@ -45,13 +45,20 @@ $id = (int)$_GET["id"];
                         $Topla = 0;
                         $say = 0;
                         $Levhalar = [];
-
+                        $Adetler = 0;
+                        $adt = 0;
                         $sor = $baglanti->query("SELECT Urun_ID, UrunAdi, Levha_ID, SUM(Adet) AS Adet FROM view_set_urun_sec WHERE Set_ID =" . $id . " GROUP BY Urun_ID");
                         foreach ($sor as $s) {
                             $l = $baglanti->query("SELECT Cap,Cap2,Kalinlik FROM urun_levha_bilgi INNER JOIN levha ON urun_levha_bilgi.Levha_ID = levha.Levha_ID WHERE Urun_ID =" . $s["Urun_ID"] . " AND levha.Levha_ID =" . $s["Levha_ID"]);
                             if ($l->rowCount()) {
+
                                 $Levhalar[$say] = $s["Levha_ID"];
                                 $say++;
+
+                                $a = $s["Adet"];
+                                $a += ceil(($s["Adet"] * 5) / 100);
+                                $Adetler = $a;
+
                                 $q = $l->fetch();
                                 $c = $q["Cap"];
                                 $c2 = $q["Cap2"];
@@ -78,13 +85,13 @@ $id = (int)$_GET["id"];
                                     $Fire = ceil((ceil((($c * $c * $k * (0.22)) / 1000) * $s["Adet"]) * 5) / 100);
                                     $AdetKg += $Fire;
                                 }
-                                @$yaz = $etk == false ? $AdetKg : $adt . " Adet";
-                                @$Topla += $AdetKg;
-                                $bak = $c2 <> null ? " &nbsp <i class='bi-dash-lg'></i> &nbsp " . $c2." cm" : ""; ?>
+                                $yaz = $etk == false ? $AdetKg : $adt . " Adet";
+                                $Topla += $AdetKg;
+                                $bak = $c2 <> null ? " &nbsp <i class='bi-dash-lg'></i> &nbsp " . $c2 . " cm" : ""; ?>
                                 <tr>
                                     <td><?= $i++ ?></td>
-                                    <td><?= $c." cm " . $bak ?></td>
-                                    <td><?= $k." mm" ?></td>
+                                    <td><?= $c . " cm " . $bak ?></td>
+                                    <td><?= $k . " mm" ?></td>
                                     <td><?= $s["UrunAdi"] ?></td>
                                     <td><?= $yaz ?></td>
                                     <td></td>
@@ -133,7 +140,8 @@ $id = (int)$_GET["id"];
             type: "POST",
             url: "FormHesapLevha.php",
             data: {
-                'Levhalar': <?= json_encode($Levhalar) ?>
+                'Levhalar': <?= json_encode($Levhalar) ?>,
+                'Adetler': <?= $Adetler ?>
             },
             error: function(xhr) {
                 alert('Hata: ' + xhr.responseText);
@@ -147,5 +155,6 @@ $id = (int)$_GET["id"];
 <?php
 if (isset($_POST["Levhalar"])) {
     $_SESSION["Levhalar"] = $_POST["Levhalar"];
+    $_SESSION["Adetler"] = $_POST["Adetler"];
 }
 ?>

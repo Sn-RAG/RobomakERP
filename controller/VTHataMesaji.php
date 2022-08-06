@@ -39,12 +39,12 @@ $UrunLevhaYok = "Swal.fire({
         text: 'Ürünlerin bilgilerini kontrol edin ve seti yeniden oluşturun.',
         confirmButtonText: 'Tamam',
     });";
-$Kayitvar = "<script>Swal.fire({
+$Kayitvar = "Swal.fire({
         icon: 'error',
         title: 'Kayıt zaten mevcut!',
         text: 'Var olan Kaydı oluşturamazsın!',
         confirmButtonText: 'Tamam',
-    })</script>";
+    })";
 $SilHata = "<script>Swal.fire({
         icon: 'error',
         title: 'Teklif verilen Set silinemez!',

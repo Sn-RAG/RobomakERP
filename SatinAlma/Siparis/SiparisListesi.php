@@ -110,7 +110,7 @@ $tarih = date("Y-m-d");
                                                 <!--HESAP SON-->
                                             </td>
                                             <td><?= $sn['Kalinlik'] ?></td>
-                                            <td class="d-flex"><label class="me-2 small"><b id="Agirlik<?= $id ?>" class="Agirlik">0</b> Kg</label><input type='number' class='form-control Adet' id="Adet<?= $id ?>" LevhaID='<?= $id ?>' placeholder='Adet Giriniz'></td>
+                                            <td><div class="d-flex"><div class="col-md-6"><label class="me-2 small"><b id="Agirlik<?= $id ?>" class="Agirlik">0</b> Kg</label></div><div class="col-md-6"><input type='number' class='form-control Adet' id="Adet<?= $id ?>" value="<?= $_SESSION["Adetler"] ?>" LevhaID='<?= $id ?>' placeholder='Adet Giriniz'></td></div></div>
                                         </tr>
                                     <?php } ?>
                                 </tbody>

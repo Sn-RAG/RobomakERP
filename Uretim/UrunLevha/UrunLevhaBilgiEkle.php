@@ -10,7 +10,7 @@ $Uid = (int)$_GET['Urun_ID'];
 
     <section class="section">
         <div class="d-flex align-items-center justify-content-center min-vh-100">
-            <div class="card col-sm-3">
+            <div class="card col-sm-4">
                 <div class="card-body ">
                     <div class="modal-header">
                         <h5 class="modal-title"><?= $page ?></h5>
@@ -19,29 +19,33 @@ $Uid = (int)$_GET['Urun_ID'];
                     <form class="modal-body row g-3 needs-validation" method="post" novalidate>
                         <input type="hidden" name="Urun_ID" value="<?= $Uid ?>" />
 
-                        <div class="form-floating mb-3">
-                            <select name="Tip" class="form-select" aria-label="Seçiniz" required>
-                                <option selected value="Daire">Daire</option>
-                                <option value="Kare">Kare</option>
-                                <option value="DikDörtgen">DikDörtgen</option>
-                            </select>
-                            <label>Tip</label>
-                        </div>
+                        <select name="Tip" class="form-select Tip" aria-label="Seçiniz" required>
+                            <option value="">Tip Seç</option>
+                            <option value="Daire">Daire</option>
+                            <option value="Kare">Kare</option>
+                            <option value="DikDörtgen">DikDörtgen</option>
+                        </select>
 
-                        <div class="form-floating">
-                            <input type="number" name="Cap" class="form-control" id="Cap" step="0.01" value="0.00" required>
-                            <label>Çap</label>
-                        </div>
+                        <select name="Cap" class="form-select" required>
+                            <option value="">Çap Seç</option>
+                            <?php foreach ($baglanti->query('SELECT DISTINCT Cap FROM levha') as $s) {
+                                echo "<option $sec value='$s[Cap]'>$s[Cap]</option>";
+                            } ?>
+                        </select>
 
-                        <div hidden class="form-floating dikdortgen">
-                            <input type="number" name="Cap2" class="form-control" id="Cap" step="0.01" value="0.00">
-                            <label>2. Çap</label>
-                        </div>
+                        <select hidden name="Cap2" class="form-select dd">
+                            <option value="">2. Çap Seç</option>
+                            <?php foreach ($baglanti->query('SELECT DISTINCT Cap2 FROM levha WHERE Cap2<>""') as $s) {
+                                echo "<option $sec value='$s[Cap2]'>$s[Cap2]</option>";
+                            } ?>
+                        </select>
 
-                        <div class="form-floating">
-                            <input type="number" name="Kalinlik" class="form-control" id="Kalinlik" step="0.01" value="0.00" required>
-                            <label>Kalınlık</label>
-                        </div>
+                        <select name="Kalinlik" class="form-select" required>
+                            <option value="">* Kalınlık Seç</option>
+                            <?php foreach ($baglanti->query('SELECT DISTINCT Kalinlik FROM levha') as $s) {
+                                echo "<option $sec value='$s[Kalinlik]'>$s[Kalinlik]</option>";
+                            } ?>
+                        </select>
                         <button name="UrunLevhaBilgiEkle" type="submit" class="btn btn-primary bi-pencil">&nbsp Kaydet</button>
                     </form>
 
@@ -50,11 +54,11 @@ $Uid = (int)$_GET['Urun_ID'];
     </section>
 </main>
 <script>
-    $("select").change(function() {
+    $(".Tip").change(function() {
         if ($(this).val() == "DikDörtgen") {
-            $(".dikdortgen").prop("hidden", false);
+            $(".dd").prop("hidden", false);
         } else {
-            $(".dikdortgen").prop("hidden", true);
+            $(".dd").prop("hidden", true);
         }
     });
 </script>

@@ -4,7 +4,6 @@ $page = "Levha Siparişleri";
 require __DIR__ . '/../../controller/Header.php';
 require __DIR__ . '/../../controller/Db.php';
 require __DIR__ . '/../../controller/Sil.php';
-unset($_SESSION["Levhalar"]);
 ?>
 <main id="main" class="main">
     <section class="section">

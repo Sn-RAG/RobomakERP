@@ -1,23 +1,40 @@
 <SCRIPT>
     $(function() {
-        <?php if (isset($_GET["Setler"])) { ?>
+        <?php if (isset($_GET["Setler"]) || isset($_GET["Ekle"])) { ?>
             $("#Yeni").modal("show");
+        <?php } elseif (isset($_SESSION["Adetler"])) { ?>
+            //Hesap İşlemi
+            $(".Adet").map(function() {
+                var id = $(this).attr("LevhaID");
+                var a = parseFloat($("#Hesap" + id + "").text());
+                var b = $("#Adet" + id + "").val();
+                var Kg = Math.ceil((a * b) / 1000);
+                $("#Agirlik" + id + "").text(Kg);
+            });
         <?php } ?>
     });
+
+    $(".Tip").change(function() {
+        if ($(this).val() == "DikDörtgen") {
+            $(".dd").prop("hidden", false);
+        } else {
+            $(".dd").prop("hidden", true);
+        }
+    });
+
     $('.modal').on('shown.bs.modal', function() {
         $(".temizle").val("");
         $('.Hata').html("");
         $('.focus').focus();
     });
     //EKLE Boya
+    
     $("#BoyaEkle").click(function() {
         var Marka = $("#Marka").val();
         var Renk = $("#Renk").val();
         var Seri = $(".Seri").val();
         var Kod = $("#Kod").val();
-        if (Marka == "" || Renk == "" || Kod == "") {
-            $(".Hata").html("* Zorunlu alanlar boş bırakılamaz!");
-        } else {
+        if (Marka != "" && Renk != "" && Kod != "") {
             $.ajax({
                 type: "POST",
                 url: "AjaxForm/post.php",
@@ -28,17 +45,19 @@
                     'Kod': $.trim(Kod),
                     'BoyaEkle': true,
                 },
-                error: function(xhr, textStatus, errorThrown) {
+                error: function(xhr) {
                     alert('Hata: ' + xhr.responseText);
                 },
                 success: function(data) {
-                    if (data == "") {
-                        window.location.assign("BoyaSiparis.php")
+                    if (data == "var") {
+                        <?= $Kayitvar ?>
                     } else {
-                        <?= $Kayitvarr ?>
+                        window.location.assign("LevhaSiparis.php");
                     }
                 }
             })
+        } else {
+            <?= $Gecersiz ?>
         }
     });
     // Boya Düzenle
@@ -49,27 +68,31 @@
         var Seri = $("#Seri" + ID + "").val();
         var Kod = $("#Kod" + ID + "").val();
 
-        if (Marka == "" || Renk == "" || Kod == "") {
-            $(".Hata").html("* Zorunlu alanlar boş bırakılamaz!");
-        } else {
+        if (Marka != "" && Renk != "" && Kod != "") {
             $.ajax({
                 type: "POST",
                 url: "AjaxForm/post.php",
                 data: {
-                    'DBoyaID': ID,
-                    'DMarka': $.trim(Marka),
-                    'DRenk': $.trim(Renk),
-                    'DSeri': $.trim(Seri),
-                    'DKod': $.trim(Kod),
+                    'BoyaID': ID,
+                    'Marka': $.trim(Marka),
+                    'Renk': $.trim(Renk),
+                    'Seri': $.trim(Seri),
+                    'Kod': $.trim(Kod),
                     'BoyaDuzenle': true,
                 },
-                error: function(xhr, textStatus, errorThrown) {
+                error: function(xhr) {
                     alert('Hata: ' + xhr.responseText);
                 },
-                success: function() {
-                    window.location.assign("BoyaSiparis.php")
+                success: function(data) {
+                    if (data == "var") {
+                        <?= $Kayitvar ?>
+                    } else {
+                        window.location.assign("LevhaSiparis.php");
+                    }
                 }
             })
+        } else {
+            <?= $Gecersiz ?>
         }
     });
 
@@ -140,32 +163,46 @@
     //##########      ####################      ####################      ####################      ####################      ####################      ####################      ##########
 
 
-    $("#YeniLevha").submit(function() {
+    $("#YeniLevha").click(function() {
         var Firma = $("#Firma").val();
         var Tip = $("#Tip").val();
         var Cap = $("#Cap").val();
+        var Cap2 = $("#Cap2").val();
         var Kalinlik = $("#Kalinlik").val();
-        $.ajax({
-            type: "POST",
-            url: "AjaxForm/post.php",
-            data: {
-                'LevhaFirma': Firma,
-                'Tip': Tip,
-                'Cap': Cap,
-                'Kalinlik': Kalinlik,
-                'LevhaEklee': true,
-            },
-            error: function(xhr) {
-                alert('Hata: ' + xhr.responseText);
-            },
-        })
+        if (Cap != "" && Kalinlik != "") {
+            $.ajax({
+                type: "POST",
+                url: "AjaxForm/post.php",
+                data: {
+                    'LevhaFirma': Firma,
+                    'Tip': Tip,
+                    'Cap': Cap,
+                    'Cap2': Cap2,
+                    'Kalinlik': Kalinlik,
+                    'LevhaEkle': true,
+                },
+                error: function(xhr) {
+                    alert('Hata: ' + xhr.responseText);
+                },
+                success: function(data) {
+                    if (data == "var") {
+                        <?= $Kayitvar ?>
+                    } else {
+                        window.location.assign("LevhaSiparis.php");
+                    }
+                }
+            })
+        } else {
+            <?= $Gecersiz ?>
+        }
     });
 
-    $('.LevhaDuzenle').submit(function() {
+    $('.LevhaDuzenle').click(function() {
         var ID = $(this).attr("LevhaID");
         var Firma = $("#Firma" + ID + "").val();
         var Tip = $("#Tip" + ID + "").val();
         var Cap = $("#Cap" + ID + "").val();
+        var Cap2 = $("#Cap2" + ID + "").val();
         var Kalinlik = $("#Kalinlik" + ID + "").val();
         if (Cap != "" && Kalinlik != "") {
             $.ajax({
@@ -176,15 +213,23 @@
                     'LevhaFirma': Firma,
                     'Tip': Tip,
                     'Cap': Cap,
+                    'Cap2': Cap2,
                     'Kalinlik': Kalinlik,
                     'LevhaDuzenle': true,
                 },
                 error: function(xhr) {
                     alert('Hata: ' + xhr.responseText);
+                },
+                success: function(data) {
+                    if (data == "var") {
+                        <?= $Kayitvar ?>
+                    } else {
+                        window.location.assign("LevhaSiparis.php");
+                    }
                 }
             })
         } else {
-            alert("Boş Değer Gönderemezsiniz!");
+            <?= $Gecersiz ?>
         }
     });
 
@@ -236,28 +281,39 @@
     //##########      ####################      ###################               KULP              ####################      ####################      ####################      ##########
     //##########      ####################      ####################      ####################      ####################      ####################      ####################      ##########
 
-    $("#YeniKulp").submit(function() {
+    $("#YeniKulp").click(function() {
         var Firma = $("#Firma").val();
         var Adi = $("#Adi").val();
         var Cesit = $("#Cesit").val();
         var Renk = $("#Renk").val();
-        $.ajax({
-            type: "POST",
-            url: "AjaxForm/post.php",
-            data: {
-                'Firma': Firma,
-                'Adi': $.trim(Adi),
-                'Cesit': $.trim(Cesit),
-                'Renk': $.trim(Renk),
-                'KulpEkle': true,
-            },
-            error: function(xhr) {
-                alert('Hata: ' + xhr.responseText);
-            }
-        })
+        if (Adi != "" && Cesit != "" && Renk != "") {
+            $.ajax({
+                type: "POST",
+                url: "AjaxForm/post.php",
+                data: {
+                    'Firma': Firma,
+                    'Adi': $.trim(Adi),
+                    'Cesit': $.trim(Cesit),
+                    'Renk': $.trim(Renk),
+                    'KulpEkle': true,
+                },
+                error: function(xhr) {
+                    alert('Hata: ' + xhr.responseText);
+                },
+                success: function(data) {
+                    if (data == "var") {
+                        <?= $Kayitvar ?>
+                    } else {
+                        window.location.assign("KulpSiparis.php");
+                    }
+                }
+            })
+        } else {
+            <?= $Gecersiz ?>
+        }
     });
 
-    $('.KulpDuzenle').submit(function() {
+    $('.KulpDuzenle').click(function() {
         var ID = $(this).attr("KulpID");
         var Firma = $("#Firma" + ID + "").val();
         var Adi = $("#Adi" + ID + "").val();
@@ -277,10 +333,17 @@
                 },
                 error: function(xhr) {
                     alert('Hata: ' + xhr.responseText);
+                },
+                success: function(data) {
+                    if (data == "var") {
+                        <?= $Kayitvar ?>
+                    } else {
+                        window.location.assign("KulpSiparis.php");
+                    }
                 }
             })
         } else {
-            alert("Boş Değer Gönderemezsiniz!");
+            <?= $Gecersiz ?>
         }
     });
 
@@ -288,24 +351,35 @@
     //##########      ####################      ###################               KAPAK              ####################      ####################      ####################      ##########
     //##########      ####################      ####################      ####################      ####################      ####################      ####################      ##########
 
-    $("#YeniKapak").submit(function() {
+    $("#YeniKapak").click(function() {
         var Firma = $("#Firma").val();
         var Adi = $("#Adi").val();
-        $.ajax({
-            type: "POST",
-            url: "AjaxForm/post.php",
-            data: {
-                'Firma': Firma,
-                'Adi': $.trim(Adi),
-                'KapakEkle': true,
-            },
-            error: function(xhr) {
-                alert('Hata: ' + xhr.responseText);
-            },
-        })
+        if (Adi != "") {
+            $.ajax({
+                type: "POST",
+                url: "AjaxForm/post.php",
+                data: {
+                    'Firma': Firma,
+                    'Adi': $.trim(Adi),
+                    'KapakEkle': true,
+                },
+                error: function(xhr) {
+                    alert('Hata: ' + xhr.responseText);
+                },
+                success: function(data) {
+                    if (data == "var") {
+                        <?= $Kayitvar ?>
+                    } else {
+                        window.location.assign("KapakSiparis.php");
+                    }
+                }
+            })
+        } else {
+            <?= $Gecersiz ?>
+        }
     });
 
-    $('.KapakDuzenle').submit(function() {
+    $('.KapakDuzenle').click(function() {
         var ID = $(this).attr("KapakID");
         var Firma = $("#Firma" + ID + "").val();
         var Adi = $("#Adi" + ID + "").val();
@@ -321,10 +395,17 @@
                 },
                 error: function(xhr) {
                     alert('Hata: ' + xhr.responseText);
+                },
+                success: function(data) {
+                    if (data == "var") {
+                        <?= $Kayitvar ?>
+                    } else {
+                        window.location.assign("KapakSiparis.php");
+                    }
                 }
             })
         } else {
-            alert("Boş Değer Gönderemezsiniz!");
+            <?= $Gecersiz ?>
         }
     });
 
@@ -332,24 +413,35 @@
     //##########      ####################      ###################               TEPE              ####################      ####################      ####################      ##########
     //##########      ####################      ####################      ####################      ####################      ####################      ####################      ##########
 
-    $("#YeniTepe").submit(function() {
+    $("#YeniTepe").click(function() {
         var Firma = $("#Firma").val();
         var Adi = $("#Adi").val();
-        $.ajax({
-            type: "POST",
-            url: "AjaxForm/post.php",
-            data: {
-                'Firma': Firma,
-                'Adi': $.trim(Adi),
-                'TepeEkle': true,
-            },
-            error: function(xhr) {
-                alert('Hata: ' + xhr.responseText);
-            },
-        })
+        if (Adi != "") {
+            $.ajax({
+                type: "POST",
+                url: "AjaxForm/post.php",
+                data: {
+                    'Firma': Firma,
+                    'Adi': $.trim(Adi),
+                    'TepeEkle': true,
+                },
+                error: function(xhr) {
+                    alert('Hata: ' + xhr.responseText);
+                },
+                success: function(data) {
+                    if (data == "var") {
+                        <?= $Kayitvar ?>
+                    } else {
+                        window.location.assign("TepeSiparis.php");
+                    }
+                }
+            })
+        } else {
+            <?= $Gecersiz ?>
+        }
     });
 
-    $('.TepeDuzenle').submit(function() {
+    $('.TepeDuzenle').click(function() {
         var ID = $(this).attr("TepeID");
         var Firma = $("#Firma" + ID + "").val();
         var Adi = $("#Adi" + ID + "").val();
@@ -365,10 +457,17 @@
                 },
                 error: function(xhr) {
                     alert('Hata: ' + xhr.responseText);
+                },
+                success: function(data) {
+                    if (data == "var") {
+                        <?= $Kayitvar ?>
+                    } else {
+                        window.location.assign("TepeSiparis.php");
+                    }
                 }
             })
         } else {
-            alert("Boş Değer Gönderemezsiniz!");
+            <?= $Gecersiz ?>
         }
     });
 </SCRIPT>

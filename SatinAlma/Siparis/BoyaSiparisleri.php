@@ -4,7 +4,6 @@ $page = "Boya Siparişleri";
 require __DIR__ . '/../../controller/Header.php';
 require __DIR__ . '/../../controller/Db.php';
 require __DIR__ . '/../../controller/Sil.php';
-unset($_SESSION["Miktar"], $_SESSION["Boyalar"], $_SESSION["BAstar"], $_SESSION["BAstarm"], $_SESSION["BRenk"], $_SESSION["BRenkm"]);
 ?>
 <main id="main" class="main">
     <section class="section">

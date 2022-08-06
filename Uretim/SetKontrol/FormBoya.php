@@ -27,10 +27,15 @@ $Say = count($Boyalar);
         <div class="card-body">
             <br>
             <div class="yazdir">
-                <div class="d-flex border border-dark mb-3">
-                    <h5 class="p-2 flex-fill col-md-4 card-text border-end m-0 text-center"> &nbsp BOYAHANE ÜRETİM FORMU &nbsp </h5>
-                    <h5 class="p-2 flex-fill col-md-2 card-text border-end m-0 text-center"> &nbsp FİRMA &nbsp </h5>
-                    <h5 class="p-2 flex-fill col-md-6 card-text text-center"> &nbsp <?= $_GET["adi"] ?> &nbsp </h5>
+                <div class="d-flex mb-3">
+                    <div class="flex-fill col-md-4"><img src="../../assets/img/yazdir.jpg"></div>
+                    <div class="flex-fill col-md-8 d-flex align-items-center text-center border border-dark">
+                        <h5 class="flex-fill card-title">BOYAHANE ÜRETİM FORMU</h5>
+                    </div>
+                </div>
+                <div class="d-flex border border-dark mb-3 text-black">
+                    <h5 class="p-2 card-text border-end m-0 text-center"> &nbsp FİRMA &nbsp </h5>
+                    <h5 class="p-2 flex-fill card-text text-center"> &nbsp <?= $_GET["adi"] ?> &nbsp </h5>
                 </div>
                 <table class="table table-sm table-bordered text-center">
                     <thead>

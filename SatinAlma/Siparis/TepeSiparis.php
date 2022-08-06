@@ -4,7 +4,6 @@ $page = "Tepe Sipariş";
 require __DIR__ . '/../../controller/Header.php';
 require __DIR__ . '/../../controller/Kayit.php';
 require __DIR__ . '/../../controller/VTHataMesaji.php';
-
 ?>
 <main id="main" class="main">
     <section class="section">
@@ -52,32 +51,30 @@ require __DIR__ . '/../../controller/VTHataMesaji.php';
                                                     <h5 class="modal-title">Düzenle</h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
-                                                <form TepeID="<?= $id ?>" class="TepeDuzenle">
-                                                    <div class="modal-body row g-3">
-                                                        <div class="col-md-12">
-                                                            <div class="form-floating">
-                                                                <select id="Firma<?= $id ?>" class="form-select">
-                                                                    <option value=""></option>
-                                                                    <?php
-                                                                    $query = $baglanti->query("SELECT Firma_ID, Firma FROM firmalar");
-                                                                    foreach ($query as $s) { ?>
-                                                                        <option <?= $s["Firma_ID"] == $sonuc['Firma_ID'] ? "selected" : "" ?> value='<?= $s["Firma_ID"] ?>'><?= $s["Firma"] ?></option>
-                                                                    <?php } ?>
-                                                                </select>
-                                                                <label>Çalışılan Firma</label>
-                                                            </div>
+                                                <div class="modal-body row g-3">
+                                                    <div class="col-md-12">
+                                                        <div class="form-floating">
+                                                            <select id="Firma<?= $id ?>" class="form-select">
+                                                                <option value=""></option>
+                                                                <?php
+                                                                $query = $baglanti->query("SELECT Firma_ID, Firma FROM firmalar");
+                                                                foreach ($query as $s) { ?>
+                                                                    <option <?= $s["Firma_ID"] == $sonuc['Firma_ID'] ? "selected" : "" ?> value='<?= $s["Firma_ID"] ?>'><?= $s["Firma"] ?></option>
+                                                                <?php } ?>
+                                                            </select>
+                                                            <label>Çalışılan Firma</label>
                                                         </div>
-
-                                                        <div class="col-md-12">
-                                                            <div class="form-floating">
-                                                                <input type='text' id='Adi<?= $id ?>' value="<?= $TA ?>" class='form-control'>
-                                                                <label>* Adı</label>
-                                                            </div>
-                                                        </div>
-
-                                                        <button type="submit" class="btn btn-warning form-control">Düzenle</button>
                                                     </div>
-                                                </form>
+
+                                                    <div class="col-md-12">
+                                                        <div class="form-floating">
+                                                            <input type='text' id='Adi<?= $id ?>' value="<?= $TA ?>" class='form-control'>
+                                                            <label>* Adı</label>
+                                                        </div>
+                                                    </div>
+
+                                                    <button type="button" class="btn btn-warning form-control TepeDuzenle" TepeID="<?= $id ?>">Düzenle</button>
+                                                </div>
                                             </div>
                                         </div>
                                     <?php } ?>
@@ -120,7 +117,7 @@ require __DIR__ . '/../../controller/VTHataMesaji.php';
                 <h5 class="modal-title">Ekle</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form id="YeniTepe" class="modal-body needs-validation row g-3" novalidate>
+            <div class="modal-body row g-3">
                 <div class="col-md-12">
                     <div class="form-floating">
                         <select id="Firma" class="form-select">
@@ -138,13 +135,13 @@ require __DIR__ . '/../../controller/VTHataMesaji.php';
 
                 <div class="col-md-12">
                     <div class="form-floating">
-                        <input type='text' id='Adi' class='form-control' required>
+                        <input type='text' id='Adi' class='form-control'>
                         <label>* Adı</label>
                     </div>
                 </div>
 
-                <button type="submit" class="btn btn-primary form-control">Ekle</button>
-            </form>
+                <button type="button" id="YeniTepe" class="btn btn-primary form-control">Ekle</button>
+            </div>
         </div>
     </div>
 </div>

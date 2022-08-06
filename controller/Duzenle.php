@@ -36,7 +36,7 @@ if (isset($_POST['UrunBoyaBilgiDuzenle'])) {
     $Bid = $_POST["Bid"];
     $sor = $baglanti->query("SELECT * FROM urun_boya_bilgi WHERE Urun_ID=" . $Uid . " AND Boya_ID=" . $Bid);
     if ($sor->rowCount()) {
-        echo $Kayitvar;
+        echo "<script>" . $Kayitvar . "</script>";
     } else {
         $SetKaydet = $baglanti->prepare("UPDATE urun_boya_bilgi SET Urun_ID= ?, Boya_ID= ?, icAstar= ?, icUstkat= ?, DisAstar= ?, DisUstkat= ?, Kullanici_ID= ? WHERE Urun_Boya_Bilgi_ID= ?");
         $SonucSor = $SetKaydet->execute(array($Uid, $Bid, $_POST['icAstar'], $_POST['icUstkat'], $_POST['DisAstar'], $_POST['DisUstkat'], $Kullanici, $_POST['Urun_Boya_Bilgi_ID']));

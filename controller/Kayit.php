@@ -19,8 +19,8 @@ if (isset($_POST['UrunEkle'])) {
     $Sorgu->execute(array($UrunAdi));
     $Sor = $Sorgu->fetch();
     echo $Kategori_ID;
-    if ($Sorgu->rowCount() > 0) {
-        echo $Kayitvar;
+    if ($Sorgu->rowCount()) {
+        echo "<script>" . $Kayitvar . "</script>";
     } else {
         if ($Resim != "") {
             $Ekle = $baglanti->prepare("INSERT INTO urun SET Kategori_ID= ?, UrunAdi= ?, UrunFoto= ?, Aciklama= ?");
@@ -46,7 +46,7 @@ if (isset($_POST['UrunBoyaBilgiEkle'])) {
 
     $sor = $baglanti->query("SELECT * FROM urun_boya_bilgi WHERE Urun_ID=" . $Uid . " AND Boya_ID=" . $Bid);
     if ($sor->rowCount()) {
-        echo $Kayitvar;
+        echo "<script>" . $Kayitvar . "</script>";
     } else {
         $Kaydet = $baglanti->prepare("INSERT INTO urun_boya_bilgi SET Urun_ID= ?, Boya_ID= ?, icAstar= ?, icUstkat= ?, DisAstar= ?, DisUstkat= ?, Kullanici_ID= ?");
         $SonucSor = $Kaydet->execute(array($Uid, $Bid, $_POST['icAstar'], $_POST['icUstkat'], $_POST['DisAstar'], $_POST['DisUstkat'], $Kullanici));
@@ -63,20 +63,26 @@ if (isset($_POST['UrunLevhaBilgiEkle'])) {
     $C2 = $_POST['Cap2'];
     $K = $_POST['Kalinlik'];
     $bak = $T == "DikDörtgen" ? " AND Cap2='$C2'" : "";
+    $EKLE = $T == "DikDörtgen" ? $C2 : null;
     //-----------------------------------------------------Levha Varmı Yok mu Sorgu /// Yoksa ekle
     $Varmi = $baglanti->query("SELECT Levha_ID FROM levha WHERE Tip='$T' AND Cap='$C' AND Kalinlik='$K'" . $bak);
     if ($Varmi->rowCount()) {
-        $Lid = $Varmi->fetch()['Levha_ID'];
-        if ($baglanti->query("SELECT * FROM urun_levha_bilgi WHERE Levha_ID=" . $Lid)->rowCount()) {
+        $L = $Varmi->fetch()['Levha_ID'];
+        if ($baglanti->query("SELECT * FROM urun_levha_bilgi WHERE Levha_ID=" . $L)->rowCount()) {
             echo "<script>" . $Kayitvarr . "</script>";
+            return;
         } else {
-            $Kaydet = $baglanti->prepare("INSERT INTO urun_levha_bilgi SET Urun_ID= ?, Levha_ID= ?, Kullanici_ID= ?");
-            $Kaydet->execute(array($ID, $Lid, $Kullanici));
-            header("location:UrunLevhaBilgi.php?Urun_ID=$ID");
+            $Lid = $L;
         }
     } else {
-        echo $KayitAcilmamis;
+        $Kaydet = $baglanti->prepare("INSERT INTO levha SET Tip= ?, Cap= ?, Cap2= ?, Kalinlik= ?");
+        $Kaydet->execute(array($T, $C, $EKLE, $K));
+        $Lid = $baglanti->lastInsertId();
     }
+    $Kaydet = $baglanti->prepare("INSERT INTO urun_levha_bilgi SET Urun_ID= ?, Levha_ID= ?, Kullanici_ID= ?");
+    $Kaydet->execute(array($ID, $Lid, $Kullanici));
+    header("location:UrunLevhaBilgi.php?Urun_ID=$ID");
+
     logtut($Kullanici, "Ürüne levha verisi ekledi.");
 }
 

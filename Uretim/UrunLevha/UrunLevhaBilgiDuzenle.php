@@ -45,7 +45,7 @@ $sor = $baglanti->query("SELECT * FROM levha WHERE Levha_ID=$Lid")->fetch();
 
                         <div class="form-floating dd">
                             <select name="Cap2" class="form-select" required>
-                                <?php foreach ($baglanti->query('SELECT DISTINCT Cap2 FROM levha') as $s) {
+                                <?php foreach ($baglanti->query('SELECT DISTINCT Cap2 FROM levha WHERE Cap2<>""') as $s) {
                                     $sec = $s["Cap2"] == $sor["Cap2"] ? "selected" : "";
                                     echo "<option $sec value='$s[Cap2]'>$s[Cap2]</option>";
                                 } ?>
