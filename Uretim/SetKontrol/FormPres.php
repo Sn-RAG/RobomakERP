@@ -54,7 +54,7 @@ $SetID = (int)$_GET["id"];
                     <tbody>
                         <?php
                         $i = 1;
-                        $Listele = $baglanti->query("SELECT urun.Urun_ID, UrunAdi, SUM( Adet ) AS tpl, levha.Levha_ID, levha.Cap, levha.Kalinlik FROM set_urunler INNER JOIN urun ON set_urunler.Urun_ID = urun.Urun_ID INNER JOIN levha ON set_urunler.Levha_ID = levha.Levha_ID WHERE Set_ID = $SetID GROUP BY set_urunler.Urun_ID");
+                        $Listele = $baglanti->query("SELECT urun.Urun_ID, UrunAdi, SUM( Adet ) AS tpl, levha.Levha_ID, levha.Cap, levha.Kalinlik FROM set_urunler INNER JOIN urun ON set_urunler.Urun_ID = urun.Urun_ID INNER JOIN levha ON set_urunler.Levha_ID = levha.Levha_ID WHERE Set_ID = $SetID GROUP BY set_urunler.Urun_ID ORDER BY urun.Urun_ID ASC");
                         foreach ($Listele as $s) {
                             $C = $baglanti->query("SELECT Cap FROM view_urun_levha_bilgi WHERE Levha_ID=" . $s['Levha_ID'] . " AND Urun_ID=" . $s['Urun_ID']);
                             if ($C->rowCount()) { ?>

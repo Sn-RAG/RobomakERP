@@ -32,18 +32,19 @@ $UrunID = (int)$_GET['Urun_ID'];
                         foreach ($sor as $s) {
                             $id = $s['Urun_Boya_Bilgi_ID'];
                             $Urun_ID = $s['Urun_ID'];
+                            $R = $s['Renk'];
                         ?>
                             <tr>
                                 <th hidden><?= $id ?></th>
                                 <th hidden><?= $Urun_ID ?></th>
                                 <td><?= $s['UrunAdi'] ?></td>
                                 <td><?= $s['Marka'] ?></td>
-                                <td><?= $s['Renk'] ?></td>
+                                <td><?= $R ?></td>
                                 <td><?= $s['icAstar'] ?> gr</td>
                                 <td><?= $s['icUstkat'] ?> gr</td>
                                 <td><?= $s['DisAstar'] ?> gr</td>
                                 <td><?= $s['DisUstkat'] ?> gr</td>
-                                <td><a href="UrunBoyaBilgiDuzenle.php?id=<?= $id ?>&Urun_ID=<?= $Urun_ID ?>" class="btn btn-sm btn-warning bi-pencil"> &nbsp Düzenle</a></td>
+                                <td><a href="UrunBoyaBilgiDuzenle.php?id=<?= $id ?>&Urun_ID=<?= $Urun_ID ?>&Renk=<?= $R ?>" class="btn btn-sm btn-warning bi-pencil"> &nbsp Düzenle</a></td>
                             </tr>
                         <?php } ?>
                     </tbody>

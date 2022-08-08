@@ -66,7 +66,11 @@ require __DIR__ . '/../controller/Kayit.php';
                             $kapak = $baglanti->query("SELECT Kapak_ID, Model_Adi FROM kapak GROUP BY Model_Adi")->fetchAll();
                             $Tepe = $baglanti->query("SELECT Tepe_ID, TepeAdi FROM tepe GROUP BY TepeAdi")->fetchAll();
                             $kulp = $baglanti->query("SELECT Kulp_ID, KulpAdi FROM kulp GROUP BY KulpAdi")->fetchAll();
-                            $i = 0;
+                            $u = 0;
+                            $m = 0;
+                            $kl = 0;
+                            $kp = 0;
+                            $t = 0;
                             $sorgu = $baglanti->query("SELECT * FROM kategori");
                             foreach ($sorgu as $sonuc) {
                             ?>
@@ -77,13 +81,16 @@ require __DIR__ . '/../controller/Kayit.php';
                                             <div class="row">
                                                 <?php $sorgu2 = $baglanti->query("SELECT * FROM urun WHERE Kategori_ID=" . $sonuc['Kategori_ID']);
                                                 foreach ($sorgu2 as $sonuc2) {
+                                                    $urun = false;
                                                     $ID = $sonuc2['Urun_ID'];
                                                     $Foto = $sonuc2['UrunFoto']; ?>
                                                     <label class="row mb-3 col-md-3" for="<?= $ID ?>">
                                                         <input class="card2__input UrunSecim" type="checkbox" id="<?= $ID ?>" name="UrunIDler[]" <?php if (isset($_SESSION["UrunIDler"])) {
-                                                                                                                                                        foreach ($_SESSION["UrunIDler"] as $A) {
-                                                                                                                                                            if ($A == $ID) {
+                                                                                                                                                        if (array_key_exists($u, $_SESSION["UrunIDler"])) {
+                                                                                                                                                            if ($_SESSION["UrunIDler"][$u] == $ID) {
                                                                                                                                                                 echo "checked";
+                                                                                                                                                                $u++;
+                                                                                                                                                                $urun = true;
                                                                                                                                                             }
                                                                                                                                                         }
                                                                                                                                                     } ?>>
@@ -107,9 +114,21 @@ require __DIR__ . '/../controller/Kayit.php';
                                                                                     <select class='form-select mb-2 mm' id="kal<?= $ID ?>" urunid="<?= $ID ?>">
                                                                                         <option value="">Kalınlık Seç</option>
                                                                                         <?php
-                                                                                        foreach ($baglanti->query("SELECT Levha_ID,Kalinlik FROM view_urun_levha_bilgi WHERE Urun_ID =" . $ID) as $K) { ?>
-                                                                                            <option <?= isset($_SESSION["mmSec"]) ? (array_key_exists($i, $_SESSION["mmSec"]) ? ($_SESSION["mmSec"][$i] == $K["Levha_ID"] ? "selected" : "") : "") : "" ?> value='<?= $K["Levha_ID"] ?>'><?= $K["Kalinlik"] ?> mm</option>
-                                                                                        <?php } ?>
+                                                                                        $Levha = $baglanti->query("SELECT Levha_ID,Kalinlik FROM view_urun_levha_bilgi WHERE Urun_ID =" . $ID);
+                                                                                        if ($urun == true) {
+                                                                                            foreach ($Levha as $s) {
+                                                                                                echo "<option ";
+                                                                                                if ($_SESSION["mmSec"][$m] == $s["Levha_ID"]) {
+                                                                                                    echo "selected";
+                                                                                                }
+                                                                                                echo " value='$s[Levha_ID]'>$s[Kalinlik] mm</option>";
+                                                                                            }
+                                                                                            $m++;
+                                                                                        } else {
+                                                                                            foreach ($Levha as $s) {
+                                                                                                echo "<option value='$s[Levha_ID]'>$s[Kalinlik]</option>";
+                                                                                            }
+                                                                                        } ?>
                                                                                     </select>
                                                                                     <a href="../SatinAlma/Siparis/LevhaSiparis.php?Setler" type="button" class="input-group-text bg-primary-light text-center">Ekle</a>
                                                                                 </div>
@@ -123,9 +142,22 @@ require __DIR__ . '/../controller/Kayit.php';
                                                                                     <select id='Kulp<?= $ID ?>' urunid="<?= $ID ?>" class='form-select mb-2 Kulp'>
                                                                                         <option value="">Kulp Seç</option>
                                                                                         <?php
-                                                                                        foreach ($kulp as $s) { ?>
-                                                                                            <option <?= isset($_SESSION["KulpSec"]) ? (array_key_exists($i, $_SESSION["KulpSec"]) ? ($_SESSION["KulpSec"][$i] == $s["Kulp_ID"] ? "selected" : "") : "") : "" ?> value="<?= $s["Kulp_ID"] ?>"><?= $s["KulpAdi"] ?></option>
-                                                                                        <?php } ?>
+                                                                                        if ($urun == true) {
+                                                                                            if (array_key_exists($kl, $_SESSION["KulpSec"])) {
+                                                                                                foreach ($kulp as $s) {
+                                                                                                    echo "<option ";
+                                                                                                    if ($_SESSION["KulpSec"][$kl] == $s["Kulp_ID"]) {
+                                                                                                        echo "selected ";
+                                                                                                    }
+                                                                                                    echo "value='$s[Kulp_ID]'>$s[KulpAdi]</option>";
+                                                                                                }
+                                                                                                $kl++;
+                                                                                            }
+                                                                                        } else {
+                                                                                            foreach ($kulp as $s) {
+                                                                                                echo "<option value='$s[Kulp_ID]'>$s[KulpAdi]</option>";
+                                                                                            }
+                                                                                        } ?>
                                                                                     </select>
                                                                                     <a href="../SatinAlma/Siparis/KulpSiparis.php?Setler" type="button" class="input-group-text bg-primary-light text-center">Ekle</a>
                                                                                 </div>
@@ -139,9 +171,22 @@ require __DIR__ . '/../controller/Kayit.php';
                                                                                     <select id='Tepe<?= $ID ?>' urunid="<?= $ID ?>" class='form-select mb-2 Tepe'>
                                                                                         <option value="">Tepe Seç</option>
                                                                                         <?php
-                                                                                        foreach ($Tepe as $s) { ?>
-                                                                                            <option <?= isset($_SESSION["TepeSec"]) ? (array_key_exists($i, $_SESSION["TepeSec"]) ? ($_SESSION["TepeSec"][$i] == $s["Tepe_ID"] ? "selected" : "") : "") : "" ?> value="<?= $s["Tepe_ID"] ?>"><?= $s["TepeAdi"] ?></option>
-                                                                                        <?php } ?>
+                                                                                        if ($urun == true) {
+                                                                                            if (array_key_exists($t, $_SESSION["TepeSec"])) {
+                                                                                                foreach ($Tepe as $s) {
+                                                                                                    echo "<option ";
+                                                                                                    if ($_SESSION["TepeSec"][$t] == $s["Tepe_ID"]) {
+                                                                                                        echo "selected";
+                                                                                                    }
+                                                                                                    echo " value='$s[Tepe_ID]'>$s[TepeAdi]</option>";
+                                                                                                }
+                                                                                                $t++;
+                                                                                            }
+                                                                                        } else {
+                                                                                            foreach ($Tepe as $s) {
+                                                                                                echo "<option value='$s[Tepe_ID]'>$s[TepeAdi]</option>";
+                                                                                            }
+                                                                                        } ?>
                                                                                     </select>
                                                                                     <a href="../SatinAlma/Siparis/TepeSiparis.php?Setler" type="button" class="input-group-text bg-primary-light text-center">Ekle</a>
                                                                                 </div>
@@ -155,9 +200,22 @@ require __DIR__ . '/../controller/Kayit.php';
                                                                                     <select id='Kapak<?= $ID ?>' urunid="<?= $ID ?>" class='form-select mb-2 Kapak'>
                                                                                         <option value="">Kapak Seç</option>
                                                                                         <?php
-                                                                                        foreach ($kapak as $s) { ?>
-                                                                                            <option <?= isset($_SESSION["KapakSec"]) ? (isset($_SESSION["KapakSec"]) ? ($_SESSION["KapakSec"][$i] == $s["Kapak_ID"] ? "selected" : "") : "") : "" ?> value="<?= $s["Kapak_ID"] ?>"><?= $s["Model_Adi"] ?></option>
-                                                                                        <?php } ?>
+                                                                                        if ($urun == true) {
+                                                                                            if (array_key_exists($kp, $_SESSION["KapakSec"])) {
+                                                                                                foreach ($kapak as $s) {
+                                                                                                    echo "<option ";
+                                                                                                    if ($_SESSION["KapakSec"][$kp] == $s["Kapak_ID"]) {
+                                                                                                        echo "selected";
+                                                                                                    }
+                                                                                                    echo " value='$s[Kapak_ID]'>$s[Model_Adi]</option>";
+                                                                                                }
+                                                                                                $kp++;
+                                                                                            }
+                                                                                        } else {
+                                                                                            foreach ($kapak as $s) {
+                                                                                                echo "<option value='$s[Kapak_ID]'>$s[Model_Adi]</option>";
+                                                                                            }
+                                                                                        } ?>
                                                                                     </select>
                                                                                     <a href="../SatinAlma/Siparis/KapakSiparis.php?Setler" type="button" class="input-group-text bg-primary-light text-center">Ekle</a>
                                                                                 </div>
@@ -180,9 +238,7 @@ require __DIR__ . '/../controller/Kayit.php';
                                                         </div>
                                                     </label>
 
-                                                <?php
-                                                    $i++;
-                                                } ?>
+                                                <?php } ?>
 
                                             </div>
                                         </div>

@@ -7,7 +7,8 @@ if (!(isset($_SESSION["Oturum"]) && $_SESSION["Oturum"] == "8388")) {
 require __DIR__ . "/Yetki.php";
 if ($page != "Sipariş Listesi") {
     unset($_SESSION["Miktar"], $_SESSION["Boyalar"], $_SESSION["BAstar"], $_SESSION["BAstarm"], $_SESSION["BRenk"], $_SESSION["BRenkm"], $_SESSION["Levhalar"], $_SESSION["Adetler"]);
-} elseif ($page != "Yeni Set" || $page != "Boya Sipariş" || $page != "Levha Sipariş" || $page != "Tepe Sipariş" || $page != "Kulp Sipariş" || $page != "Kapak Sipariş") {
+} 
+if ($page != "Yeni Set" && $page != "Boya Sipariş" && $page != "Levha Sipariş" && $page != "Tepe Sipariş" && $page != "Kulp Sipariş" && $page != "Kapak Sipariş") {
     unset($_SESSION["Set_ID"], $_SESSION["SetAdi"], $_SESSION["UrunIDler"], $_SESSION["KulpSec"], $_SESSION["mmSec"], $_SESSION["KapakSec"], $_SESSION["KutuSec"], $_SESSION["TepeSec"]);
 }
 ?>

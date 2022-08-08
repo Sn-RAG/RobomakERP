@@ -41,7 +41,6 @@ unset($_SESSION["SeticerikID"], $_SESSION["Setler"], $_SESSION["FirmaID"], $_SES
                             <tr>
                                 <td><?= $Firma ?></td>
                                 <td>
-                                    <ol class='list-group list-group-numbered'>
                                         <?php
                                         $Adi = $baglanti->query("SELECT Set_ID, SetAdi, Adet FROM teklif_setler INNER JOIN set_icerik ON teklif_setler.Set_icerik_ID = set_icerik.Set_icerik_ID INNER JOIN view_uretim_setler ON set_icerik.Set_Urun_ID = view_uretim_setler.Set_Urun_ID WHERE S_No=" . $SNo);
                                         foreach ($Adi as $Ad) {
@@ -49,45 +48,39 @@ unset($_SESSION["SeticerikID"], $_SESSION["Setler"], $_SESSION["FirmaID"], $_SES
                                             $Sadi = $Ad["SetAdi"];
                                             $Adet = $Ad['Adet'];
                                         ?>
-                                            <li class='list-group-item d-flex justify-content-between align-items-start'>
-                                                <div class='ms-2 me-auto small'>
-                                                    <?= "<button class='btn btn-sm bg-light' data-bs-toggle='modal' data-bs-target='#UrunBilgi$Sid'>$Sadi</button>" ?>
+                                            <li class='d-flex justify-content-between'>
+                                                <div class='col-md-10'>
+                                                    <button class='btn btn-sm bg-light form-control' data-bs-toggle='modal' data-bs-target='#UrunBilgi<?= $Sid ?>'><?= $Sadi ?></button>
                                                 </div>
-                                                <span class='badge bg-primary rounded-pill small'><?= $Adet ?> - Adet</span>
+                                                <small class="bg-light d-flex align-items-center"> &nbsp <?= $Adet ?> - Adet &nbsp </small>
                                             </li>
 
-                                            <div class="modal fade" id="UrunBilgi<?= $Sid ?>" tabindex="-1">
-                                                <div class="modal-dialog modal-dialog">
+                                            <div class="modal fade" id="UrunBilgi<?= $Sid ?>" tabindex="-1" aria-hidden="true" style="display: none;">
+                                                <div class="modal-dialog modal-dialog-centered">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <h5 class="modal-title"><?= $Sadi ?></h5>
                                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                         </div>
                                                         <div class="modal-body">
-                                                            <h5> Levha Hesabı</h5>
-                                                            <a href="HesapLevha.php?id=<?= $Sid ?>&adet=<?= $Adet ?>&adi=<?= $Sadi ?>" class='btn btn-success mb-3'><?= $Sadi ?> Levha Hesabı</a>
-                                                            <div class="row">
+                                                            <a href="HesapLevha.php?id=<?= $Sid ?>&adet=<?= $Adet ?>&adi=<?= $Sadi ?>" class='btn btn-success btn-sm'>Levha Hesabı</a>
+                                                            <hr>
+                                                            <ul class="row">
                                                                 <?php
                                                                 $Aa = $baglanti->query("SELECT UrunAdi FROM set_urun INNER JOIN urun ON set_urun.Urun_ID = urun.Urun_ID WHERE set_urun.Set_ID=" . $Sid);
-                                                                foreach ($Aa as $A) { ?>
-                                                                    <div class='col-md-6'>
-                                                                        <div class='fw-bold'><?= $A["UrunAdi"] ?></div>
-                                                                    </div>
-                                                                <?php } ?>
-                                                            </div>
+                                                                foreach ($Aa as $A) {
+                                                                    echo "<li class='col-md-6 small'>$A[UrunAdi]</li>";
+                                                                } ?>
+                                                            </ul>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         <?php } ?>
-                                    </ol>
                                 </td>
                                 <td><?= $TT ?></td>
                                 <td>
-                                    <button type="button" class="btn btn-info bi-info-circle" data-bs-toggle="modal" data-bs-target="#Bilgi<?= $id ?>">
-                                    </button>
-                                    <a href="Teklifler.php?TeklifSil=<?= $id ?>&S_No=<?= $SNo ?>" class="btn btn-danger bi-x-square">
-                                    </a>
+                                    <a href="Teklifler.php?TeklifSil=<?= $id ?>&S_No=<?= $SNo ?>" class="btn btn-danger bi-x-square btn-sm"></a>
                                 </td>
                             </tr>
                         <?php } ?>

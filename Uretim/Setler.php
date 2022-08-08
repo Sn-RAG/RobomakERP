@@ -38,22 +38,45 @@ require __DIR__ . '/../controller/Sil.php';
                             $SetID = $sonuc['Set_ID'];
                             $SetAdi = $sonuc['SetAdi'];
                             require __DIR__ . '/SetKontrol/Yuzde.php';
-                            @$SorYuzde = $SetYuzde == 100 ? "Yükleme Bekliyor" : $SetYuzde;
+                            @$Yukleme = $SetYuzde == 100 ? "Yükleme Bekliyor" : $SetYuzde . "%";
+                            @$Yuzde = $SetYuzde <= 5 ? 5 : $SetYuzde;
+
                         ?>
                             <tr>
                                 <td><?= $id ?></td>
                                 <td><?= $SetID ?></td>
                                 <?php if (isset($_GET["Sec"])) { ?>
-                                    <td><?= $SetAdi ?></td>
+                                    <td><?= "<button class='btn btn-sm bg-light' data-bs-toggle='modal' data-bs-target='#UrunBilgi$SetID'>$SetAdi</button>" ?></td>
                                     <td><input type="number" class="form-control Adet" placeholder="Adet"></td>
                                     <td>
                                         <div class='form-check'><input class='form-check-input' type='checkbox' id='Check<?= $id ?>' value='<?= $id ?>'><label class='form-check-label fw-bold' for='Check<?= $id ?>'>SEÇ</label></div>
                                     </td>
+
+                                    <div class="modal fade" id="UrunBilgi<?= $SetID ?>" tabindex="-1" aria-hidden="true" style="display: none;">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title"><?= $SetAdi ?><br>ÜRÜNLER</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <ul class="row">
+                                                        <?php
+                                                        $Aa = $baglanti->query("SELECT UrunAdi FROM set_urun INNER JOIN urun ON set_urun.Urun_ID = urun.Urun_ID WHERE set_urun.Set_ID=" . $SetID);
+                                                        foreach ($Aa as $A) { ?>
+                                                            <li class='col-md-6 fw-bold'><?= $A["UrunAdi"] ?></li>
+                                                        <?php } ?>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                 <?php } else { ?>
                                     <td><a href="SetKontrol/SetKontrol.php?SetAdi=<?= $SetAdi ?>&Set_ID=<?= $SetID ?>" class="btn btn-light form-control mt-1 fw-bold"><?= $SetAdi ?></a></td>
                                     <td>
                                         <div class="progress mt-2" style="height: 25px;">
-                                            <div class="progress-bar" role="progressbar" style="width: <?= $SorYuzde <= 5 ? 5 : $SorYuzde ?>%"><?= $SorYuzde ?>%</div>
+                                            <div class="progress-bar" role="progressbar" style="width: <?= $Yuzde ?>%"><?= $Yukleme ?></div>
                                         </div>
                                     </td>
                                     <td class="text-center"><a href='Setler.php?UretimSetlerSil=<?= $id ?>&Set_ID=<?= $SetID ?>' class='bi-trash btn btn-danger'></a></td>
@@ -130,6 +153,6 @@ require __DIR__ . '/../controller/Footer.php';
 
 if (isset($_POST["Setsec"])) {
     $_SESSION["Setler"] = $_POST["Setsec"];
-    $_SESSION["Adetler"] = $_POST["Adet"];
+    $_SESSION["SetAdeti"] = $_POST["Adet"];
 }
 ?>

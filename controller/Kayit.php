@@ -44,14 +44,16 @@ if (isset($_POST['UrunBoyaBilgiEkle'])) {
     $Uid = $_POST['Urun_ID'];
     $Bid = $_POST["Bid"];
 
-    $sor = $baglanti->query("SELECT * FROM urun_boya_bilgi WHERE Urun_ID=" . $Uid . " AND Boya_ID=" . $Bid);
+    $sor = $baglanti->query("SELECT * FROM boya WHERE Boya_ID=" . $Bid);
     if ($sor->rowCount()) {
-        echo "<script>" . $Kayitvar . "</script>";
+        $Bid = $sor->fetch()["Boya_ID"];
     } else {
-        $Kaydet = $baglanti->prepare("INSERT INTO urun_boya_bilgi SET Urun_ID= ?, Boya_ID= ?, icAstar= ?, icUstkat= ?, DisAstar= ?, DisUstkat= ?, Kullanici_ID= ?");
-        $SonucSor = $Kaydet->execute(array($Uid, $Bid, $_POST['icAstar'], $_POST['icUstkat'], $_POST['DisAstar'], $_POST['DisUstkat'], $Kullanici));
-        header("location:UrunBoyaBilgi.php?Urun_ID=$Uid");
+        echo "<script>" . $KayitAcilmamis . "</script>";
+        return;
     }
+    $Kaydet = $baglanti->prepare("INSERT INTO urun_boya_bilgi SET Urun_ID= ?, Boya_ID= ?, icAstar= ?, icUstkat= ?, DisAstar= ?, DisUstkat= ?, Kullanici_ID= ?");
+    $SonucSor = $Kaydet->execute(array($Uid, $Bid, $_POST['icAstar'], $_POST['icUstkat'], $_POST['DisAstar'], $_POST['DisUstkat'], $Kullanici));
+    header("location:UrunBoyaBilgi.php?Urun_ID=$Uid");
     logtut($Kullanici, "Ürüne boya verisi ekledi.");
 }
 //---------------------------------------Ürün Levha Bilgileri
@@ -63,21 +65,13 @@ if (isset($_POST['UrunLevhaBilgiEkle'])) {
     $C2 = $_POST['Cap2'];
     $K = $_POST['Kalinlik'];
     $bak = $T == "DikDörtgen" ? " AND Cap2='$C2'" : "";
-    $EKLE = $T == "DikDörtgen" ? $C2 : null;
     //-----------------------------------------------------Levha Varmı Yok mu Sorgu /// Yoksa ekle
-    $Varmi = $baglanti->query("SELECT Levha_ID FROM levha WHERE Tip='$T' AND Cap='$C' AND Kalinlik='$K'" . $bak);
-    if ($Varmi->rowCount()) {
-        $L = $Varmi->fetch()['Levha_ID'];
-        if ($baglanti->query("SELECT * FROM urun_levha_bilgi WHERE Levha_ID=" . $L)->rowCount()) {
-            echo "<script>" . $Kayitvarr . "</script>";
-            return;
-        } else {
-            $Lid = $L;
-        }
+    $Sor = $baglanti->query("SELECT Levha_ID FROM levha WHERE Tip='$T' AND Cap='$C' AND Kalinlik='$K'" . $bak);
+    if ($Sor->rowCount()) {
+        $Lid = $Sor->fetch()['Levha_ID'];
     } else {
-        $Kaydet = $baglanti->prepare("INSERT INTO levha SET Tip= ?, Cap= ?, Cap2= ?, Kalinlik= ?");
-        $Kaydet->execute(array($T, $C, $EKLE, $K));
-        $Lid = $baglanti->lastInsertId();
+        echo "<script>" . $KayitAcilmamis . "</script>";
+        return;
     }
     $Kaydet = $baglanti->prepare("INSERT INTO urun_levha_bilgi SET Urun_ID= ?, Levha_ID= ?, Kullanici_ID= ?");
     $Kaydet->execute(array($ID, $Lid, $Kullanici));
@@ -130,20 +124,20 @@ if (isset($_POST['FirmaEkle'])) {
 //#######################################################################        SİPARİŞ İŞLEMLERİ      ##########################################################################################
 //---------------------------------------Sipariş GİDEN Ekle
 if (isset($_POST['Teklifver'])) {
-    if (isset($_SESSION["Setler"]) || isset($_SESSION["Adetler"]) || isset($_SESSION["FirmaID"])) {
+    if (isset($_SESSION["Setler"]) || isset($_SESSION["SetAdeti"]) || isset($_SESSION["FirmaID"])) {
         $Say = $baglanti->query("SELECT COUNT(*) AS S_No FROM view_teklifler");
         $SNo = $Say->fetch()['S_No'];
         $SNo++;
         for ($i = 0; $i < count($_SESSION["Setler"]); $i++) {
             $Kaydet = $baglanti->prepare("INSERT INTO teklif_setler SET S_No= ?, Firma_ID= ?, Set_icerik_ID= ?, Adet= ?");
-            $Sonuc = $Kaydet->execute(array($SNo, $_SESSION["FirmaID"], $_SESSION["Setler"][$i], $_SESSION["Adetler"][$i]));
+            $Sonuc = $Kaydet->execute(array($SNo, $_SESSION["FirmaID"], $_SESSION["Setler"][$i], $_SESSION["SetAdeti"][$i]));
         }
 
         $id = $baglanti->lastInsertId();
 
         $Kaydet = $baglanti->prepare("INSERT INTO teklifler SET Teklif_Set_ID= ?, Teslim_Tarihi= ?, Kullanici_ID= ?");
         $Sonuc = $Kaydet->execute(array($id, $_POST['Teslim_Tarihi'], $Kullanici));
-        unset($_SESSION["Setler"], $_SESSION["Adetler"], $_SESSION["FirmaID"]);
+        unset($_SESSION["Setler"], $_SESSION["SetAdeti"], $_SESSION["FirmaID"]);
         header("location:Teklifler.php");
     } else {
         echo $DbHata;

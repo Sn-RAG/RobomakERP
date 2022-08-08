@@ -133,10 +133,10 @@ if (isset($_POST['Listele'])) {
         $tpl = $baglanti->query("SELECT " . $Ekle . " FROM set_urunler_asama WHERE Urun_ID = " . $UrunID[$i] . " AND Set_ID=" . $SetID)->fetch()[$Ekle];
         $sum = $Deger[$i] + $tpl;
         if ($Is == "Preslendi") {
-            if (LStokDus($Deger[$i], $KT, $Kullanici, $UrunID[$i], $SetID, $Levha[$i]) === 0) {
+            /*if (LStokDus($Deger[$i], $KT, $Kullanici, $UrunID[$i], $SetID, $Levha[$i]) === 0) {
                 echo "StokYok";
                 return;
-            }
+            }*/
         } elseif ($Is == "İçi Boyandı") {
             /* if (BStokDus($Deger[$i], $KT, $Kullanici, $UrunID[$i], $SetID, $iBoya) === 0) {
                 echo "StokYok";
@@ -180,12 +180,12 @@ if (isset($_POST['Listele'])) {
     $tarih = new DateTime("now");
     $tarih = date("Y-m-d");
     for ($i = 0; $i < count($UrunID); $i++) {
-        if (LStokDus($Deger[$i], $tarih, $Kullanici, $UrunID[$i], $SetID, $Lid[$i]) === 0) {
+       /* if (LStokDus($Deger[$i], $tarih, $Kullanici, $UrunID[$i], $SetID, $Lid[$i]) === 0) {
             echo "StokYok";
-        } else {
+        } else {*/
             $kaydet = $baglanti->prepare("INSERT INTO set_urunler_asama_akis SET Set_ID= ?,Urun_ID= ?,Levha_ID=?,Yapilan_is= ?,Adet= ?, Tarih= ?");
             $kaydet->execute(array($SetID, $UrunID[$i], $Lid[$i], "Fire", $Deger[$i], $_POST['FTarih']));
-        }
+        //}
     }
     /*LOG KAYDI*/
     logtut($Kullanici, "$SetID numaralı sette Fire kaydetti.");
@@ -294,7 +294,7 @@ if (isset($_POST["GirSil"])) {
     if ($is == "Preslendi" || $is == "Fire") {
         $Ne = "Preslenen";
 
-        $Lsid = $baglanti->query("SELECT Levha_Stok_ID FROM levha_giden WHERE SetID=" . $Sid . " AND UrunID=" . $Uid . " AND LevhaID=" . $Lid)->fetch()["Levha_Stok_ID"];
+        /*$Lsid = $baglanti->query("SELECT Levha_Stok_ID FROM levha_giden WHERE SetID=" . $Sid . " AND UrunID=" . $Uid . " AND LevhaID=" . $Lid)->fetch()["Levha_Stok_ID"];
         $Hsp = $baglanti->query("SELECT Cap, Kalinlik FROM levha WHERE Levha_ID=" . $Lid)->fetch();
         $Cap = $Hsp["Cap"];
         $Kalinlik = $Hsp["Kalinlik"];
@@ -310,7 +310,7 @@ if (isset($_POST["GirSil"])) {
         if ($is == "Fire") {
             $baglanti->query("DELETE FROM set_urunler_asama_akis WHERE ID =" . $_POST["id"] . " AND Yapilan_is='$is'");
             return;
-        }
+        }*/
     } elseif ($is == "Tellendi") {
         $Ne = "Tellenen";
     } elseif ($is == "Kumlandı") {

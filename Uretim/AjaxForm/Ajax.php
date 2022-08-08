@@ -201,7 +201,6 @@
             Tepeler.push($("#Tepe" + h + "").val());
             Kulplar.push($("#Kulp" + h + "").val());
         });
-
         if (UrunIDler == "") {
             $("#UrunBos").html("Ürün Seçmediniz!");
         } else {

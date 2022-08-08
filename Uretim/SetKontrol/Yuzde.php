@@ -1,7 +1,5 @@
 <?php
-//require __DIR__ . '/../../controller/Db.php';
-//$SetID=(int)$_GET["Set_ID"];
-/*Toplam Set içerik Adeti*/ $Toplam = $baglanti->query('SELECT SUM(Adet) AS Toplam FROM view_set_urun_sec WHERE Set_ID =' . $SetID)->fetch()["Toplam"];
+$Toplam = $baglanti->query('SELECT SUM(Adet) AS Toplam FROM view_set_urun_sec WHERE Set_ID =' . $SetID)->fetch()["Toplam"];
 //Levha
 $CartLevha = [];
 $LevhaTed = 0;
@@ -142,28 +140,28 @@ if ($Cart->rowCount()) {
 
 $Hesap = floor($LevhaTed / count($sor));
 
-if ($e <> null) { //Pres
-    $Prs = floor($e / ($Toplam / 100));
-    $Prs = $Prs > 99 ? 100 : $Prs;
-}
-if ($f <> null) { //Yıkama
-    $Yika = floor($f / ($Toplam / 100));
-    $Yika = $Yika > 99 ? 100 : $Yika;
-}
-if ($g <> null) { //Kumlama
-    $Kumla = floor($g / ($Toplam / 100));
-    $Kumla = $Kumla > 99 ? 100 : $Kumla;
-}
-if ($h <> null) { //Teleme
-    $Telle = floor($h / ($Toplam / 100));
-    $Telle = $Telle > 99 ? 100 : $Telle;
-}
-if ($j <> null) { //Boyama
-    $Boya = floor(($j / 2) / ($Toplam / 100));
-    $Boya = $Boya > 99 ? 100 : $Boya;
-}
-if ($p <> null) { //Paketleme
-    $Paket = floor($p / ($Toplam / 100));
-    $Paket = $Paket > 99 ? 100 : $Paket;
-}
-$SetYuzde = floor(($Prs + $Yika + $Kumla + $Telle + $Boya + $Paket) / 6);
+$Prs = floor($e / ($Toplam / 100));
+$Prs = $Prs > 99 ? 100 : $Prs;
+
+$Yika = floor($f / ($Toplam / 100));
+$Yika = $Yika > 99 ? 100 : $Yika;
+
+$Kumla = floor($g / ($Toplam / 100));
+$Kumla = $Kumla > 99 ? 100 : $Kumla;
+
+$Telle = floor($h / ($Toplam / 100));
+$Telle = $Telle > 99 ? 100 : $Telle;
+
+$Boya = floor(($j / 2) / ($Toplam / 100));
+$Boya = $Boya > 99 ? 100 : $Boya;
+
+$Paket = floor($p / ($Toplam / 100));
+$Paket = $Paket > 99 ? 100 : $Paket;
+
+$pr = ($Prs * 40) / 100;
+$kk = ($Kumla * 20) / 100;
+$tt = ($Telle * 20) / 100;
+$bb = ($Boya * 10) / 100;
+$pk = ($Paket * 10) / 100;
+
+$SetYuzde = floor($pr + $kk + $tt + $bb + $pk);

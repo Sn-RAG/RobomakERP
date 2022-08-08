@@ -80,7 +80,8 @@ $Sor = $sorgu->fetch();
                 type: "POST",
                 url: "../AjaxForm/post.php",
                 data: {
-                    'Marka': v,
+                    'BDuzenle': v,
+                    'Renk':"<?=$_GET["Renk"]?>"
                 },
                 error: function(xhr, textStatus, errorThrown) {
                     alert('Hata: ' + xhr.responseText);

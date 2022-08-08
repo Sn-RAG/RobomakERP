@@ -208,4 +208,10 @@ elseif (isset($_POST["Listele"])) {
     foreach ($boya as $s) {
         echo "<option value='$s[Boya_ID]'>$s[Renk]</option>";
     }
+} elseif (isset($_POST["BDuzenle"])) {
+    $boya = $baglanti->query("SELECT Boya_ID, Renk FROM boya WHERE Marka='$_POST[BDuzenle]' AND Seri='ÜST KAT' GROUP BY Renk");
+    foreach ($boya as $s) {
+        $sor = $_POST["Renk"] == $s['Renk'] ? 'selected' : '';
+        echo "<option $sor value='$s[Boya_ID]'>$s[Renk]</option>";
+    }
 }
