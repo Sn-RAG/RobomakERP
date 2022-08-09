@@ -41,42 +41,47 @@ unset($_SESSION["SeticerikID"], $_SESSION["Setler"], $_SESSION["FirmaID"], $_SES
                             <tr>
                                 <td><?= $Firma ?></td>
                                 <td>
-                                        <?php
-                                        $Adi = $baglanti->query("SELECT Set_ID, SetAdi, Adet FROM teklif_setler INNER JOIN set_icerik ON teklif_setler.Set_icerik_ID = set_icerik.Set_icerik_ID INNER JOIN view_uretim_setler ON set_icerik.Set_Urun_ID = view_uretim_setler.Set_Urun_ID WHERE S_No=" . $SNo);
-                                        foreach ($Adi as $Ad) {
-                                            $Sid = $Ad["Set_ID"];
-                                            $Sadi = $Ad["SetAdi"];
-                                            $Adet = $Ad['Adet'];
-                                        ?>
-                                            <li class='d-flex justify-content-between'>
-                                                <div class='col-md-10'>
-                                                    <button class='btn btn-sm bg-light form-control' data-bs-toggle='modal' data-bs-target='#UrunBilgi<?= $Sid ?>'><?= $Sadi ?></button>
-                                                </div>
-                                                <small class="bg-light d-flex align-items-center"> &nbsp <?= $Adet ?> - Adet &nbsp </small>
-                                            </li>
+                                    <?php
+                                    $Adi = $baglanti->query("SELECT Set_ID, SetAdi, Adet FROM teklif_setler INNER JOIN set_icerik ON teklif_setler.Set_icerik_ID = set_icerik.Set_icerik_ID INNER JOIN view_uretim_setler ON set_icerik.Set_Urun_ID = view_uretim_setler.Set_Urun_ID WHERE S_No=" . $SNo);
+                                    foreach ($Adi as $Ad) {
+                                        $Sid = $Ad["Set_ID"];
+                                        $Sadi = $Ad["SetAdi"];
+                                        $Adet = $Ad['Adet'];
+                                    ?>
+                                        <li class='d-flex justify-content-between'>
+                                            <div class='col-md-10'>
+                                                <button class='btn btn-sm bg-light form-control' data-bs-toggle='modal' data-bs-target='#UrunBilgi<?= $Sid ?>'><?= $Sadi ?></button>
+                                            </div>
+                                            <small class="bg-light d-flex align-items-center"> &nbsp <?= $Adet ?> - Adet &nbsp </small>
+                                        </li>
 
-                                            <div class="modal fade" id="UrunBilgi<?= $Sid ?>" tabindex="-1" aria-hidden="true" style="display: none;">
-                                                <div class="modal-dialog modal-dialog-centered">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title"><?= $Sadi ?></h5>
-                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <a href="HesapLevha.php?id=<?= $Sid ?>&adet=<?= $Adet ?>&adi=<?= $Sadi ?>" class='btn btn-success btn-sm'>Levha Hesabı</a>
-                                                            <hr>
-                                                            <ul class="row">
-                                                                <?php
-                                                                $Aa = $baglanti->query("SELECT UrunAdi FROM set_urun INNER JOIN urun ON set_urun.Urun_ID = urun.Urun_ID WHERE set_urun.Set_ID=" . $Sid);
-                                                                foreach ($Aa as $A) {
-                                                                    echo "<li class='col-md-6 small'>$A[UrunAdi]</li>";
-                                                                } ?>
-                                                            </ul>
-                                                        </div>
+                                        <div class="modal fade" id="UrunBilgi<?= $Sid ?>" tabindex="-1" aria-hidden="true" style="display: none;">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title"><?= $Sadi ?></h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <a href="HesapLevha.php?id=<?= $Sid ?>&adet=<?= $Adet ?>&adi=<?= $Sadi ?>" class='btn btn-success btn-sm'>Levha Hesabı</a>
+
+                                                        <hr>
+
+                                                        <b>Ürünler</b>
+                                                        <?php foreach ($baglanti->query("SELECT DISTINCT UrunAdi,Levha_ID FROM view_set_urun_sec WHERE Set_ID=" . $Sid) as $A) { ?>
+                                                            <span class='border-bottom d-flex justify-content-between'><?= "<span>" . $A["UrunAdi"] . "</span>" . $baglanti->query("SELECT Kalinlik FROM levha WHERE Levha_ID=" . $A["Levha_ID"])->fetch()["Kalinlik"] . " mm" ?></span>
+                                                        <?php } ?>
+                                                        <hr>
+                                                        <div class="d-flex justify-content-between border-bottom border-dark"><b>İç Boya</b><b>Dış Boya</b><b>ADET</b></div>
+                                                        <?php foreach ($baglanti->query('SELECT DISTINCT Adet, icBoya_ID, DisRenk FROM view_set_urun_sec WHERE Set_ID = ' . $Sid) as $s) { ?>
+                                                            <span class='border-bottom d-flex justify-content-between'><span><?= $baglanti->query('SELECT Renk FROM boya WHERE Boya_ID =' . $s["icBoya_ID"])->fetch()["Renk"] . "</span><span>" .  $s["DisRenk"] . "</span><span>" . $s['Adet'] ?></span></span>
+                                                            <?php } ?>
+
                                                     </div>
                                                 </div>
                                             </div>
-                                        <?php } ?>
+                                        </div>
+                                    <?php } ?>
                                 </td>
                                 <td><?= $TT ?></td>
                                 <td>

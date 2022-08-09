@@ -25,8 +25,8 @@ require __DIR__ . '/../controller/Sil.php';
                         <tr>
                             <th>#</th>
                             <th>Set ID</th>
-                            <th>Set</th>
-                            <th><?= isset($_GET["Sec"]) ? "Adet" : "Durum" ?></th>
+                            <th><?= isset($_GET["Sec"]) ? "" : "Set" ?></th>
+                            <th><?= isset($_GET["Sec"]) ? "Set" : "Durum" ?></th>
                             <th>&nbsp</th>
                         </tr>
                     </thead>
@@ -46,27 +46,31 @@ require __DIR__ . '/../controller/Sil.php';
                                 <td><?= $id ?></td>
                                 <td><?= $SetID ?></td>
                                 <?php if (isset($_GET["Sec"])) { ?>
-                                    <td><?= "<button class='btn btn-sm bg-light' data-bs-toggle='modal' data-bs-target='#UrunBilgi$SetID'>$SetAdi</button>" ?></td>
-                                    <td><input type="number" class="form-control Adet" placeholder="Adet"></td>
                                     <td>
-                                        <div class='form-check'><input class='form-check-input' type='checkbox' id='Check<?= $id ?>' value='<?= $id ?>'><label class='form-check-label fw-bold' for='Check<?= $id ?>'>SEÇ</label></div>
+                                        <label class='form-check-label' for='Check<?= $id ?>'><input class='form-check-input' type='checkbox' id='Check<?= $id ?>' value='<?= $id ?>'> &nbsp Seç</label>
                                     </td>
+                                    <td><button class='btn btn-sm bg-light form-control form-control-sm' data-bs-toggle='modal' data-bs-target='#UrunBilgi<?= $SetID ?>'><?= $SetAdi ?></button></td>
+                                    <td></td>
 
                                     <div class="modal fade" id="UrunBilgi<?= $SetID ?>" tabindex="-1" aria-hidden="true" style="display: none;">
                                         <div class="modal-dialog modal-dialog-centered">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title"><?= $SetAdi ?><br>ÜRÜNLER</h5>
+                                                    <h5 class="modal-title"><?= $SetAdi ?></h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <ul class="row">
-                                                        <?php
-                                                        $Aa = $baglanti->query("SELECT UrunAdi FROM set_urun INNER JOIN urun ON set_urun.Urun_ID = urun.Urun_ID WHERE set_urun.Set_ID=" . $SetID);
-                                                        foreach ($Aa as $A) { ?>
-                                                            <li class='col-md-6 fw-bold'><?= $A["UrunAdi"] ?></li>
-                                                        <?php } ?>
-                                                    </ul>
+                                                    <b>Ürünler</b>
+                                                    <?php foreach ($baglanti->query("SELECT DISTINCT UrunAdi,Levha_ID FROM view_set_urun_sec WHERE Set_ID=" . $SetID) as $A) { ?>
+                                                        <span class='border-bottom d-flex justify-content-between'><?= "<span>" . $A["UrunAdi"] . "</span>" . $baglanti->query("SELECT Kalinlik FROM levha WHERE Levha_ID=" . $A["Levha_ID"])->fetch()["Kalinlik"] . " mm" ?></span>
+                                                    <?php } ?>
+                                                    <hr>
+                                                    <div class="d-flex justify-content-between border-bottom border-dark"><b>İç Boya</b><b>Dış Boya</b><b>ADET</b></div>
+                                                    <?php foreach ($baglanti->query('SELECT DISTINCT Adet, icBoya_ID, DisRenk FROM view_set_urun_sec WHERE Set_ID = ' . $SetID) as $s) {
+                                                        $icRenk = $baglanti->query('SELECT Renk FROM boya WHERE Boya_ID =' . $s["icBoya_ID"])->fetch()["Renk"];
+                                                    ?>
+                                                        <span class='border-bottom d-flex justify-content-between'><?= "<span>" . $icRenk . "</span><span>" .  $s["DisRenk"] . "</span><span>" . $s['Adet'] . "</span>" ?></span>
+                                                    <?php } ?>
                                                 </div>
                                             </div>
                                         </div>
@@ -124,19 +128,11 @@ require __DIR__ . '/../controller/Sil.php';
         $("input:checkbox:checked").map(function() {
             Setsec.push($(this).val());
         });
-        var Adet = $(".Adet").map(function() {
-            if ($(this).val() != "") {
-                return $(this).val();
-            }
-        }).get();
-        console.log(Setsec);
-        console.log(Adet);
         $.ajax({
             type: "POST",
             url: "Setler.php",
             data: {
-                'Setsec': Setsec,
-                'Adet': Adet
+                'Setsec': Setsec
             },
             error: function(xhr) {
                 alert('Hata: ' + xhr.responseText);
@@ -153,6 +149,5 @@ require __DIR__ . '/../controller/Footer.php';
 
 if (isset($_POST["Setsec"])) {
     $_SESSION["Setler"] = $_POST["Setsec"];
-    $_SESSION["SetAdeti"] = $_POST["Adet"];
 }
 ?>

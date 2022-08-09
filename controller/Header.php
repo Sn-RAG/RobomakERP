@@ -7,9 +7,9 @@ if (!(isset($_SESSION["Oturum"]) && $_SESSION["Oturum"] == "8388")) {
 require __DIR__ . "/Yetki.php";
 if ($page != "Sipariş Listesi") {
     unset($_SESSION["Miktar"], $_SESSION["Boyalar"], $_SESSION["BAstar"], $_SESSION["BAstarm"], $_SESSION["BRenk"], $_SESSION["BRenkm"], $_SESSION["Levhalar"], $_SESSION["Adetler"]);
-} 
-if ($page != "Yeni Set" && $page != "Boya Sipariş" && $page != "Levha Sipariş" && $page != "Tepe Sipariş" && $page != "Kulp Sipariş" && $page != "Kapak Sipariş") {
-    unset($_SESSION["Set_ID"], $_SESSION["SetAdi"], $_SESSION["UrunIDler"], $_SESSION["KulpSec"], $_SESSION["mmSec"], $_SESSION["KapakSec"], $_SESSION["KutuSec"], $_SESSION["TepeSec"]);
+}
+if ($page != "Firma Ekle" && $page != "Firma Düzenle" && $page != "Firmalar" && $page != "Yeni Set" && $page != "Boya Sipariş" && $page != "Levha Sipariş" && $page != "Tepe Sipariş" && $page != "Kulp Sipariş" && $page != "Kapak Sipariş" && $page != "Devam eden" && $page != "Satış Yap") {
+    unset($_SESSION["Set_ID"], $_SESSION["SetAdi"], $_SESSION["UrunIDler"], $_SESSION["KulpSec"], $_SESSION["mmSec"], $_SESSION["KapakSec"], $_SESSION["KutuSec"], $_SESSION["TepeSec"], $_SESSION["Setler"], $_SESSION["FirmaID"]);
 }
 ?>
 <!DOCTYPE html>
