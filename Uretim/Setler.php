@@ -12,7 +12,7 @@ require __DIR__ . '/../controller/Sil.php';
                 <hr>
                 <div class="row">
                     <div class="col-md-6">
-                        <a href="SetlerKayit.php<?= isset($_GET["Sec"]) ? '?Sec=true' : "" ?>" class="btn btn-info me-3 bi-bricks">&nbsp Yeni Set</a>
+                        <a href="SetlerKayit.php<?= isset($_GET["Sec"]) ? '?Sec=true' : "" ?>" class="btn btn-primary me-3 bi-save">&nbsp Yeni Set</a>
                         <!--<a href="UrunTasarla/UrunTasarla.php<?= isset($_GET["Sec"]) ? '?Sec=true' : "" ?>" class="btn btn-primary bi-hammer">&nbsp Ürün Tasarla</a>-->
                     </div>
                     <div class="col-md-6 justify-content-end d-flex">
@@ -45,49 +45,15 @@ require __DIR__ . '/../controller/Sil.php';
                             <tr>
                                 <td><?= $id ?></td>
                                 <td><?= $SetID ?></td>
-                                <?php if (isset($_GET["Sec"])) { ?>
-                                    <td>
-                                        <label class='form-check-label' for='Check<?= $id ?>'><input class='form-check-input' type='checkbox' id='Check<?= $id ?>' value='<?= $id ?>'> &nbsp Seç</label>
-                                    </td>
-                                    <td><button class='btn btn-sm bg-light form-control form-control-sm' data-bs-toggle='modal' data-bs-target='#UrunBilgi<?= $SetID ?>'><?= $SetAdi ?></button></td>
-                                    <td></td>
-
-                                    <div class="modal fade" id="UrunBilgi<?= $SetID ?>" tabindex="-1" aria-hidden="true" style="display: none;">
-                                        <div class="modal-dialog modal-dialog-centered">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title"><?= $SetAdi ?></h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <b>Ürünler</b>
-                                                    <?php foreach ($baglanti->query("SELECT DISTINCT UrunAdi,Levha_ID FROM view_set_urun_sec WHERE Set_ID=" . $SetID) as $A) { ?>
-                                                        <span class='border-bottom d-flex justify-content-between'><?= "<span>" . $A["UrunAdi"] . "</span>" . $baglanti->query("SELECT Kalinlik FROM levha WHERE Levha_ID=" . $A["Levha_ID"])->fetch()["Kalinlik"] . " mm" ?></span>
-                                                    <?php } ?>
-                                                    <hr>
-                                                    <div class="d-flex justify-content-between border-bottom border-dark"><b>İç Boya</b><b>Dış Boya</b><b>ADET</b></div>
-                                                    <?php foreach ($baglanti->query('SELECT DISTINCT Adet, icBoya_ID, DisRenk FROM view_set_urun_sec WHERE Set_ID = ' . $SetID) as $s) {
-                                                        $icRenk = $baglanti->query('SELECT Renk FROM boya WHERE Boya_ID =' . $s["icBoya_ID"])->fetch()["Renk"];
-                                                    ?>
-                                                        <span class='border-bottom d-flex justify-content-between'><?= "<span>" . $icRenk . "</span><span>" .  $s["DisRenk"] . "</span><span>" . $s['Adet'] . "</span>" ?></span>
-                                                    <?php } ?>
-                                                </div>
-                                            </div>
-                                        </div>
+                                <td><a href="SetKontrol/SetKontrol.php?SetAdi=<?= $SetAdi ?>&Set_ID=<?= $SetID ?>" class="btn btn-light form-control mt-1 fw-bold"><?= $SetAdi ?></a></td>
+                                <td>
+                                    <div class="progress mt-2" style="height: 25px;">
+                                        <div class="progress-bar" role="progressbar" style="width: <?= $Yuzde ?>%"><?= $Yukleme ?></div>
                                     </div>
-
-                                <?php } else { ?>
-                                    <td><a href="SetKontrol/SetKontrol.php?SetAdi=<?= $SetAdi ?>&Set_ID=<?= $SetID ?>" class="btn btn-light form-control mt-1 fw-bold"><?= $SetAdi ?></a></td>
-                                    <td>
-                                        <div class="progress mt-2" style="height: 25px;">
-                                            <div class="progress-bar" role="progressbar" style="width: <?= $Yuzde ?>%"><?= $Yukleme ?></div>
-                                        </div>
-                                    </td>
-                                    <td class="text-center"><a href='Setler.php?UretimSetlerSil=<?= $id ?>&Set_ID=<?= $SetID ?>' class='bi-trash btn btn-danger'></a></td>
-                            <?php }
-                                echo "</tr>";
-                            }
-                            ?>
+                                </td>
+                                <td class="text-center"><a href='Setler.php?UretimSetlerSil=<?= $id ?>&Set_ID=<?= $SetID ?>' class='bi-trash btn btn-danger'></a></td>
+                            </tr>
+                        <?php } ?>
                     </tbody>
                 </table>
             </div>
@@ -120,34 +86,8 @@ require __DIR__ . '/../controller/Sil.php';
             ['25 Adet', '50 Adet', '100 Adet', 'Tümü'],
         ],
     });
-
-    //Seçilen Setleri array olarak sessiona post ediyoruz herşey bu sayfada
-
-    $('.Sec').click(function() {
-        var Setsec = [];
-        $("input:checkbox:checked").map(function() {
-            Setsec.push($(this).val());
-        });
-        $.ajax({
-            type: "POST",
-            url: "Setler.php",
-            data: {
-                'Setsec': Setsec
-            },
-            error: function(xhr) {
-                alert('Hata: ' + xhr.responseText);
-            },
-            success: function() {
-                window.location.assign("../Pazarlama/Teklifler/TeklifVer.php")
-            }
-        })
-    });
 </script>
 <?php
 ob_end_flush();
 require __DIR__ . '/../controller/Footer.php';
-
-if (isset($_POST["Setsec"])) {
-    $_SESSION["Setler"] = $_POST["Setsec"];
-}
 ?>

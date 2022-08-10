@@ -4,7 +4,6 @@ $page = "Firma Ekle";
 require __DIR__ . '/../controller/Header.php';
 require __DIR__ . '/../controller/Db.php';
 require __DIR__ . '/../controller/Kayit.php';
-$Sec = $_GET["Sec"];
 ?>
     <main id="main" class="main">
 
@@ -15,11 +14,7 @@ $Sec = $_GET["Sec"];
                         <div class="card-body">
                             <div class="modal-header">
                                 <h5 class="modal-title"><?= $page ?></h5>
-                                <a href="Firmalar.php<?=$Sec=="true"?'?Sec=true':"" ?>">
-                                    <button type="button" class="btn btn-secondary"><i
-                                                class="bi bi-arrow-left me-1"></i> Geri
-                                    </button>
-                                </a>
+                                <a href="Firmalar.php" class="btn btn-secondary bi-arrow-left">&nbsp Geri Dön</a>
                             </div>
                             <form class="row g-3" method="post">
 

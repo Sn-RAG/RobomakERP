@@ -78,7 +78,7 @@ require __DIR__ . '/../../controller/VTHataMesaji.php';
                         ######################// Ürün Listele
 
                         $n = 1;
-                        $sorgu = $baglanti->query("SELECT Urun_ID,UrunAdi,Adet FROM view_set_urun_sec WHERE Set_ID =$id GROUP BY Urun_ID ORDER BY UrunAdi ASC");
+                        $sorgu = $baglanti->query("SELECT Urun_ID,UrunAdi,Adet FROM view_set_urun_sec WHERE Set_ID =$id GROUP BY Urun_ID ORDER BY Adet,UrunAdi");
                         foreach ($sorgu as $s) {
                             $Gr = $baglanti->query("SELECT icAstar,icUstkat,DisAstar,DisUstkat FROM view_urun_boya_bilgi WHERE Urun_ID=" . $s["Urun_ID"])->fetch();
                         ?>
@@ -148,13 +148,13 @@ require __DIR__ . '/../../controller/VTHataMesaji.php';
                             <?php } else {
                                 @$b[$icAstarAdi] += $TicA[$ic] + $TdisA[$Dis];
                                 $renk[$i] = $iR;
-                                $renkm[$i] = $Tic[$ic] + $Tdis[$Dis]; ?>
+                                @$renkm[$i] = $Tic[$ic] + $Tdis[$Dis]; ?>
                                 <tr>
                                     <td colspan="3">
-                                        <div class="d">İç ve Dış Astar &nbsp<span><?= $icAstarAdi ?></span><code><?= ($TicA[$ic] + $TdisA[$Dis]) / 1000 ?> kg</code></div>
+                                        <div class="d">İç ve Dış Astar &nbsp<span><?= $icAstarAdi ?></span><code><?= @($TicA[$ic] + $TdisA[$Dis]) / 1000 ?> kg</code></div>
                                     </td>
                                     <td colspan="4">
-                                        <div class="d">İç ve Dış Üstkat &nbsp<span><?= $iR ?></span><code><?= ($Tic[$ic] + $Tdis[$Dis]) / 1000 ?> kg</code></div>
+                                        <div class="d">İç ve Dış Üstkat &nbsp<span><?= $iR ?></span><code><?= @($Tic[$ic] + $Tdis[$Dis]) / 1000 ?> kg</code></div>
                                     </td>
                                 </tr>
                         <?php }

@@ -41,22 +41,17 @@ $Say = count($Boyalar);
                     <thead>
                         <tr>
                             <th rowspan="2" colspan="2"></th>
-                            <th rowspan="2" style="vertical-align: middle; text-align:center;">TOPLAM</th>
-                            <?php
-                            for ($i = 0; $i < $Say; $i++) {
+                            <th rowspan="2" class="ortala text-center">TOPLAM</th>
+                            <?php for ($i = 0; $i < $Say; $i++) {
                                 echo "<th>İç Renk<th>Dış Renk</th></th>";
-                            }
-                            ?>
+                            } ?>
                         </tr>
                         <tr>
-                            <?php
-                            foreach ($Boyalar as $I) { ?>
+                            <?php foreach ($Boyalar as $I) { ?>
                                 <th><?= $I["icRenk"] ?>
-                                    <?php
-                                    foreach ($baglanti->query('SELECT Renk AS DisRenk FROM boya WHERE Boya_ID = ' . $I["DisBoya_ID"]) as $D) {
+                                    <?php foreach ($baglanti->query('SELECT Renk AS DisRenk FROM boya WHERE Boya_ID = ' . $I["DisBoya_ID"]) as $D) {
                                         echo "<th>" . $D["DisRenk"] . "</th>";
-                                    }
-                                    ?>
+                                    } ?>
                                 </th>
                             <?php } ?>
                         </tr>
@@ -64,28 +59,24 @@ $Say = count($Boyalar);
                             <th>SIRA NO</th>
                             <th>ÜRÜN ADI</th>
                             <th>ADET</th>
-                            <?php
-                            for ($i = 0; $i < $Say; $i++) {
+                            <?php for ($i = 0; $i < $Say; $i++) {
                                 echo "<th colspan='2'>ADET</th>";
-                            }
-                            ?>
+                            } ?>
                         </tr>
                     </thead>
                     <tbody>
                         <?php
                         $ii = 1;
-                        $Listele = $baglanti->query('SELECT urun.Urun_ID,UrunAdi, SUM(Adet) AS tpl,Adet FROM set_urunler INNER JOIN urun ON set_urunler.Urun_ID = urun.Urun_ID WHERE Set_ID = ' . $SetID . " GROUP BY set_urunler.Urun_ID ORDER BY Adet ASC");
+                        $Listele = $baglanti->query("SELECT urun.Urun_ID,UrunAdi, SUM(Adet) AS tpl,Adet FROM set_urunler INNER JOIN urun ON set_urunler.Urun_ID = urun.Urun_ID WHERE Set_ID =$SetID GROUP BY set_urunler.Urun_ID ORDER BY Adet, Urun_ID");
                         foreach ($Listele as $s) {
                             $Uid = $s["Urun_ID"] ?>
                             <tr>
                                 <th><?= $ii++ ?></th>
                                 <td><?= $s["UrunAdi"] ?></td>
                                 <td><?= $s["tpl"] ?></td>
-                                <?php
-                                for ($i = 0; $i < $Say; $i++) {
+                                <?php for ($i = 0; $i < $Say; $i++) {
                                     echo "<td colspan='2'>$s[Adet]</td>";
-                                }
-                                ?>
+                                } ?>
                             </tr>
                         <?php } ?>
                     </tbody>

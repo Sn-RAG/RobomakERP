@@ -8,8 +8,8 @@ require __DIR__ . "/Yetki.php";
 if ($page != "Sipariş Listesi") {
     unset($_SESSION["Miktar"], $_SESSION["Boyalar"], $_SESSION["BAstar"], $_SESSION["BAstarm"], $_SESSION["BRenk"], $_SESSION["BRenkm"], $_SESSION["Levhalar"], $_SESSION["Adetler"]);
 }
-if ($page != "Firma Ekle" && $page != "Firma Düzenle" && $page != "Firmalar" && $page != "Yeni Set" && $page != "Boya Sipariş" && $page != "Levha Sipariş" && $page != "Tepe Sipariş" && $page != "Kulp Sipariş" && $page != "Kapak Sipariş" && $page != "Devam eden" && $page != "Satış Yap") {
-    unset($_SESSION["Set_ID"], $_SESSION["SetAdi"], $_SESSION["UrunIDler"], $_SESSION["KulpSec"], $_SESSION["mmSec"], $_SESSION["KapakSec"], $_SESSION["KutuSec"], $_SESSION["TepeSec"], $_SESSION["Setler"], $_SESSION["FirmaID"]);
+if ($page != "Firma Ekle" && $page != "Firma Düzenle" && $page != "Firmalar" && $page != "Yeni Set" && $page != "Boya Sipariş" && $page != "Levha Sipariş" && $page != "Tepe Sipariş" && $page != "Kulp Sipariş" && $page != "Kapak Sipariş" && $page != "Devam eden") {
+    unset($_SESSION["Set_ID"], $_SESSION["SetAdi"], $_SESSION["UrunIDler"], $_SESSION["KulpSec"], $_SESSION["mmSec"], $_SESSION["KapakSec"], $_SESSION["KutuSec"], $_SESSION["TepeSec"]);
 }
 ?>
 <!DOCTYPE html>
@@ -148,10 +148,10 @@ if ($page != "Firma Ekle" && $page != "Firma Düzenle" && $page != "Firmalar" &&
                 <a class="Pazarlama nav-link collapsed" href="<?= $Link ?>Navigasyon/Pazarlama.php">
                     <i class="bi bi-truck"></i><span>Pazarlama</span><i class="bi bi-chevron-down ms-auto"></i>
                 </a>
-                <ul id="Pazarlama" class="nav-content collapse <?= $page == "Satış" || $page == "Konteynır Hesapla" || $page == "Maaliyet Düzenle" || $page == "Onay Gönder" || $page == "Teklif Hazırla" || $page == "Teklifler" ? "show" : "" ?>" data-bs-parent="#sidebar-nav">
+                <ul id="Pazarlama" class="nav-content collapse <?= $page == "Satış" || $page == "Konteynır Hesapla" || $page == "Maaliyet Düzenle" || $page == "Ret" || $page == "Onay" || $page == "Hazır Teklifler" || $page == "Teklif" ? "show" : "" ?>" data-bs-parent="#sidebar-nav">
                     <li>
-                        <a href="<?= $Link ?>Pazarlama/Teklifler/Teklifler.php" class="<?= $page == "Teklifler" ? "active" : "" ?>">
-                            <i class="bi bi-circle"></i></i><span>Teklifler</span>
+                        <a href="<?= $Link ?>Pazarlama/TeklifHazirla/Hazir.php" class="<?= $page == "Hazır Teklifler" ? "active" : "" ?>">
+                            <i class="bi bi-circle"></i></i><span>Teklif Hazırla</span>
                         </a>
                     </li>
                     <li>
@@ -165,13 +165,18 @@ if ($page != "Firma Ekle" && $page != "Firma Düzenle" && $page != "Firmalar" &&
                         </a>
                     </li>
                     <li>
-                        <a href="<?= $Link ?>Pazarlama/OnayGonder.php" class="<?= $page == "Onay Gönder" ? "active" : "" ?>">
-                            <i class="bi bi-circle"></i></i><span>Onay için Gönder</span>
+                        <a href="<?= $Link ?>Pazarlama/TeklifHazirla/Hazir.php?Ret&h" class="<?= $page == "Ret" ? "active" : "" ?>">
+                            <i class="bi bi-circle"></i></i><span>Reddedilenler</span>
                         </a>
                     </li>
                     <li>
-                        <a href="<?= $Link ?>Pazarlama/TeklifHazirla.php" class="<?= $page == "Teklif Hazırla" ? "active" : "" ?>">
-                            <i class="bi bi-circle"></i></i><span>Teklif Hazırla</span>
+                        <a href="<?= $Link ?>Pazarlama/TeklifHazirla/Hazir.php?Onay&h" class="<?= $page == "Onay" ? "active" : "" ?>">
+                            <i class="bi bi-circle"></i></i><span>Onaylananlar</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="<?= $Link ?>Pazarlama/TeklifHazirla/Hazir.php?Teklif&h" class="<?= $page == "Teklif" ? "active" : "" ?>">
+                            <i class="bi bi-circle"></i></i><span>Teklifler</span>
                         </a>
                     </li>
                 </ul>

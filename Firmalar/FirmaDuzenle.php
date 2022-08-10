@@ -22,11 +22,7 @@ $SorA = $sorgu->fetch();
                         <div class="card-body">
                             <div class="modal-header">
                                 <h5 class="modal-title"><?= $page ?></h5>
-                                <a href="Firmalar.php">
-                                    <button type="button" class="btn btn-secondary"><i
-                                                class="bi bi-arrow-left me-1"></i> Geri
-                                    </button>
-                                </a>
+                                <a href="Firmalar.php" class="btn btn-secondary bi-arrow-left">&nbsp Geri Dön</a>
                             </div>
                             <form class="row g-3">
 

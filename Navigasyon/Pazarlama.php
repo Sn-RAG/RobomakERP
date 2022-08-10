@@ -7,9 +7,9 @@ require __DIR__ . "/../controller/Link.php";
     <section class='section'>
         <div class="row">
             <h5>&nbsp</h5>
-            <div class='col-md-2 me-3 mb-3'><a href='<?= $Link ?>Pazarlama/Teklifler/Teklifler.php'>
+            <div class='col-md-2 me-3 mb-3'><a href='<?= $Link ?>Pazarlama/TeklifHazirla/Hazir.php'>
                     <button class='form-control btn-outline-success' style='border: 0 solid #ffffff00;display: flex;background-color: #123b74;color: white;border-color: #ffffff00;height: 124px;margin-right: 15px; justify-content: center;align-items: center;flex-direction: column-reverse;flex-wrap: nowrap;align-content: stretch;'>
-                        Teklifler <img src='<?= $Link ?>assets/img/ConteinerLink/sell.svg'></button>
+                        Teklif Hazırla <img src='<?= $Link ?>assets/img/ConteinerLink/sell.svg'></button>
                 </a></div>
             <div class='col-md-2 me-3 mb-3'><a href='<?= $Link ?>Pazarlama/MaaliyetDuzenle.php'>
                     <button class='form-control btn-outline-success' style='background-color: #122b48;color: white;border-color: #ffffff00;height: 124px;margin-right: 15px;display: flex;flex-direction: column-reverse;flex-wrap: wrap;align-content: center;justify-content: center;align-items: center;'>

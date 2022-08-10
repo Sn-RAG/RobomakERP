@@ -120,25 +120,3 @@ if (isset($_POST['FirmaEkle'])) {
     }
     logtut($Kullanici, "firma ekledi.");
 }
-
-//#######################################################################        SİPARİŞ İŞLEMLERİ      ##########################################################################################
-//---------------------------------------Sipariş GİDEN Ekle
-if (isset($_POST['Teklifver'])) {
-    if (isset($_SESSION["Setler"]) && isset($_SESSION["SetAdeti"]) && isset($_SESSION["FirmaID"])) {
-        $Say = $baglanti->query("SELECT COUNT(*) AS S_No FROM view_teklifler");
-        $SNo = $Say->fetch()['S_No'];
-        $SNo++;
-        for ($i = 0; $i < count($_SESSION["Setler"]); $i++) {
-            $Kaydet = $baglanti->prepare("INSERT INTO teklif_setler SET S_No= ?, Firma_ID= ?, Set_icerik_ID= ?, Adet= ?");
-            $Sonuc = $Kaydet->execute(array($SNo, $_SESSION["FirmaID"], $_SESSION["Setler"][$i], $_SESSION["SetAdeti"][$i]));
-        }
-
-        $id = $baglanti->lastInsertId();
-
-        $Kaydet = $baglanti->prepare("INSERT INTO teklifler SET Teklif_Set_ID= ?, Teslim_Tarihi= ?, Kullanici_ID= ?");
-        $Sonuc = $Kaydet->execute(array($id, $_POST['Teslim_Tarihi'], $Kullanici));
-        header("location:Teklifler.php");
-    } else {
-        echo $DbHata;
-    }
-}

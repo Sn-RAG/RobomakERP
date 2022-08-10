@@ -293,10 +293,7 @@ if (isset($_POST["GirSil"])) {
     $KT = $_POST["Tarih"];
     if ($is == "Preslendi" || $is == "Fire") {
         $Ne = "Preslenen";
-        if ($is == "Fire") {
-            $baglanti->query("DELETE FROM set_urunler_asama_akis WHERE ID =" . $_POST["id"] . " AND Yapilan_is='$is'");
-            return;
-        }
+
         /*$Lsid = $baglanti->query("SELECT Levha_Stok_ID FROM levha_giden WHERE SetID=" . $Sid . " AND UrunID=" . $Uid . " AND LevhaID=" . $Lid)->fetch()["Levha_Stok_ID"];
         $Hsp = $baglanti->query("SELECT Cap, Kalinlik FROM levha WHERE Levha_ID=" . $Lid)->fetch();
         $Cap = $Hsp["Cap"];
@@ -314,7 +311,6 @@ if (isset($_POST["GirSil"])) {
             $baglanti->query("DELETE FROM set_urunler_asama_akis WHERE ID =" . $_POST["id"] . " AND Yapilan_is='$is'");
             return;
         }*/
-        
     } elseif ($is == "Tellendi") {
         $Ne = "Tellenen";
     } elseif ($is == "Kumlandı") {

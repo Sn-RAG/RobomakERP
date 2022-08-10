@@ -16,14 +16,14 @@ require __DIR__ . '/../controller/Sil.php';
                         <hr>
                         <button type="button" class="btn btn-primary bi-save" data-bs-toggle="modal" data-bs-target="#Ekle">&nbsp Ekle</button>
                         <hr>
-                        <table class="table table-borderless datatable">
+                        <table class="table table-sm datatable">
                             <thead>
                             <tr>
-                                <th scope="col">Kullanıcı Adı</th>
-                                <th scope="col">Ad Soyad</th>
-                                <th scope="col">Telefon</th>
-                                <th scope="col">Aktif mi?</th>
-                                <th scope="col">Yetki</th>
+                                <th>Kullanıcı Adı</th>
+                                <th>Ad Soyad</th>
+                                <th>Telefon</th>
+                                <th>Aktif mi?</th>
+                                <th>Yetki</th>
                                 <th>&nbsp</th>
                             </tr>
                             </thead>
@@ -36,7 +36,7 @@ require __DIR__ . '/../controller/Sil.php';
                                 $Sifre = $sonuc['Sifre'];
                                 $AdSoyad = $sonuc['AdSoyad'];
                                 $Telefon = $sonuc['Telefon'];
-                                $Aktifmi = (bool)$sonuc['Aktifmi'];
+                                $Aktifmi = $sonuc['Aktifmi'];
                                 $Yetki = $sonuc['Yetki'];
                                 ?>
                                 <tr>
@@ -45,14 +45,10 @@ require __DIR__ . '/../controller/Sil.php';
                                     <td hidden><?= $Sifre ?></td>
                                     <td><?= $AdSoyad ?></td>
                                     <td><?= $Telefon ?></td>
-                                    <td><?= $Aktifmi == 1 ? "<span class='badge text-success'>Aktif</span>" : "<span class='badge text-warning'>Aktif Değil</span>" ?></td>
+                                    <td><?= $Aktifmi == 1 ? "<span class='text-success'>Aktif" : "<span class='text-warning'>Aktif Değil" ?></span></td>
                                     <td><?= $Yetki == 1 ? "Yönetici" : "Kullanıcı"  ?></td>
                                     <td>
-                                        <a href="index.php?KullaniciSil=<?= $id ?>">
-                                            <button type="button" class="btn btn-danger">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </a>
+                                        <a href="index.php?KullaniciSil=<?= $id ?>" class="btn btn-sm btn-danger bi-trash"></a>
                                     </td>
                                 </tr>
                             <?php } ?>
@@ -134,6 +130,9 @@ require __DIR__ . '/../controller/Sil.php';
     </div>
 </div>
 <script>
+    $(function(){
+        $("td").addClass("ortala");
+    });
     $("#formum").submit(function (){
         var Aktifmi=$("input[name=Aktifmi]:checked").val();
         var Yetki=$(".Yetki").val();
@@ -163,7 +162,6 @@ require __DIR__ . '/../controller/Sil.php';
     });
 </script>
 <?php
-ob_end_flush();
 require __DIR__ . '/../controller/Footer.php';
 if (isset($_POST['KullaniciEkle'])) {
     $Kadi = $_POST['Kadi'];
