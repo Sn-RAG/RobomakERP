@@ -29,7 +29,7 @@ require __DIR__ . "/../controller/Link.php";
                     <button class='form-control btn-outline-success' style='background-color: #454b62;color: #ffffff;border-color: #ffffff00;height: 62px;margin-right: 15px;display: flex;flex-direction: row;flex-wrap: nowrap;align-content: center;align-items: center;justify-content: center;'>
                         Teklif Hazırla <img src='<?= $Link ?>assets/img/ConteinerLink/editoffer.svg'></button>
                 </a>
-                <a href='<?= $Link ?>Pazarlama/Teklifler.php' style='color: #f9f9fd;'>
+                <a href='<?= $Link ?>Pazarlama/TeklifHazirla/Hazir.php?Teklif&h' style='color: #f9f9fd;'>
                     <button class='form-control btn-outline-success' style='background-color: #14b5ed;color: white;border-color: #ffffff00;height: 62px;margin-right: 15px;display: flex;flex-wrap: wrap;flex-direction: row;align-content: center;justify-content: space-around;align-items: center;'>
                         Teklifler <img src='<?= $Link ?>assets/img/ConteinerLink/offer.svg'></button>
                 </a>

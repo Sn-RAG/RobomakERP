@@ -3,21 +3,11 @@ ob_start();
 $tn = isset($_GET["h"]) ? "hidden" : "";
 $gizle = "hidden";
 $gizle2 = "hidden";
-$gizle3 = "hidden";
-$gizle4 = "hidden";
 $geri = "";
 if (isset($_GET["Teklif"])) {
-    $t = "1 AND Onay=0";
-    $page = "Teklif";
+    $t = 1;
+    $page = "Teklifler";
     $gizle2 = "";
-} elseif (isset($_GET["Ret"])) {
-    $t = 2;
-    $gizle3 = "";
-    $page = "Ret";
-} elseif (isset($_GET["Onay"])) {
-    $t = "1 AND Onay=1";
-    $gizle4 = "";
-    $page = "Onay";
 } else {
     $t = 0;
     $page = "Hazır Teklifler";
@@ -40,12 +30,10 @@ require __DIR__ . '/../../controller/Sil.php';
                         <li><a class="hover dropdown-item" href="../../Firmalar/Firmalar.php">Firmalar</a></li>
                         <li><a class="hover dropdown-item" href="../../Firmalar/FirmaEkle.php">Firma Ekle</a></li>
                     </ul>
-                    <a href="Hazir.php?Teklif" class="btn btn-success bi-book me-3">&nbsp Teklif</a>
-                    <a href="Hazir.php?Ret" class="btn btn-warning bi-dash-circle me-3">&nbsp Ret</a>
-                    <a href="Hazir.php?Onay" class="btn btn-info bi-card-checklist">&nbsp Onay</a>
+                    <a href="Hazir.php?Teklif" class="btn btn-success bi-book me-3">&nbsp Teklifler</a>
                 </div>
 
-                <a <?= $gizle == "hidden" ? "" : "hidden" ?> href='Hazir.php' class='btn btn-secondary bi-arrow-left me-3'>&nbsp Geri Dön</a>
+                <a <?= $gizle == "hidden" ? (isset($_GET["h"]) ? "hidden" : "") : "hidden" ?> href='Hazir.php' class='btn btn-secondary bi-arrow-left me-3'>&nbsp Geri Dön</a>
 
                 <hr>
 
@@ -60,13 +48,15 @@ require __DIR__ . '/../../controller/Sil.php';
                     <tbody>
                         <?php
                         $sorgu2 = $baglanti->query('SELECT * FROM view_teklifler WHERE Teklif=' . $t);
-                        foreach ($sorgu2 as $sonuc) {
-                            $id = $sonuc['Teklif_ID'];
-                            $Firma = $sonuc['Firma'];
-                            $SNo = $sonuc['S_No'];
+                        foreach ($sorgu2 as $s) {
+                            $id = $s['Teklif_ID'];
+                            $Firma = $s['Firma'];
+                            $SNo = $s['S_No'];
+                            $Onay = $s["Onay"];
+                            $Teklif = $s["Teklif"];
                         ?>
                             <tr>
-                                <td><?= $Firma ?></td>
+                                <td><a href="../Uretim/SetKontrol.php?SNo=<?= $SNo ?>&adi=<?= $Firma ?>" class="btn btn-sm btn-light form-control form-control-sm"><?= $Firma ?></a></td>
                                 <td>
                                     <?php
                                     $Adi = $baglanti->query("SELECT Set_ID, SetAdi FROM teklif_setler INNER JOIN set_icerik ON teklif_setler.Set_icerik_ID = set_icerik.Set_icerik_ID INNER JOIN view_uretim_setler ON set_icerik.Set_Urun_ID = view_uretim_setler.Set_Urun_ID WHERE S_No=" . $SNo);
@@ -108,13 +98,8 @@ require __DIR__ . '/../../controller/Sil.php';
                                         </div>
                                     <?php } ?>
                                 </td>
-                                <td>
-                                    <a <?= $gizle3 ?> href='Hazir.php?TeklifVer=<?= $id ?>' class='btn btn-info bi-back btn-sm'>&nbsp Geri Al</a>
-                                    <a <?= $gizle4 ?> href='Hazir.php?OnayGeri=<?= $id ?>' class='btn btn-info bi-back btn-sm'>&nbsp Geri Al</a>
-                                    <div <?= $gizle2 ?>>
-                                        <a href='Hazir.php?Onayla=<?= $id ?>' class='btn btn-primary bi-check-lg btn-sm'>&nbsp Onayla</a>
-                                        <a href='Hazir.php?Reddet=<?= $id ?>' class='btn btn-danger bi-x-lg btn-sm'>&nbsp Reddet</a>
-                                    </div>
+                                <td <?= $gizle2 == "" ? "class='text-center'" : "" ?>>
+                                    <span <?= $gizle2 ?>><?= $Onay > 0 ? "<b class='text-success'>Onaylandı" : "<a href='Hazir.php?GeriAl=$id' class='bi-back btn btn-light me-2'>&nbsp Geri Al</a><b class='text-warning'>Onay Bekliyor" ?></b></span>
                                     <div <?= $gizle ?>>
                                         <a href='Hazir.php?TeklifVer=<?= $id ?>' class='btn btn-success bi-check-lg btn-sm'>&nbsp Teklif Ver</a>
                                         <a href="Hazir.php?TeklifSil=<?= $id ?>&S_No=<?= $SNo ?>" class="btn btn-danger bi-x-square btn-sm"></a>
@@ -130,8 +115,9 @@ require __DIR__ . '/../../controller/Sil.php';
 </main>
 <script>
     $(function() {
-        $("td").addClass("ortala");
+        $("td").addClass("ortala"); //dikey ortalama
     });
+
     $('.datatablem').DataTable({
         responsive: true,
         columnDefs: [{
@@ -152,20 +138,10 @@ if (isset($_GET["TeklifVer"])) {
     $Teklif = $baglanti->prepare("UPDATE teklifler SET Teklif= ? WHERE Teklif_ID= ?");
     $Teklif->execute(array(1, $id));
     header("location:Hazir.php?Teklif");
-} elseif (isset($_GET["Onayla"])) {
-    $id = strip_tags(htmlspecialchars(trim($_GET['Onayla'])));
-    $Teklif = $baglanti->prepare("UPDATE teklifler SET Onay= ? WHERE Teklif_ID= ?");
-    $Teklif->execute(array(1, $id));
-    header("location:Hazir.php?Onay");
-} elseif (isset($_GET["OnayGeri"])) {
-    $id = strip_tags(htmlspecialchars(trim($_GET['OnayGeri'])));
-    $Teklif = $baglanti->prepare("UPDATE teklifler SET Onay= ? WHERE Teklif_ID= ?");
-    $Teklif->execute(array(0, $id));
-    header("location:Hazir.php?Teklif");
-} elseif (isset($_GET["Reddet"])) {
-    $id = strip_tags(htmlspecialchars(trim($_GET['Reddet'])));
+} elseif (isset($_GET["GeriAl"])) {
+    $id = strip_tags(htmlspecialchars(trim($_GET['GeriAl'])));
     $Teklif = $baglanti->prepare("UPDATE teklifler SET Teklif= ? WHERE Teklif_ID= ?");
-    $Teklif->execute(array(2, $id));
-    header("location:Hazir.php?Ret");
+    $Teklif->execute(array(0, $id));
+    header("location:Hazir.php");
 }
 ?>

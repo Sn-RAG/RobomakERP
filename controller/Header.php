@@ -148,7 +148,7 @@ if ($page != "Firma Ekle" && $page != "Firma Düzenle" && $page != "Firmalar" &&
                 <a class="Pazarlama nav-link collapsed" href="<?= $Link ?>Navigasyon/Pazarlama.php">
                     <i class="bi bi-truck"></i><span>Pazarlama</span><i class="bi bi-chevron-down ms-auto"></i>
                 </a>
-                <ul id="Pazarlama" class="nav-content collapse <?= $page == "Satış" || $page == "Konteynır Hesapla" || $page == "Maaliyet Düzenle" || $page == "Ret" || $page == "Onay" || $page == "Hazır Teklifler" || $page == "Teklif" ? "show" : "" ?>" data-bs-parent="#sidebar-nav">
+                <ul id="Pazarlama" class="nav-content collapse <?= $page == "Satış" || $page == "Konteynır Hesapla" || $page == "Maaliyet Düzenle" || $page == "Hazır Teklifler" || $page == "Teklifler" ? "show" : "" ?>" data-bs-parent="#sidebar-nav">
                     <li>
                         <a href="<?= $Link ?>Pazarlama/TeklifHazirla/Hazir.php" class="<?= $page == "Hazır Teklifler" ? "active" : "" ?>">
                             <i class="bi bi-circle"></i></i><span>Teklif Hazırla</span>
@@ -165,17 +165,7 @@ if ($page != "Firma Ekle" && $page != "Firma Düzenle" && $page != "Firmalar" &&
                         </a>
                     </li>
                     <li>
-                        <a href="<?= $Link ?>Pazarlama/TeklifHazirla/Hazir.php?Ret&h" class="<?= $page == "Ret" ? "active" : "" ?>">
-                            <i class="bi bi-circle"></i></i><span>Reddedilenler</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="<?= $Link ?>Pazarlama/TeklifHazirla/Hazir.php?Onay&h" class="<?= $page == "Onay" ? "active" : "" ?>">
-                            <i class="bi bi-circle"></i></i><span>Onaylananlar</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="<?= $Link ?>Pazarlama/TeklifHazirla/Hazir.php?Teklif&h" class="<?= $page == "Teklif" ? "active" : "" ?>">
+                        <a href="<?= $Link ?>Pazarlama/TeklifHazirla/Hazir.php?Teklif&h" class="<?= $page == "Teklifler" ? "active" : "" ?>">
                             <i class="bi bi-circle"></i></i><span>Teklifler</span>
                         </a>
                     </li>

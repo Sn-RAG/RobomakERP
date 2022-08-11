@@ -57,7 +57,7 @@ if (isset($_SESSION["Setler"])) {
                             </table>
                         </div>
                     </div>
-                    
+
                     <div class="border-start col-6 d-flex justify-content-center">
                         <div class="col-11">
                             <a href="../../Uretim/SetlerKayit.php" class="btn btn-sm btn-outline-primary bi-save-fill">&nbsp Yeni Set</a>
@@ -112,7 +112,6 @@ if (isset($_SESSION["Setler"])) {
                 </div>
             </div>
         </div>
-        <div class="yaz"></div>
     </section>
 </main>
 <script>
@@ -136,9 +135,8 @@ if (isset($_SESSION["Setler"])) {
             error: function(xhr) {
                 alert('Hata: ' + xhr.responseText);
             },
-            success: function(data) {
-                $(".yaz").html(data);
-                //window.location.assign("Hazir.php")
+            success: function() {
+                window.location.assign("Hazir.php")
             }
         })
     });
