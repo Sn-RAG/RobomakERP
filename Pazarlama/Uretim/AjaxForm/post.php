@@ -8,68 +8,25 @@ $Kullanici = $Sor->fetch()['Kullanici_ID'];
 
 if (isset($_POST['Listele'])) {
     $SNo = $_POST["SNo"];
-    $Urunler = $_POST['Urunler'];
     $sayi = $_POST['sayi'];
-    $say = count($sayi);
-
-    $HB = $_POST['HangiButon'];
     $is = $_POST['is'];
 
     $Adetler = [];
 
     $sorgu = $baglanti->query("SELECT * FROM imalat INNER JOIN urun ON imalat.Urun_ID = urun.Urun_ID WHERE S_No=$SNo AND Yapilan_is='$is'");
-    if ($sorgu->rowCount()) {
-        foreach ($sorgu as $s) {
-            for ($i = 0; $i < $say; $i++) {
-                if ($Urunler[$i] == $s["Urun_ID"] & $_POST["Sidler"][$i] == $s["Set_ID"]) {
-                    $Adetler[$i] = $s["Adet"];
-                } else {
-                    $Adetler[$i] = 0;
-                }
-            }
-        } ?>
+
+
+    foreach ($sorgu as $s) {
+        $id = $s["Set_ID"] . $s["Urun_ID"];
+        if (in_array($id, $sayi)) {
+            @$Adetler[$s["Set_ID"] . $s["Urun_ID"]] += $s["Adet"];
+        }
+    }
+    for ($i = 0; $i < count($sayi); $i++) { ?>
         <script>
-            var sayi = <?= json_encode($sayi) ?>;
-            var Adet = <?= json_encode($Adetler); ?>;
-
-            <?php if ($HB == "Pres") { ?>
-                for (let i = 0; i < <?= $say ?>; i++) {
-                    $("#yazsayi" + sayi[i] + "").html(Adet[i]);
-                }
-
-            <?php } elseif ($HB == "Telleme") { ?>
-                for (let i = 0; i < <?= $say ?>; i++) {
-                    $("#yazsayi" + sayi[i] + "").html(Adet[i]);
-                }
-            <?php } elseif ($HB == "Kumlama") { ?>
-                for (let i = 0; i < <?= $say ?>; i++) {
-                    $("#yazsayi" + sayi[i] + "").html(Adet[i]);
-                }
-            <?php } elseif ($HB == "icBoyama") { ?>
-                for (let i = 0; i < <?= $say ?>; i++) {
-                    $("#yazsayi" + sayi[i] + "").html(Adet[i]);
-                }
-            <?php } elseif ($HB == "DisBoyama") { ?>
-                for (let i = 0; i <= <?= $say ?>; i++) {
-                    $("#yazsayi" + sayi[i] + "").html(Adet[i]);
-                }
-            <?php } elseif ($HB == "Yıkama") { ?>
-                for (let i = 0; i < <?= $say ?>; i++) {
-                    $("#yazsayi" + sayi[i] + "").html(Adet[i]);
-                }
-            <?php } else { ?>
-                for (let i = 0; i < <?= $say ?>; i++) {
-                    $("#yazsayi" + sayi[i] + "").html(Adet[i]);
-                }
-            <?php } ?>
-        </script>
-
-    <?php } else { ?>
-        <script>
-            var sayi = <?= json_encode($sayi) ?>;
-
-            for (let i = 0; i < <?= $say ?>; i++) {
-                $("#yazsayi" + sayi[i] + "").html(0);
+            $("#yazsayi<?= $sayi[$i] ?>").text(<?= @$Adetler[$sayi[$i]] ?>);
+            if ($("#yazsayi<?= $sayi[$i] ?>").text() == "") {
+                $("#yazsayi<?= $sayi[$i] ?>").text(0);
             }
         </script>
     <?php }
@@ -78,8 +35,7 @@ if (isset($_POST['Listele'])) {
     $SNo = $_POST["SNo"];
     $is = $_POST['is'];
     ?>
-
-
+    
     <table class="table table-sm border mb-1 imalat">
         <thead>
             <tr>

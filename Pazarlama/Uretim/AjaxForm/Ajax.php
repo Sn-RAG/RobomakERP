@@ -11,35 +11,26 @@ $Has = ".hasClass('btn-primary')";
         $('.DisRenk').prop("hidden", true);
         $.Listele = function() {
             var sayi = <?= json_encode($sayi) ?>;
-            var Sidler = <?= json_encode($Sidler) ?>;
-            var Urunler = <?= json_encode($Urunler) ?>;
             switch (true) {
                 case $("#Pres") <?= $Has ?>:
-                    Hangisi = "Pres";
                     Is = "Preslendi";
                     break;
                 case $("#Telleme") <?= $Has ?>:
-                    Hangisi = "Telleme";
                     Is = "Tellendi";
                     break;
                 case $("#Kumlama") <?= $Has ?>:
-                    Hangisi = "Kumlama";
                     Is = "Kumlandı";
                     break;
                 case $("#icBoyama") <?= $Has ?>:
-                    Hangisi = "icBoyama";
                     Is = "İçi Boyandı";
                     break;
                 case $("#DisBoyama") <?= $Has ?>:
-                    Hangisi = "DisBoyama";
                     Is = "Dışı Boyandı";
                     break;
                 case $("#Paketleme") <?= $Has ?>:
-                    Hangisi = "Paketleme";
                     Is = "Paketlendi";
                     break;
                 case $("#Yikama") <?= $Has ?>:
-                    Hangisi = "Yıkama";
                     Is = "Yıkandı";
                     break;
             }
@@ -48,11 +39,8 @@ $Has = ".hasClass('btn-primary')";
                 type: "POST",
                 url: "AjaxForm/post.php",
                 data: {
-                    'HangiButon': Hangisi,
                     'is': Is,
                     'SNo': SNo,
-                    'Sidler': Sidler,
-                    'Urunler': Urunler,
                     'sayi': sayi,
                     'Listele': true
                 },

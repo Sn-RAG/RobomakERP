@@ -73,8 +73,6 @@ $tarih = date("Y-m-d");
                     <table class="table table-sm table-bordered mb-1 datatablem" id="Yuksek">
                         <tbody>
                             <?php
-                            $Sidler = [];
-                            $Urunler = [];
                             $sayi = [];
                             $i = 0;
 
@@ -106,8 +104,6 @@ $tarih = date("Y-m-d");
                                     $no = $Sid . $Uid;
 
                                     $sayi[$ii] = $no;
-                                    $Urunler[$ii] = $Uid;
-                                    $Sidler[$ii] = $Sid;
                                     $ii++;
                                 ?>
                                     <tr>
@@ -123,16 +119,18 @@ $tarih = date("Y-m-d");
                     </table>
                 </div>
 
-                <div class="col-md-12 border-top border-dark py-1">
-                    <h5 class="card-title text-center">SET DETAY</h5>
-                    <table class="table table-sm small table-bordered table-responsive">
+                <div class="col-md-12">
+                    <table class="table table-sm small table-bordered">
                         <tbody>
+                            <tr class="table-primary text-center">
+                                <th colspan="6">DETAYLAR</th>
+                            </tr>
+                            <tr>
+                                <td colspan="6">&nbsp</td>
+                            </tr>
                             <?php for ($i = 0; $i < count($sor); $i++) { ?>
-                                <tr>
-                                    <td colspan="6">&nbsp</td>
-                                </tr>
                                 <tr class="table-light text-center">
-                                    <th colspan="6"><?= $sor[$i][$i]['SetAdi'] ?></th>
+                                    <th colspan="6" class="text-danger"><?= $sor[$i][$i]['SetAdi'] ?></th>
                                 </tr>
                                 <tr class="table-light">
                                     <th>Ürünler</th>
@@ -156,15 +154,14 @@ $tarih = date("Y-m-d");
                                             <td><?= $C->fetch()["Cap"] ?> cm</td>
                                             <td><?= $baglanti->query("SELECT Kalinlik FROM view_urun_levha_bilgi WHERE Levha_ID=" . $s['Levha_ID'] . " AND Urun_ID=" . $Uid)->fetch()["Kalinlik"] ?> mm</td>
                                         </tr>
-                            <?php } else {
+                                <?php } else {
                                         echo "<script>" . $UrunLevhaYok . "</script>";
                                     }
-                                }
-                            }
-                            ?>
-                            <tr>
-                                <td colspan="6">&nbsp</td>
-                            </tr>
+                                } ?>
+                                <tr>
+                                    <td colspan="6">&nbsp</td>
+                                </tr>
+                            <?php } ?>
                             <tr class="table-primary text-center">
                                 <th colspan="6">SET BOYA BİLGİ</th>
                             </tr>
@@ -173,7 +170,7 @@ $tarih = date("Y-m-d");
                                     <td colspan="6">&nbsp</td>
                                 </tr>
                                 <tr class="table-light text-center">
-                                    <th colspan="6"><?= $SetBilgi[$i][$i]['SetAdi'] ?></th>
+                                    <th colspan="6" class="text-danger"><?= $SetBilgi[$i][$i]['SetAdi'] ?></th>
                                 </tr>
                                 <tr class="table-light">
                                     <th rowspan="<?= count($SetBilgi[$i]) + 1 ?>"></th>
@@ -201,14 +198,15 @@ $tarih = date("Y-m-d");
                                     <td colspan="6">&nbsp</td>
                                 </tr>
                                 <tr class="table-light text-center">
-                                    <th colspan="6"><?= $UrunBilgi[$i][$i]['SetAdi'] ?></th>
+                                    <th colspan="6" class="text-danger"><?= $UrunBilgi[$i][$i]['SetAdi'] ?></th>
                                 </tr>
                                 <tr class="table-light">
+                                    <th rowspan="<?= count($UrunBilgi[$i]) + 1 ?>"></th>
                                     <th>Ürünler</th>
                                     <th>İç Boya</th>
                                     <th>Dış Boya</th>
                                     <th>Adet</th>
-                                    <th colspan="2" rowspan="<?= count($UrunBilgi[$i]) + 1 ?>"></th>
+                                    <th rowspan="<?= count($UrunBilgi[$i]) + 1 ?>"></th>
                                 </tr>
                                 <?php foreach ($UrunBilgi[$i] as $b) { ?>
                                     <tr>
