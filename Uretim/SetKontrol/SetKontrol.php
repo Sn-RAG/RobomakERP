@@ -23,6 +23,7 @@ require __DIR__ . '/Yuzde.php';
                     <div class="btn-group btn-group-sm">
                         <a class="btn btn-outline-dark bi-calculator" href="FormHesapBoya.php?id=<?= $SetID ?>&adi=<?= $SetAdi ?>" target="_blank" rel="noreferrer noopener">&nbsp Boya Hesapla</a>
                         <a class="btn btn-outline-dark bi-calculator" href="FormHesapLevha.php?id=<?= $SetID ?>&adi=<?= $SetAdi ?>" target="_blank" rel="noreferrer noopener">&nbsp Levha Hesapla</a>
+                        <a class="btn btn-outline-dark bi-vinyl" href="FormTYK.php?id=<?= $SetID ?>&adi=<?= $SetAdi ?>" target="_blank" rel="noreferrer noopener">&nbsp TYK Formu</a>
                         <a class="btn btn-outline-dark bi-circle-square" href="FormPres.php?id=<?= $SetID ?>&adi=<?= $SetAdi ?>" target="_blank" rel="noreferrer noopener">&nbsp Preshane Formu</a>
                         <a class="btn btn-outline-dark bi-brush" href="FormBoya.php?id=<?= $SetID ?>&adi=<?= $SetAdi ?>" target="_blank" rel="noreferrer noopener">&nbsp Boyahane Formu</a>
                     </div>
