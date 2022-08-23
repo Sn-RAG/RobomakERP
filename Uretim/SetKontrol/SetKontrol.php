@@ -132,7 +132,7 @@ require __DIR__ . '/Yuzde.php';
                     <button class="mb-3 me-2 btn btn-outline-dark t" id="DisBoyama">Dış Boya</button>
                     <button class="mb-3 me-2 btn btn-outline-dark t" id="Paketleme">Paketleme</button>
                 </div>
-                
+
                 <!-- Scroll Tablo -->
                 <div class="col-md-6 border mb-3">
                     <div class="isDurum mb-1">
@@ -235,7 +235,7 @@ require __DIR__ . '/Yuzde.php';
                                     echo "<script>" . $UrunLevhaYok . "</script>";
                                 }
                             }
-                            $SetBilgi = $baglanti->query('SELECT Adet, icBoya, DisBoya FROM set_urun_icerik WHERE Set_ID = ' . $SetID)->fetchAll();
+                            $SetBilgi = $baglanti->query('SELECT * FROM set_urun_icerik WHERE Set_ID = ' . $SetID)->fetchAll();
                             $UrunBilgi = $baglanti->query('SELECT Urun_ID,UrunAdi,icBoya_ID,DisRenk,Adet FROM view_set_urun_sec WHERE Set_ID = ' . $SetID . " ORDER BY UrunAdi")->fetchAll();
                             ?>
                             <tr class="table-light text-center">
@@ -246,14 +246,18 @@ require __DIR__ . '/Yuzde.php';
                                 <th>İç Boya</th>
                                 <th>Dış Boya</th>
                                 <th>Adet</th>
+                                <th>Kırçıl</th>
                                 <th colspan="2" rowspan="<?= count($SetBilgi) + 1 ?>"></th>
                             </tr>
                             <?php
-                            foreach ($SetBilgi as $s) { ?>
+                            foreach ($SetBilgi as $s) {
+                                $Kircil = $s["Kircil"] != null ? $baglanti->query("SELECT Renk FROM boya WHERE Boya_ID =$s[Kircil]")->fetch()["Renk"] : "";
+                                $Kircill = $s["Kircill"] != null & $s["Kircill"] > 0 ? "<i class='bi-dash'></i>" . $baglanti->query("SELECT Renk FROM boya WHERE Boya_ID =$s[Kircill]")->fetch()["Renk"] : ""; ?>
                                 <tr>
                                     <td><?= $baglanti->query('SELECT Renk FROM boya WHERE Boya_ID =' . $s["icBoya"])->fetch()["Renk"] ?></td>
                                     <td><?= $baglanti->query('SELECT Renk FROM boya WHERE Boya_ID =' . $s["DisBoya"])->fetch()["Renk"] ?></td>
                                     <td><?= $s['Adet'] ?></td>
+                                    <td><?= $Kircil . $Kircill ?></td>
                                 </tr>
                             <?php } ?>
                             <tr class="table-light text-center">

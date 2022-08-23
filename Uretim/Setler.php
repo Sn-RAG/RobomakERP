@@ -59,7 +59,7 @@ require __DIR__ . '/../controller/Sil.php';
                                     <div class="btn-group">
                                         <a href='Setler.php?YTamam&id=<?= $SetID ?>' class='bi-check btn btn-success me-2'></a>
                                         <a href='Setler.php?Yiptal&id=<?= $SetID ?>' class='bi-dash btn btn-warning me-2'></a>
-                                        <a href='Setler.php?UretimSetlerSil=<?= $id ?>&Set_ID=<?= $SetID ?>' class='bi-trash btn btn-danger'></a>
+                                        <!--<a href='Setler.php?UretimSetlerSil=<?= $id ?>&Set_ID=<?= $SetID ?>' class='bi-trash btn btn-danger'></a>-->
                                     </div>
                                 </td>
                             </tr>
